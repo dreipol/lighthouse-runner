@@ -29,6 +29,7 @@ function getChromePort(opts, port) {
  * @param {Object} opts
  * @param {Object} config
  * @param {Number|null} port
+ * 
  * @return {Promise|any|*|PromiseLike<{chrome?: *, port: *}>|Promise<{chrome?: *, port: *}>}
  */
 function launchChromeAndRunLighthouse(_url, opts, config, port) {

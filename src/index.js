@@ -6,7 +6,7 @@ const url = require('url');
 
 const runner = require('./lighthouseRunner');
 const writeReportFile = require('./writeReport');
-const {coloredFlag, printBudget} = require('./printer.js');
+const { printBudget } = require('./printer.js');
 const checkBudget = require('./budget');
 
 /**
@@ -41,7 +41,7 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
                 const category = categories[i];
                 const score = Math.round(category.score);
                 const budgetReached = checkBudget(category.id, category.name, score, budget);
-                printBudget(category.id, category.name, score, budget)
+                printBudget(category.id, category.name, score, budget);
 
                 if (budgetReached === false) {
                     allBudgetsReached = false;
@@ -51,8 +51,9 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
             if (allBudgetsReached) {
                 log(chalk.bgGreen('Congrats! Budged reached!'));
             }
-        })
+        });
 }
+
 /**
  * Run multiple urls synchronously
  *
@@ -75,6 +76,21 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port) 
         });
 }
 
+
+/**
+ * Output colored flags
+ *
+ * @param {string} name
+ * @param {Boolean} flag
+ * @return {*|string}
+ */
+function coloredFlag(name, flag) {
+    if (flag === true) {
+        return chalk.green(name);
+    }
+    return chalk.red(name);
+}
+
 /**
  * Execute reporter
  * 
@@ -91,7 +107,6 @@ function execute(configFile, port) {
 
     const configFilePath = path.resolve(process.cwd(), configFile);
     const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} = require(configFilePath);
-    console.log(folder);
     let reportFolder = null;
     if(folder){
         reportFolder = path.resolve(path.dirname(configFilePath), folder);
