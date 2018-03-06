@@ -4,10 +4,10 @@ const log = require('fancy-log');
 const path = require('path');
 const url = require('url');
 
-const runner = require('./lighthouse-runner');
-const writeReportFile = require('./write-log');
-const coloredFlagOutput = require('./printer.js');
-const checkBudget = require('./budgetChecker.js');
+const runner = require('./lighthouseRunner');
+const writeReportFile = require('./writeReport');
+const {coloredFlag, printBudget} = require('./printer.js');
+const checkBudget = require('./budget');
 
 /**
  * Run report
@@ -41,6 +41,8 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
                 const category = categories[i];
                 const score = Math.round(category.score);
                 const budgetReached = checkBudget(category.id, category.name, score, budget);
+                printBudget(category.id, category.name, score, budget)
+
                 if (budgetReached === false) {
                     allBudgetsReached = false;
                 }
@@ -77,16 +79,23 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port) 
  * Execute reporter
  * 
  * @param {string} configFile 
- * @param {string|null} folder 
  * @param {number|null} port 
  * 
  * @returns {Promise}
  */
-function execute(configFile, folder, port) {
+function execute(configFile, port) {
     if(!configFile){
         throw new Error('No configfile');
     }
-    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget } = require(path.resolve(process.cwd(), configFile));
+
+
+    const configFilePath = path.resolve(process.cwd(), configFile);
+    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} = require(configFilePath);
+    console.log(folder);
+    let reportFolder = null;
+    if(folder){
+        reportFolder = path.resolve(path.dirname(configFilePath), folder);
+    }
 
     const opts = {
         chromeFlags,
@@ -100,16 +109,15 @@ function execute(configFile, folder, port) {
     log(`Config file: ${configFile}`);
 
     if (saveReport) {
-        folder = path.resolve(process.cwd(), folder);
         log(`Save report to: ${folder}`);
         log('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
     }
 
     log(`Config:`,
         `[${chromeFlags.join(';')}]`,
-        coloredFlagOutput('disableEmulation', disableEmulation),
-        coloredFlagOutput('disableThrottling', disableThrottling),
-        coloredFlagOutput('saveReport', saveReport)
+        coloredFlag('disableEmulation', disableEmulation),
+        coloredFlag('disableThrottling', disableThrottling),
+        coloredFlag('saveReport', saveReport)
     );
 
     if (!Array.isArray(paths)) {

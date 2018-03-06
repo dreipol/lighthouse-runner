@@ -41,15 +41,18 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
                 .then((_results) => {
                     results = _results;
                     delete results.artifacts;
+                    
                     if (chrome) {
                         return chrome.kill();
                     }
                     return null;
                 })
+
                 .catch((e) => {
                     if (!chrome) {
                         throw e;
                     }
+
                     return chrome.kill()
                         .then(() => {
                             throw e;
