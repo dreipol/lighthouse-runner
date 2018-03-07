@@ -27,7 +27,7 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
     let _url = url.resolve(host, paths);
 
     log(chalk.blue(`Run ${_url}`));
-    
+
     return runner(host, paths, opts, config, port)
         .then((results) => {
             if (saveReport) {
@@ -76,7 +76,6 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port) 
         });
 }
 
-
 /**
  * Output colored flags
  *
@@ -92,24 +91,29 @@ function coloredFlag(name, flag) {
 }
 
 /**
- * Execute reporter
+ * Run post code after report finished
  * 
- * @param {string} configFile 
- * @param {number|null} port 
- * 
- * @returns {Promise}
+ * @param {boolean} saveReport 
+ * @param {string} folder 
  */
-function execute(configFile, port) {
-    if(!configFile){
-        throw new Error('No configfile');
+function postReport(saveReport, folder) {
+    if (saveReport) {
+        log(`Save report to: ${folder}`);
+        log('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
     }
+}
 
-
-    const configFilePath = path.resolve(process.cwd(), configFile);
-    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} = require(configFilePath);
+/**
+ * Run report with config
+ * @param {string} configPath
+ * @param {Object} {url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} 
+ * @param {Number} port 
+ * @returns 
+ */
+function executeReport(configPath, { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder }, port) {
     let reportFolder = null;
-    if(folder){
-        reportFolder = path.resolve(path.dirname(configFilePath), folder);
+    if (folder) {
+        reportFolder = path.resolve(configPath, folder);
     }
 
     const opts = {
@@ -121,12 +125,6 @@ function execute(configFile, port) {
     opts.disableCpuThrottling = disableThrottling;
 
     log(`Run Report: ${url}`);
-    log(`Config file: ${configFile}`);
-
-    if (saveReport) {
-        log(`Save report to: ${folder}`);
-        log('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
-    }
 
     log(`Config:`,
         `[${chromeFlags.join(';')}]`,
@@ -136,10 +134,37 @@ function execute(configFile, port) {
     );
 
     if (!Array.isArray(paths)) {
-        return runReport(url, paths, opts, report, saveReport, budget, folder, port);
+        return runReport(url, paths, opts, report, saveReport, budget, folder, port)
+            .then(() => {
+                postReport(saveReport, folder);
+            });
     }
 
-    return runReports(url, paths, opts, report, saveReport, budget, folder, port);
+    return runReports(url, paths, opts, report, saveReport, budget, folder, port)
+        .then(() => {
+            postReport(saveReport, folder);
+        });
 }
 
-module.exports = execute;
+/**
+ * Execute reporter
+ * 
+ * @param {string} configFile 
+ * @param {number|null} port 
+ * 
+ * @returns {Promise}
+ */
+function execute(configFile, port) {
+    if (!configFile) {
+        throw new Error('No configfile');
+    }
+
+    const configFilePath = path.resolve(process.cwd(), configFile);
+    log(`Config file: ${configFile}`);
+    executeReport(path.dirname(configFilePath), require(configFilePath), port)
+}
+
+module.exports = {
+    execute,
+    executeReport
+};

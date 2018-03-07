@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const lib = require('../src/index');
+const {execute} = require('../src/index');
 const args = require('./args')();
 
-lib(args.config, args.port);
+execute(args.config, args.port);

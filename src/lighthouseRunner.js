@@ -42,7 +42,7 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
                 .then((_results) => {
                     results = _results;
                     delete results.artifacts;
-                    
+
                     if (chrome) {
                         return chrome.kill();
                     }
@@ -77,7 +77,7 @@ module.exports = function runReport(targetUrl, urlPath, opts, config, port) {
     let _url = url.resolve(targetUrl, urlPath);
 
     return launchChromeAndRunLighthouse(_url, opts, config, port)
-        .then(results => {            
+        .then(results => {
             return results;
         });
 };
