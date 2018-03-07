@@ -134,15 +134,15 @@ function executeReport(configPath, { url, paths, report, chromeFlags, saveReport
     );
 
     if (!Array.isArray(paths)) {
-        return runReport(url, paths, opts, report, saveReport, budget, folder, port)
+        return runReport(url, paths, opts, report, saveReport, budget, reportFolder, port)
             .then(() => {
-                postReport(saveReport, folder);
+                postReport(saveReport, reportFolder);
             });
     }
 
-    return runReports(url, paths, opts, report, saveReport, budget, folder, port)
+    return runReports(url, paths, opts, report, saveReport, budget, reportFolder, port)
         .then(() => {
-            postReport(saveReport, folder);
+            postReport(saveReport, reportFolder);
         });
 }
 
