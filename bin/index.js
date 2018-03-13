@@ -12,4 +12,3 @@ if (args.setup) {
 }
 
 execute(args.config, args.port);
-
