@@ -6,7 +6,9 @@ const log = require('fancy-log');
 
 /**
  * Get templatefolder from installed module
+ * 
  * @param {String} baseDir 
+ * @returns {Promise<String>}
  */
 function getConfigModulePath(baseDir) {
     return new Promise((res, rej) => {
@@ -20,7 +22,9 @@ function getConfigModulePath(baseDir) {
 
 /**
  * Get all templatefiles from module
+ * 
  * @param {String} templateFolder 
+ * @returns {Promise<Array>}
  */
 function getTemplateFiles(templateFolder) {
     return new Promise((res, rej) => {
@@ -35,8 +39,11 @@ function getTemplateFiles(templateFolder) {
 
 /**
  * Copy all templatefiles
+ * 
  * @param {String[]} files 
  * @param {String} target 
+ * 
+ * @returns {Promise<Array>}
  */
 function copyFiles(files, target) {
     let promises = [];
@@ -48,8 +55,11 @@ function copyFiles(files, target) {
 
 /**
  * Copy single file into project
+ * 
  * @param {String} file 
  * @param {String} target 
+ * 
+ * @returns {Promise}
  */
 function copyFile(file, target) {
     const basename = path.basename(file);
@@ -67,7 +77,10 @@ function copyFile(file, target) {
 
 /**
  * Settingup default configuration
+ * 
  * @param {String} configFolder 
+ * 
+ * @returns {Promise}
  */
 module.exports = function writeDefaultConfig(configFolder) {
     const baseDir = process.cwd();

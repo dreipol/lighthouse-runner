@@ -30,7 +30,7 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
 
     return runner(host, paths, opts, config, port)
         .then((results) => {
-            if (saveReport) {
+            if (saveReport && folder) {
                 writeReportFile(folder, _url, results);
                 log(`Report created and saved`);
             }
@@ -81,6 +81,7 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port) 
  *
  * @param {string} name
  * @param {Boolean} flag
+ * 
  * @return {*|string}
  */
 function coloredFlag(name, flag) {
@@ -105,10 +106,12 @@ function postReport(saveReport, folder) {
 
 /**
  * Run report with config
+ * 
  * @param {string} configPath
  * @param {Object} {url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} 
  * @param {Number} port 
- * @returns 
+ * 
+ * @returns {Promise}
  */
 function executeReport(configPath, { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder }, port) {
     let reportFolder = null;

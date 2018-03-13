@@ -8,6 +8,7 @@ const chalk = require('chalk');
  * @param {string} name
  * @param {Number} score
  * @param {Object} budget
+ * 
  * @return {boolean}
  */
 module.exports = function checkBudget(categoryId, name, score, budget) {

@@ -1,7 +1,10 @@
 /**
  * Check if flag is allowed
+ * 
  * @param {String[]} flags 
  * @param {String} flag 
+ * 
+ * @return {String}
  */
 function isFlagAvailable(flags, flag) {
     return (flags.indexOf(flag) !== -1);
@@ -9,8 +12,11 @@ function isFlagAvailable(flags, flag) {
 
 /**
  * Check if argument is allowed
+ * 
  * @param {String[]} args 
  * @param {String} arg 
+ * 
+ * @returns {String}
  */
 function isArgAvailable(args, arg) {
     let parts = arg.split('=');
@@ -20,6 +26,8 @@ function isArgAvailable(args, arg) {
 
 /**
  * Parse all named arguments
+ * 
+ * @param {{args, flags}} 
  * 
  * @returns {Object}
  */

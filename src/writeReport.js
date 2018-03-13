@@ -5,6 +5,7 @@ const path = require('path');
 /**
  *  Format date
  * @param {Date} date
+ * 
  * @returns {string}
  */
 function formatDate(date) {

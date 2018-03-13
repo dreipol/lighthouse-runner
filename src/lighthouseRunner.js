@@ -3,9 +3,11 @@ const chromeLauncher = require('chrome-launcher');
 const url = require('url');
 
 /**
- * Start either a new chrome instance or get port from passed argumentsd
+ * Start either a new chrome instance or get port from passed arguments
+ * 
  * @param {Object} opts
  * @param {Number|null} port
+ * 
  * @return {Promise}
  */
 function getChromePort(opts, port) {
@@ -71,7 +73,8 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
  * @param {Object} opts
  * @param {Object} config
  * @param {Number} port
- * @return {Promise<T>}
+ * 
+ * @return {Promise<Array>}
  */
 module.exports = function runReport(targetUrl, urlPath, opts, config, port) {
     let _url = url.resolve(targetUrl, urlPath);

@@ -8,7 +8,7 @@ const chalk = require('chalk');
  * @param {string} name 
  * @param {number} score 
  * @param {Object} budget 
- * @returns 
+ * 
  */
 function printBudget(categoryId, name, score, budget) {
     const threshhold = budget[categoryId];
