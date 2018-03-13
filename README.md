@@ -1,4 +1,4 @@
-# dreipol-reporter
+# dreihouse
 Create lighthouse report for a website
 
 ## Requirements

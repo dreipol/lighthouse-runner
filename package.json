@@ -13,7 +13,7 @@
     "url": "git+https://github.com/dreipol/lighthouse-runner.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dreipol/lighthouse-runner/issues"
   },
