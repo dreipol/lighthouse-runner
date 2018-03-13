@@ -12,6 +12,7 @@ const chalk = require('chalk');
  */
 module.exports = function checkBudget(categoryId, name, score, budget) {
     const threshhold = budget[categoryId];
+    
     if (threshhold === false) {
         return null;
     }

@@ -24,7 +24,7 @@ const checkBudget = require('./budget');
  * @returns {Promise}
  */
 function runReport(host, paths, opts, config, saveReport, budget, folder, port) {
-    let _url = url.resolve(host, paths);
+    const _url = url.resolve(host, paths);
 
     log(chalk.blue(`Run ${_url}`));
 

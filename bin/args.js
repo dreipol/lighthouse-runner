@@ -1,23 +1,52 @@
 /**
+ * Check if flag is allowed
+ * @param {String[]} flags 
+ * @param {String} flag 
+ */
+function isFlagAvailable(flags, flag) {
+    return (flags.indexOf(flag) !== -1);
+}
+
+/**
+ * Check if argument is allowed
+ * @param {String[]} args 
+ * @param {String} arg 
+ */
+function isArgAvailable(args, arg) {
+    let parts = arg.split('=');
+    return (args.indexOf(parts[0]) !== -1);
+}
+
+
+/**
  * Parse all named arguments
  * 
  * @returns {Object}
  */
-module.exports = function getNamed(defaultArgs){
-    defaultArgs = defaultArgs || {};
-    let args = process.argv;
-    let namedArgs = defaultArgs;
+module.exports = function getNamed({ args, flags }) {
+    const availableArgs = args || [];
+    const availableFlags = flags || [];
 
-    for(let i = 0; i < args.length; i++){
-        let arg = args[i];
+    let procArgs = process.argv;
+    let namedArgs = {};
 
-        if(arg.indexOf('--') === -1){
+    for (let i = 0; i < procArgs.length; i++) {
+        let arg = procArgs[i];
+        const originalArg = arg;
+
+        if (arg.indexOf('--') === -1) {
             continue;
         }
-
         arg = arg.replace('--', '');
-        let parts = arg.split('=');
-        namedArgs[parts[0]] = parts[1];
+
+        if (isFlagAvailable(availableFlags, arg)) {
+            namedArgs[arg] = true;
+        } else if (isArgAvailable(availableArgs, arg)) {
+            let parts = arg.split('=');
+            namedArgs[parts[0]] = parts[1];
+        } else {
+            throw new Error(`Invalid argument ${originalArg}`);
+        }
     }
     return namedArgs;
-}
+};
