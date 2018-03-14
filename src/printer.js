@@ -12,7 +12,8 @@ const chalk = require('chalk');
  */
 function printBudget(categoryId, name, score, budget) {
     const threshhold = budget[categoryId];
-    if (threshhold === false) {
+    
+    if (threshhold === false || threshhold === undefined || threshhold === null) {
         log(name, score);
         return;
     }
