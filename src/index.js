@@ -73,7 +73,8 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port) 
                 return runReports(url, paths, opts, config, saveReport, budget, folder, port);
             }
             return null;
-        });
+        })
+        .catch( e => console.error(e));
 }
 
 /**
