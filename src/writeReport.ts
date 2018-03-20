@@ -1,6 +1,6 @@
-const fs = require('fs');
-const url = require('url');
-const path = require('path');
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { parse } from 'url';
+import { join } from 'path';
 
 /**
  *  Format date
@@ -8,7 +8,7 @@ const path = require('path');
  * 
  * @returns {string}
  */
-function formatDate(date) {
+function formatDate(date: Date): string {
     let year = date.getUTCFullYear().toString();
     let month = date.getUTCMonth().toString();
     let day = date.getUTCDay().toString();
@@ -33,19 +33,23 @@ function formatDate(date) {
  * @param {string} _url
  * @param {Object} results
  */
-module.exports = function writeReportFile(configFolder, _url, results) {
+export default function writeReportFile(configFolder: string, _url: string, results: any): void {
     const d = new Date();
 
-    if (!fs.existsSync(configFolder)) {
-        fs.mkdirSync(configFolder);
+    if (!existsSync(configFolder)) {
+        mkdirSync(configFolder);
     }
 
-    const reportUrl = url.parse(_url);
+    const reportUrl = parse(_url);
     let pathname = reportUrl.pathname;
+    if (!pathname) {
+        throw new Error('Can not get pathname from url');
+    }
+
     pathname = pathname.replace(/(^\/)|(\/$)/g, '');
     pathname = pathname.replace(/\//g, '_');
     const filenamePrefix = formatDate(d);
-    const filename = path.join(configFolder, `${ filenamePrefix }__${reportUrl.hostname}__${pathname}.json`);
+    const filename = join(configFolder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.json`);
 
-    fs.writeFileSync(filename, JSON.stringify(results));
+    writeFileSync(filename, JSON.stringify(results));
 }

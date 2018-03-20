@@ -1,6 +1,12 @@
-const lighthouse = require('lighthouse');
-const chromeLauncher = require('chrome-launcher');
-const url = require('url');
+import lighthouse from 'lighthouse/lighthouse-core/index.js';
+import { launch } from 'chrome-launcher';
+import { resolve } from 'url';
+import { LaunchedChrome as Chrome, Results } from 'lighthouse/typings/externs';
+
+
+import LighthouseOptionsInterface from './Interfaces/LighthouseOptionsInterface';
+import { LaunchedChrome } from './Interfaces/lib';
+import LighthouseConfigInterface from './Interfaces/LighthouseConfigInterface';
 
 /**
  * Start either a new chrome instance or get port from passed arguments
@@ -10,7 +16,7 @@ const url = require('url');
  * 
  * @return {Promise}
  */
-function getChromePort(opts, port) {
+function getChromePort(opts: LighthouseOptionsInterface, port?: Number): Promise<LaunchedChrome> {
     if (port) {
         return Promise.resolve({
             port: port,
@@ -18,8 +24,8 @@ function getChromePort(opts, port) {
         });
     }
 
-    return chromeLauncher.launch({ chromeFlags: opts.chromeFlags })
-        .then(chrome => {
+    return launch({ chromeFlags: opts.chromeFlags })
+        .then((chrome: Chrome) => {
             return { chrome, port: chrome.port };
         });
 }
@@ -32,16 +38,16 @@ function getChromePort(opts, port) {
  * @param {Object} config
  * @param {Number|null} port
  * 
- * @return {Promise|any|*|PromiseLike<{chrome?: *, port: *}>|Promise<{chrome?: *, port: *}>}
  */
-function launchChromeAndRunLighthouse(_url, opts, config, port) {
+function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptionsInterface, config: LighthouseConfigInterface, port?: Number): Promise<Results> {
     return getChromePort(opts, port)
         .then(({ chrome, port }) => {
             opts.port = port;
 
-            let results = {};
+            let results: Results;
+
             return lighthouse(_url, opts, config)
-                .then((_results) => {
+                .then((_results: Results) => {
                     results = _results;
                     delete results.artifacts;
 
@@ -50,8 +56,7 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
                     }
                     return null;
                 })
-
-                .catch((e) => {
+                .catch((e: Error) => {
                     if (!chrome) {
                         throw e;
                     }
@@ -76,11 +81,8 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
  * 
  * @return {Promise<Array>}
  */
-module.exports = function runReport(targetUrl, urlPath, opts, config, port) {
-    let _url = url.resolve(targetUrl, urlPath);
+export default function runReport(targetUrl: string, urlPath: string, opts: LighthouseOptionsInterface, config: LighthouseConfigInterface, port?: Number) {
+    let url = resolve(targetUrl, urlPath);
 
-    return launchChromeAndRunLighthouse(_url, opts, config, port)
-        .then(results => {
-            return results;
-        });
+    return launchChromeAndRunLighthouse(url, opts, config, port);
 };

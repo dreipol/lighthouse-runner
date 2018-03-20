@@ -1,5 +1,5 @@
-const log = require('fancy-log');
-const chalk = require('chalk');
+import BudgetInterface from './Interfaces/BudgetInterface';
+
 
 /**
  * Check scores against configured budget and make colored output
@@ -11,9 +11,9 @@ const chalk = require('chalk');
  * 
  * @return {boolean}
  */
-module.exports = function checkBudget(categoryId, name, score, budget) {
+export default function checkBudget(categoryId: string, score: Number, budget: BudgetInterface): Boolean | null {
     const threshhold = budget[categoryId];
-    
+
     if (threshhold === false || threshhold === undefined || threshhold === null) {
         return null;
     }

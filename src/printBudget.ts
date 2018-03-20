@@ -1,5 +1,6 @@
-const log = require('fancy-log');
-const chalk = require('chalk');
+import BudgetInterface from './Interfaces/BudgetInterface';
+import log from 'fancy-log';
+import chalk from 'chalk';
 
 /**
  * Print budget scores to cli
@@ -10,9 +11,9 @@ const chalk = require('chalk');
  * @param {Object} budget 
  * 
  */
-function printBudget(categoryId, name, score, budget) {
+export default function printBudget(categoryId: string, name: string, score: Number, budget: BudgetInterface): void {
     const threshhold = budget[categoryId];
-    
+
     if (threshhold === false || threshhold === undefined || threshhold === null) {
         log(name, score);
         return;
@@ -24,7 +25,3 @@ function printBudget(categoryId, name, score, budget) {
         log(chalk.red(`${name}: ${score}/${threshhold}`));
     }
 }
-
-module.exports = {
-    printBudget
-};
