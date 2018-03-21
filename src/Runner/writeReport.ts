@@ -4,9 +4,6 @@ import { join } from 'path';
 
 /**
  *  Format date
- * @param {Date} date
- * 
- * @returns {string}
  */
 function formatDate(date: Date): string {
     let year = date.getUTCFullYear().toString();
@@ -27,20 +24,11 @@ function formatDate(date: Date): string {
 }
 
 /**
- * Write a report file
- *
- * @param {string} configFolder
- * @param {string} _url
- * @param {Object} results
+ * Extract pathname for filename from url
  */
-export default function writeReportFile(configFolder: string, _url: string, results: any): void {
-    const d = new Date();
+function getPathname(url: string): string {
 
-    if (!existsSync(configFolder)) {
-        mkdirSync(configFolder);
-    }
-
-    const reportUrl = parse(_url);
+    const reportUrl = parse(url);
     let pathname = reportUrl.pathname;
     if (!pathname) {
         throw new Error('Can not get pathname from url');
@@ -48,6 +36,25 @@ export default function writeReportFile(configFolder: string, _url: string, resu
 
     pathname = pathname.replace(/(^\/)|(\/$)/g, '');
     pathname = pathname.replace(/\//g, '_');
+    return pathname;
+}
+
+/**
+ * Write a report file
+ *
+ * @param {string} configFolder
+ * @param {string} _url
+ * @param {Object} results
+ */
+export default function writeReportFile(configFolder: string, url: string, results: any): void {
+    const d = new Date();
+
+    if (!existsSync(configFolder)) {
+        mkdirSync(configFolder);
+    }
+
+    const reportUrl = parse(url);
+    const pathname = getPathname(url);
     const filenamePrefix = formatDate(d);
     const filename = join(configFolder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.json`);
 

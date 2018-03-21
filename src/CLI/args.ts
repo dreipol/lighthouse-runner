@@ -1,42 +1,28 @@
+import { ConfigInterface, PropertyHolderInterface } from './Interfaces';
 /**
  * Check if flag is allowed
- * 
- * @param {String[]} flags 
- * @param {String} flag 
- * 
- * @return {String}
  */
-function isFlagAvailable(flags, flag) {
+function isFlagAvailable(flags: Array<string>, flag: string): Boolean {
     return (flags.indexOf(flag) !== -1);
 }
 
 /**
  * Check if argument is allowed
- * 
- * @param {String[]} args 
- * @param {String} arg 
- * 
- * @returns {String}
  */
-function isArgAvailable(args, arg) {
+function isArgAvailable(args: Array<string>, arg: string): Boolean {
     let parts = arg.split('=');
     return (args.indexOf(parts[0]) !== -1);
 }
 
-
 /**
  * Parse all named arguments
- * 
- * @param {{args, flags}} 
- * 
- * @returns {Object}
  */
-module.exports = function getNamed({ args, flags }) {
+export default function getNamed({ args, flags }: ConfigInterface): PropertyHolderInterface {
     const availableArgs = args || [];
     const availableFlags = flags || [];
 
     let procArgs = process.argv;
-    let namedArgs = {};
+    let namedArgs: PropertyHolderInterface = {};
 
     for (let i = 0; i < procArgs.length; i++) {
         let arg = procArgs[i];
@@ -57,4 +43,4 @@ module.exports = function getNamed({ args, flags }) {
         }
     }
     return namedArgs;
-};
+}

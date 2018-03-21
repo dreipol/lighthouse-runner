@@ -1,9 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-}
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_js_1 = __importDefault(require("lighthouse/lighthouse-core/index.js"));
+const lighthouse = require('lighthouse');
 const chrome_launcher_1 = require("chrome-launcher");
 const url_1 = require("url");
 function getChromePort(opts, port) {
@@ -23,7 +20,7 @@ function launchChromeAndRunLighthouse(_url, opts, config, port) {
         .then(({ chrome, port }) => {
         opts.port = port;
         let results;
-        return index_js_1.default(_url, opts, config)
+        return lighthouse(_url, opts, config)
             .then((_results) => {
             results = _results;
             delete results.artifacts;

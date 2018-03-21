@@ -1,13 +1,15 @@
 
-const chalk = require('chalk');
-const log = require('fancy-log');
-const path = require('path');
-const url = require('url');
+import chalk from 'chalk';
+import { info as log } from 'fancy-log';
+import { resolve, dirname } from 'path';
+import { resolve as resolveUrl } from 'url';
 
-const runner = require('./lighthouseRunner');
-const writeReportFile = require('./writeReport');
-const { printBudget } = require('./printer.js');
-const checkBudget = require('./budget');
+import runner from './lighthouseRunner';
+import writeReportFile from './writeReport';
+import printBudget from './printBudget';
+import checkBudget from './checkBudget';
+
+import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface } from './Interfaces';
 
 /**
  * Run report
@@ -23,15 +25,15 @@ const checkBudget = require('./budget');
  * 
  * @returns {Promise}
  */
-function runReport(host, paths, opts, config, saveReport, budget, folder, port) {
-    const _url = url.resolve(host, paths);
+function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<any> {
+    const url = resolveUrl(host, paths);
 
-    log(chalk.blue(`Run ${_url}`));
+    log(chalk.blue(`Run ${url}`));
 
     return runner(host, paths, opts, config, port)
-        .then((results) => {
+        .then((results: LighthouseReportResultInterface) => {
             if (saveReport && folder) {
-                writeReportFile(folder, _url, results);
+                writeReportFile(folder, url, results);
                 log(`Report created and saved`);
             }
 
@@ -40,7 +42,7 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
             for (let i = 0; i < categories.length; i++) {
                 const category = categories[i];
                 const score = Math.round(category.score);
-                const budgetReached = checkBudget(category.id, category.name, score, budget);
+                const budgetReached = checkBudget(category.id, score, budget);
                 printBudget(category.id, category.name, score, budget);
 
                 if (budgetReached === false) {
@@ -51,41 +53,36 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
             if (allBudgetsReached) {
                 log(chalk.bgGreen('Congrats! Budged reached!'));
             }
+            return;
         });
 }
 
 /**
  * Run multiple urls synchronously
- *
- * @param {string[]} paths
- * @param {Object} opts
- * @param {Object} config
- * 
- * @returns {Promise}
  */
-function runReports(url, paths, opts, config, saveReport, budget, folder, port) {
+function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<any> {
     const urlPath = paths.shift();
     log(''.padStart(10, '-'));
+
+    if (!urlPath) {
+        return Promise.resolve();
+    }
 
     return runReport(url, urlPath, opts, config, saveReport, budget, folder, port)
         .then(() => {
             if (paths.length > 0) {
                 return runReports(url, paths, opts, config, saveReport, budget, folder, port);
             }
-            return null;
+            return;
         })
-        .catch( e => console.error(e));
+        .catch((e: Error) => console.error(e));
 }
 
 /**
  * Output colored flags
  *
- * @param {string} name
- * @param {Boolean} flag
- * 
- * @return {*|string}
  */
-function coloredFlag(name, flag) {
+function coloredFlag(name: string, flag: Boolean): string {
     if (flag === true) {
         return chalk.green(name);
     }
@@ -95,10 +92,8 @@ function coloredFlag(name, flag) {
 /**
  * Run post code after report finished
  * 
- * @param {boolean} saveReport 
- * @param {string} folder 
  */
-function postReport(saveReport, folder) {
+function postReport(saveReport: Boolean, folder: string | null): void {
     if (saveReport) {
         log(`Save report to: ${folder}`);
         log('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
@@ -108,19 +103,16 @@ function postReport(saveReport, folder) {
 /**
  * Run report with config
  * 
- * @param {string} configPath
- * @param {Object} {url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder} 
- * @param {Number} port 
- * 
- * @returns {Promise}
  */
-function executeReport(configPath, { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder }, port) {
-    let reportFolder = null;
+export function executeReport(configPath: string, config: LighthouseConfigInterface, port?: Number): Promise<void> {
+    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder } = config;
+
+    let reportFolder: string | null = null;
     if (folder) {
-        reportFolder = path.resolve(configPath, folder);
+        reportFolder = resolve(configPath, folder);
     }
 
-    const opts = {
+    const opts: LighthouseOptionsInterface = {
         chromeFlags,
     };
 
@@ -153,22 +145,13 @@ function executeReport(configPath, { url, paths, report, chromeFlags, saveReport
 /**
  * Execute reporter
  * 
- * @param {string} configFile 
- * @param {number|null} port 
- * 
- * @returns {Promise}
  */
-function execute(configFile, port) {
+export function execute(configFile: string, port?: Number): void {
     if (!configFile) {
         throw new Error('No configfile');
     }
 
-    const configFilePath = path.resolve(process.cwd(), configFile);
+    const configFilePath = resolve(process.cwd(), configFile);
     log(`Config file: ${configFile}`);
-    executeReport(path.dirname(configFilePath), require(configFilePath), port)
+    executeReport(dirname(configFilePath), require(configFilePath), port)
 }
-
-module.exports = {
-    execute,
-    executeReport
-};

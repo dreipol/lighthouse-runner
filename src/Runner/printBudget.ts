@@ -1,5 +1,5 @@
-import BudgetInterface from './Interfaces/BudgetInterface';
-import log from 'fancy-log';
+import { BudgetInterface } from './Interfaces';
+import { info as log } from 'fancy-log';
 import chalk from 'chalk';
 
 /**

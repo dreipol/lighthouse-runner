@@ -1,4 +1,4 @@
-import BudgetInterface from './Interfaces/BudgetInterface';
+import { BudgetInterface } from './Interfaces';
 
 
 /**

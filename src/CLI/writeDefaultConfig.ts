@@ -1,19 +1,16 @@
-const path = require('path');
-const fs = require('fs');
-const glob = require('glob');
-const chalk = require('chalk');
-const log = require('fancy-log');
+import { resolve, join, basename } from 'path';
+import { existsSync, createReadStream, createWriteStream } from 'fs';
+import glob from 'glob';
+import chalk from 'chalk';
+import { info as log } from 'fancy-log';
 
-/**
+/** 
  * Get templatefolder from installed module
- * 
- * @param {String} baseDir 
- * @returns {Promise<String>}
  */
-function getConfigModulePath(baseDir) {
+function getConfigModulePath(baseDir: string): Promise<string> {
     return new Promise((res, rej) => {
-        const templatePath = path.resolve(baseDir, 'node_modules', '@dreipol', 'lighthouse-config', 'config', 'template');
-        if (!fs.existsSync(templatePath)) {
+        const templatePath = resolve(baseDir, 'node_modules', '@dreipol', 'lighthouse-config', 'config', 'template');
+        if (!existsSync(templatePath)) {
             return rej(new Error('Could not find template in @dreipol/lighthouse-config module'));
         }
         return res(templatePath);
@@ -22,13 +19,10 @@ function getConfigModulePath(baseDir) {
 
 /**
  * Get all templatefiles from module
- * 
- * @param {String} templateFolder 
- * @returns {Promise<Array>}
  */
-function getTemplateFiles(templateFolder) {
+function getTemplateFiles(templateFolder: string): Promise<Array<string>> {
     return new Promise((res, rej) => {
-        glob(path.join(templateFolder, '**/*.js'), (err, files) => {
+        glob(join(templateFolder, '**/*.js'), (err: Error | null, files: Array<string>) => {
             if (err) {
                 return rej(err);
             }
@@ -39,13 +33,8 @@ function getTemplateFiles(templateFolder) {
 
 /**
  * Copy all templatefiles
- * 
- * @param {String[]} files 
- * @param {String} target 
- * 
- * @returns {Promise<Array>}
  */
-function copyFiles(files, target) {
+function copyFiles(files: Array<string>, target: string): Promise<Array<any>> {
     let promises = [];
     for (let i = 0; i < files.length; i++) {
         promises.push(copyFile(files[i], target));
@@ -55,21 +44,15 @@ function copyFiles(files, target) {
 
 /**
  * Copy single file into project
- * 
- * @param {String} file 
- * @param {String} target 
- * 
- * @returns {Promise}
  */
-function copyFile(file, target) {
-    const basename = path.basename(file);
-    target = path.join(target, basename);
+function copyFile(file: string, target: string): Promise<void> {
+    target = join(target, basename(file));
 
     return new Promise((res, rej) => {
-        const rd = fs.createReadStream(file);
-        rd.on('error', err => rej(err));
-        const wr = fs.createWriteStream(target);
-        wr.on('error', err => rej(err));
+        const rd = createReadStream(file);
+        rd.on('error', (err: Error) => rej(err));
+        const wr = createWriteStream(target);
+        wr.on('error', (err: Error) => rej(err));
         wr.on('close', () => res());
         rd.pipe(wr);
     });
@@ -78,13 +61,10 @@ function copyFile(file, target) {
 /**
  * Settingup default configuration
  * 
- * @param {String} configFolder 
- * 
- * @returns {Promise}
  */
-module.exports = function writeDefaultConfig(configFolder) {
+export default function writeDefaultConfig(configFolder: string): Promise<void> {
     const baseDir = process.cwd();
-    configFolder = path.resolve(baseDir, configFolder);
+    configFolder = resolve(baseDir, configFolder);
 
     return getConfigModulePath(baseDir)
         .then(templatePath => {
