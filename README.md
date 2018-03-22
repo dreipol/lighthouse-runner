@@ -13,7 +13,7 @@ After you installed the you have the `dreihouse` command available within your C
 First you have to navigate into the root of your project.
 Then run 
 
-    dreihouse --setup --config=./config
+    dreihouse --setup --config=path/to/configfolder
 
 The `--setup` flag tells `dreihouse` to create an inital setup. It copies some default config files from the `@dreipol/lighthouse-config` module.
 `--config` defines where the configufiles should be written.
@@ -23,11 +23,11 @@ The `--setup` flag tells `dreihouse` to create an inital setup. It copies some d
     $ dreihouse --config=path/to/config/desktop.js {--reports=./reports} {--port=8521}
 
 ### Options
-| option| optional | description |
-| --- | --- | --- |
-| `--config` | `false` | Run report with this config file. Checkout `@dreipol/lighthouse-config` |
-| `--reports` | `true` | Define where to store the saved reports. Relative from where you run your command |
-| `--port` | `true` | Define the chrome debugging port. If null, a new chrome instance is launched |
+| option      | optional | description                                                                       |
+| ----------- | -------- | --------------------------------------------------------------------------------- |
+| `--config`  | `false`  | Run report with this config file. Checkout `@dreipol/lighthouse-config`           |
+| `--reports` | `true`   | Define where to store the saved reports. Relative from where you run your command |
+| `--port`    | `true`   | Define the chrome debugging port. If null, a new chrome instance is launched      |
 
 ## Report site with lockdown
 To run the report against a site thats behind a lockdown there is a simple trick 
