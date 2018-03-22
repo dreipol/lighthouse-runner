@@ -1,15 +1,15 @@
 
 import chalk from 'chalk';
-import { info as log } from 'fancy-log';
 import { resolve, dirname } from 'path';
 import { resolve as resolveUrl } from 'url';
 
 import runner from './lighthouseRunner';
 import writeReportFile from './writeReport';
-import printBudget from './printBudget';
 import checkBudget from './checkBudget';
 
-import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface } from './Interfaces';
+import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
+
+let log: Function = console.log;
 
 /**
  * Run report
@@ -25,7 +25,7 @@ import { LighthouseReportConfigInterface, LighthouseOptionsInterface, Lighthouse
  * 
  * @returns {Promise}
  */
-function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<any> {
+function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
     const url = resolveUrl(host, paths);
 
     log(chalk.blue(`Run ${url}`));
@@ -53,14 +53,14 @@ function runReport(host: string, paths: string, opts: LighthouseOptionsInterface
             if (allBudgetsReached) {
                 log(chalk.bgGreen('Congrats! Budged reached!'));
             }
-            return;
+            return categories;
         });
 }
 
 /**
  * Run multiple urls synchronously
  */
-function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<any> {
+function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number, allResults: Array<Object> = []): Promise<any> {
     const urlPath = paths.shift();
     log(''.padStart(10, '-'));
 
@@ -69,13 +69,38 @@ function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsIn
     }
 
     return runReport(url, urlPath, opts, config, saveReport, budget, folder, port)
-        .then(() => {
+        .then((results) => {
+            allResults.push(results);
+
             if (paths.length > 0) {
-                return runReports(url, paths, opts, config, saveReport, budget, folder, port);
+                return runReports(url, paths, opts, config, saveReport, budget, folder, port, allResults);
             }
-            return;
+
+            return allResults;
         })
         .catch((e: Error) => console.error(e));
+}
+
+/**
+ * Print colored budget
+ * @param categoryId 
+ * @param name 
+ * @param score 
+ * @param budget 
+ */
+function printBudget(categoryId: string, name: string, score: Number, budget: BudgetInterface): void {
+    const threshhold = budget[categoryId];
+
+    if (threshhold === false || threshhold === undefined || threshhold === null) {
+        log(name, score);
+        return;
+    }
+
+    if (score >= threshhold) {
+        log(chalk.green(`${name}: ${score}/${threshhold}`));
+    } else {
+        log(chalk.red(`${name}: ${score}/${threshhold}`));
+    }
 }
 
 /**
@@ -104,7 +129,7 @@ function postReport(saveReport: Boolean, folder: string | null): void {
  * Run report with config
  * 
  */
-export function executeReport(configPath: string, config: LighthouseConfigInterface, port?: Number): Promise<void> {
+export function executeReport(configPath: string, config: LighthouseConfigInterface, port?: Number): Promise<Array<Array<ReportCategory>>> {
     const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder } = config;
 
     let reportFolder: string | null = null;
@@ -129,16 +154,16 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
         coloredFlag('saveReport', saveReport)
     );
 
+    let reportPaths: Array<string> = paths;
+
     if (!Array.isArray(paths)) {
-        return runReport(url, paths, opts, report, saveReport, budget, reportFolder, port)
-            .then(() => {
-                postReport(saveReport, reportFolder);
-            });
+        reportPaths = [paths];
     }
 
-    return runReports(url, paths, opts, report, saveReport, budget, reportFolder, port)
-        .then(() => {
+    return runReports(url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+        .then((results) => {
             postReport(saveReport, reportFolder);
+            return results;
         });
 }
 
@@ -146,12 +171,16 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
  * Execute reporter
  * 
  */
-export function execute(configFile: string, port?: Number): void {
+export function execute(configFile: string, port?: Number, logger?: Function): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         throw new Error('No configfile');
     }
 
+    if (logger) {
+        log = logger;
+    }
+
     const configFilePath = resolve(process.cwd(), configFile);
     log(`Config file: ${configFile}`);
-    executeReport(dirname(configFilePath), require(configFilePath), port)
+    return executeReport(dirname(configFilePath), require(configFilePath), port);
 }
