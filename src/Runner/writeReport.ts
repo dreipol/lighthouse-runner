@@ -4,6 +4,7 @@ import { join } from 'path';
 
 /**
  *  Format date
+ * 
  */
 function formatDate(date: Date): string {
     let year = date.getUTCFullYear().toString();
@@ -25,6 +26,7 @@ function formatDate(date: Date): string {
 
 /**
  * Extract pathname for filename from url
+ * 
  */
 function getPathname(url: string): string {
 
@@ -42,9 +44,6 @@ function getPathname(url: string): string {
 /**
  * Write a report file
  *
- * @param {string} configFolder
- * @param {string} _url
- * @param {Object} results
  */
 export default function writeReportFile(configFolder: string, url: string, results: any): void {
     const d = new Date();

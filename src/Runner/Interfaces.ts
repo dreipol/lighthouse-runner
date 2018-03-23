@@ -26,13 +26,13 @@ export interface LighthouseConfigInterface {
 }
 
 export interface BudgetInterface {
-    [index: string]: Number | Boolean | undefined;
+    [index: string]: Number | undefined;
 
-    dreipol?: Number | Boolean;
-    performance?: Number | Boolean;
-    pwa?: Number | Boolean;
-    accessibility?: Number | Boolean;
-    'best-practices'?: Number | Boolean;
+    dreipol?: Number;
+    performance?: Number;
+    pwa?: Number;
+    accessibility?: Number;
+    'best-practices'?: Number;
 }
 
 export interface LighthouseReportConfigInterface {

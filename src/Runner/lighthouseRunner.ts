@@ -8,10 +8,6 @@ import { LaunchedChrome, LighthouseOptionsInterface, LighthouseReportConfigInter
 /**
  * Start either a new chrome instance or get port from passed arguments
  * 
- * @param {Object} opts
- * @param {Number|null} port
- * 
- * @return {Promise}
  */
 function getChromePort(opts: LighthouseOptionsInterface, port?: Number): Promise<LaunchedChrome> {
     if (port) {
@@ -65,12 +61,6 @@ function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptionsInter
 /**
  * Run single report for given url
  *
- * @param {string} urlPath
- * @param {Object} opts
- * @param {Object} config
- * @param {Number} port
- * 
- * @return {Promise<Array>}
  */
 export default function runReport(targetUrl: string, urlPath: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, port?: Number): Promise<LighthouseReportResultInterface> {
     let url = resolve(targetUrl, urlPath);

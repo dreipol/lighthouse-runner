@@ -9,7 +9,7 @@ const url_1 = require("url");
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const writeReport_1 = __importDefault(require("./writeReport"));
 const checkBudget_1 = __importDefault(require("./checkBudget"));
-const configValidation_1 = __importDefault(require("./configValidation"));
+const configValidation_1 = require("./configValidation");
 const fs_1 = require("fs");
 let log = console.log;
 function runReport(host, paths, opts, config, saveReport, budget, folder, port) {
@@ -56,11 +56,12 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port, 
 }
 function printBudget(categoryId, name, score, budget) {
     const threshhold = budget[categoryId];
-    if (threshhold === false || threshhold === undefined || threshhold === null) {
+    const isReached = checkBudget_1.default(categoryId, score, budget);
+    if (isReached === null) {
         log(name, score);
         return;
     }
-    if (score >= threshhold) {
+    if (isReached) {
         log(chalk_1.default.green(`${name}: ${score}/${threshhold}`));
     }
     else {
@@ -120,7 +121,7 @@ function execute(configFile, port, logger) {
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
     const config = require(configFilePath);
-    return configValidation_1.default(config)
+    return configValidation_1.validate(config)
         .then((validatedConfig) => {
         return executeReport(path_1.dirname(configFilePath), validatedConfig, port);
     });

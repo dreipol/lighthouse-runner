@@ -1,20 +1,12 @@
 import { BudgetInterface } from './Interfaces';
 
-
 /**
  * Check scores against configured budget and make colored output
- *
- * @param {string} categoryId
- * @param {string} name
- * @param {Number} score
- * @param {Object} budget
- * 
- * @return {boolean}
  */
 export default function checkBudget(categoryId: string, score: Number, budget: BudgetInterface): Boolean | null {
     const threshhold = budget[categoryId];
 
-    if (threshhold === false || threshhold === undefined || threshhold === null) {
+    if (threshhold === undefined || threshhold === null) {
         return null;
     }
 

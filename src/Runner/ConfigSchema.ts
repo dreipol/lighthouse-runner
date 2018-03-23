@@ -1,21 +1,23 @@
 import * as Joi from 'joi';
 
 export default Joi.object().keys({
-    url: Joi.string(),
-    paths: Joi.array().items(Joi.string()),
-    folder: Joi.string()/*.when('saveReport', {
-        is: Joi.boolean().truthy(),
-    })*/,
-    chromeFlags: Joi.array().items(Joi.string()),
-    disableEmulation: Joi.boolean(),
-    disableThrottling: Joi.boolean(),
-    saveReport: Joi.boolean(),
-    budget: Joi.object(),
+    url: Joi.string().required(),
+    paths: Joi.array().items(Joi.string()).required(),
+    folder: Joi.string().allow(null)
+        .when('saveReport', {
+            is: true,
+            then: Joi.string().required(),
+        }),
+    chromeFlags: Joi.array().items(Joi.string()).required(),
+    disableEmulation: Joi.boolean().required(),
+    disableThrottling: Joi.boolean().required(),
+    saveReport: Joi.boolean().required(),
+    budget: Joi.object().required(),
     report: Joi.object().keys({
         settings: Joi.object(),
         passes: Joi.array(),
         audits: Joi.array(),
         groups: Joi.object(),
         categories: Joi.object(),
-    }),
+    }).required(),
 });

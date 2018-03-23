@@ -19,4 +19,4 @@ function validate(config) {
     }
     return Promise.resolve(result.value);
 }
-exports.default = validate;
+exports.validate = validate;

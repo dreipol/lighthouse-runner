@@ -6,7 +6,7 @@ import { resolve as resolveUrl } from 'url';
 import runner from './lighthouseRunner';
 import writeReportFile from './writeReport';
 import checkBudget from './checkBudget';
-import validator from './configValidation';
+import { validate } from './configValidation';
 
 import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
 import { existsSync } from 'fs';
@@ -16,16 +16,6 @@ let log: Function = console.log;
 /**
  * Run report
  * 
- * @param {string} host 
- * @param {string[]|string} paths 
- * @param {Object} opts 
- * @param {Object} config 
- * @param {boolean} saveReport 
- * @param {object} budget 
- * @param {string|null} folder 
- * @param {number|null} port 
- * 
- * @returns {Promise}
  */
 function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
     const url = resolveUrl(host, paths);
@@ -93,12 +83,13 @@ function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsIn
 function printBudget(categoryId: string, name: string, score: Number, budget: BudgetInterface): void {
     const threshhold = budget[categoryId];
 
-    if (threshhold === false || threshhold === undefined || threshhold === null) {
+    const isReached = checkBudget(categoryId, score, budget);
+    if (isReached === null) {
         log(name, score);
         return;
     }
 
-    if (score >= threshhold) {
+    if (isReached) {
         log(chalk.green(`${name}: ${score}/${threshhold}`));
     } else {
         log(chalk.red(`${name}: ${score}/${threshhold}`));
@@ -195,7 +186,7 @@ export function execute(configFile: string, port?: Number, logger?: Function): P
 
     const config = require(configFilePath);
 
-    return validator(config)
+    return validate(config)
         .then((validatedConfig) => {
             return executeReport(dirname(configFilePath), validatedConfig, port);
         })

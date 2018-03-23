@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function checkBudget(categoryId, score, budget) {
     const threshhold = budget[categoryId];
-    if (threshhold === false || threshhold === undefined || threshhold === null) {
+    if (threshhold === undefined || threshhold === null) {
         return null;
     }
     if (score >= threshhold) {
