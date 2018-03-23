@@ -6,8 +6,10 @@ import { resolve as resolveUrl } from 'url';
 import runner from './lighthouseRunner';
 import writeReportFile from './writeReport';
 import checkBudget from './checkBudget';
+import validator from './configValidation';
 
 import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
+import { existsSync } from 'fs';
 
 let log: Function = console.log;
 
@@ -125,6 +127,7 @@ function postReport(saveReport: Boolean, folder: string | null): void {
     }
 }
 
+
 /**
  * Run report with config
  * 
@@ -135,6 +138,10 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
     let reportFolder: string | null = null;
     if (folder) {
         reportFolder = resolve(configPath, folder);
+    }
+
+    if (saveReport && (reportFolder && !existsSync(reportFolder))) {
+        return Promise.reject(new Error(`Report folder ${reportFolder} not found`))
     }
 
     const opts: LighthouseOptionsInterface = {
@@ -182,5 +189,14 @@ export function execute(configFile: string, port?: Number, logger?: Function): P
 
     const configFilePath = resolve(process.cwd(), configFile);
     log(`Config file: ${configFile}`);
-    return executeReport(dirname(configFilePath), require(configFilePath), port);
+    if (!existsSync(configFile)) {
+        return Promise.reject(new Error(`File not found at ${configFile}`));
+    }
+
+    const config = require(configFilePath);
+
+    return validator(config)
+        .then((validatedConfig) => {
+            return executeReport(dirname(configFilePath), validatedConfig, port);
+        })
 }

@@ -9,6 +9,8 @@ const url_1 = require("url");
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const writeReport_1 = __importDefault(require("./writeReport"));
 const checkBudget_1 = __importDefault(require("./checkBudget"));
+const configValidation_1 = __importDefault(require("./configValidation"));
+const fs_1 = require("fs");
 let log = console.log;
 function runReport(host, paths, opts, config, saveReport, budget, folder, port) {
     const url = url_1.resolve(host, paths);
@@ -83,6 +85,9 @@ function executeReport(configPath, config, port) {
     if (folder) {
         reportFolder = path_1.resolve(configPath, folder);
     }
+    if (saveReport && (reportFolder && !fs_1.existsSync(reportFolder))) {
+        return Promise.reject(new Error(`Report folder ${reportFolder} not found`));
+    }
     const opts = {
         chromeFlags,
     };
@@ -111,6 +116,13 @@ function execute(configFile, port, logger) {
     }
     const configFilePath = path_1.resolve(process.cwd(), configFile);
     log(`Config file: ${configFile}`);
-    return executeReport(path_1.dirname(configFilePath), require(configFilePath), port);
+    if (!fs_1.existsSync(configFile)) {
+        return Promise.reject(new Error(`File not found at ${configFile}`));
+    }
+    const config = require(configFilePath);
+    return configValidation_1.default(config)
+        .then((validatedConfig) => {
+        return executeReport(path_1.dirname(configFilePath), validatedConfig, port);
+    });
 }
 exports.execute = execute;

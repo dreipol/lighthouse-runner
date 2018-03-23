@@ -2,17 +2,28 @@
 
 import { execute } from '../Runner/index';
 import writeDefaultConfig from './writeDefaultConfig.js';
-import argParser from './args';
 import { info } from 'fancy-log';
 
+require('yargs') // eslint-disable-line
+    .command('setup', 'Create initial setup', () => {
+    }, (argv: any) => {
+        writeDefaultConfig(<string>argv.config);
+    })
+    .command('report', 'Run report', () => {
 
-const args = argParser({
-    args: ['config', 'port'],
-    flags: ['setup']
-});
-
-if (args.setup) {
-    writeDefaultConfig(<string>args.config);
-} else {
-    execute(<string>args.config, <Number>args.port, info);
-}
+    }, (argv: any) => {
+        execute(<string>argv.config, <Number>argv.port, info);
+    })
+    .option('config', {
+        alias: 'c',
+        describe: 'Config file to use for report',
+        default: null
+    })
+    .option('port', {
+        alias: 'p',
+        describe: 'Port to use for debug',
+        default: null
+    })
+    .demandOption(['config'])
+    .help()
+    .argv

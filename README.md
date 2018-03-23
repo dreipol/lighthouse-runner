@@ -8,26 +8,33 @@ You need `@dreipol/lighthouse-config` installed locally in the project
 
     npm i @dreipol/lighthouse-runner -g
 
+and install `@dreipol/lighthouse-config` and `@dreipol/lighthouse-audits` as peer dependencies 
+
 ## Setup
 After you installed the you have the `dreihouse` command available within your CLI. Now to create a initial default configuration there is a setup command.
 First you have to navigate into the root of your project.
 Then run 
 
-    dreihouse --setup --config=path/to/configfolder
+    dreihouse --setup --config path/to/configfolder
 
 The `--setup` flag tells `dreihouse` to create an inital setup. It copies some default config files from the `@dreipol/lighthouse-config` module.
 `--config` defines where the configufiles should be written.
 
 ## Usage
 
-    $ dreihouse --config=path/to/config/desktop.js {--reports=./reports} {--port=8521}
+    $ dreihouse --config path/to/config/desktop.js {--port 8521}
 
-### Options
-| option      | optional | description                                                                       |
-| ----------- | -------- | --------------------------------------------------------------------------------- |
-| `--config`  | `false`  | Run report with this config file. Checkout `@dreipol/lighthouse-config`           |
-| `--reports` | `true`   | Define where to store the saved reports. Relative from where you run your command |
-| `--port`    | `true`   | Define the chrome debugging port. If null, a new chrome instance is launched      |
+### Arguments 
+| option     | optional | description                                                                  |
+| ---------- | -------- | ---------------------------------------------------------------------------- |
+| `--config` | `false`  | Run report with this config file. Checkout `@dreipol/lighthouse-config`      |
+| `--port`   | `true`   | Define the chrome debugging port. If null, a new chrome instance is launched |
+
+### Commands 
+| option   | description                                                     |
+| -------- | --------------------------------------------------------------- |
+| `setup`  | Create inital setup by copying cpnfig files into a given folder |
+| `report` | Run report with given config file                               |
 
 ## Report site with lockdown
 To run the report against a site thats behind a lockdown there is a simple trick 
@@ -40,4 +47,4 @@ the sessions & cookies created previously and we can pass the lockdown page.
 - Login in the website/enter the password for the lockdown page
 - run your report command with that portnumber as a parameter
     
-    `dreihouse --config=path/to/config.js --port=56723`
+    `dreihouse --config path/to/config.js --port 56723`

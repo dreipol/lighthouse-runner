@@ -14,6 +14,9 @@ const joi = __importStar(require("joi"));
 const ConfigSchema_1 = __importDefault(require("./ConfigSchema"));
 function validate(config) {
     const result = joi.validate(config, ConfigSchema_1.default);
-    return result.error === null;
+    if (result.error) {
+        return Promise.reject(result.error);
+    }
+    return Promise.resolve(result.value);
 }
 exports.default = validate;
