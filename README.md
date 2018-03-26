@@ -17,14 +17,14 @@ After you installed the you have the `dreihouse` command available within your C
 First you have to navigate into the root of your project.
 Then run 
 
-    dreihouse --setup --config path/to/configfolder
+    dreihouse setup --config path/to/configfolder
 
 The `--setup` flag tells `dreihouse` to create an inital setup. It copies some default config files from the `@dreipol/lighthouse-config` module.
 `--config` defines where the configufiles should be written.
 
 ## Usage
 
-    $ dreihouse --config path/to/config/desktop.js {--port 8521}
+    $ dreihouse report --config path/to/config/desktop.js {--port 8521}
 
 ### Arguments 
 | option     | optional | description                                                                  |
@@ -49,4 +49,4 @@ the sessions & cookies created previously and we can pass the lockdown page.
 - Login in the website/enter the password for the lockdown page
 - run your report command with that portnumber as a parameter
     
-    `dreihouse --config path/to/config.js --port 56723`
+    `dreihouse report --config path/to/config.js --port 56723`
