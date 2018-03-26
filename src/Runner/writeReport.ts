@@ -4,7 +4,6 @@ import { join } from 'path';
 
 /**
  *  Format date
- * 
  */
 function formatDate(date: Date): string {
     let year = date.getUTCFullYear().toString();

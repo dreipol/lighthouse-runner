@@ -14,7 +14,7 @@ describe('Run report', function () {
     });
 
     it('Create report', () => {
-        return execute('./test/data/config.js', null, function () { })
+        return execute('./test/data/config.js', null)
             .then(results => {
                 expect(results).to.have.lengthOf(1);
                 const routeReport = results.shift();
@@ -64,7 +64,7 @@ describe('Run report', function () {
     });
 
     it('Fail on missing file report', (done) => {
-        execute('./test/data/config2.js', null, function () { })
+        execute('./test/data/config2.js')
             .then(results => {
                 done(new Error('Should fail when missing config file'));
             })

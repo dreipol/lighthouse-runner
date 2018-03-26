@@ -6,12 +6,15 @@ import { resolve as resolveUrl } from 'url';
 import runner from './lighthouseRunner';
 import writeReportFile from './writeReport';
 import { checkBudget, printBudget } from './budget';
-import { validate } from './configValidation';
+import { validate } from './validation/configValidation';
 
 import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
 import { existsSync } from 'fs';
 
-let log: Function = console.log;
+import NoopPrinter from './Printer/NoopPrinter';
+import PrinterInterface from './Printer/Interface';
+
+let printer: PrinterInterface;
 
 /**
  * Run report
@@ -20,13 +23,13 @@ let log: Function = console.log;
 function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
     const url = resolveUrl(host, paths);
 
-    log(chalk.blue(`Run ${url}`));
+    printer.print(chalk.blue(`Run ${url}`));
 
     return runner(host, paths, opts, config, port)
         .then((results: LighthouseReportResultInterface) => {
             if (saveReport && folder) {
                 writeReportFile(folder, url, results);
-                log(`Report created and saved`);
+                printer.print(`Report created and saved`);
             }
 
             const categories = results.reportCategories;
@@ -46,11 +49,11 @@ function runReport(host: string, paths: string, opts: LighthouseOptionsInterface
                     allBudgetsReached = false;
                 }
 
-                log(budgetText);
+                printer.print(budgetText);
             }
 
             if (allBudgetsReached) {
-                log(chalk.bgGreen('Congrats! Budged reached!'));
+                printer.print(chalk.bgGreen('Congrats! Budged reached!'));
             }
             return categories;
         });
@@ -61,7 +64,7 @@ function runReport(host: string, paths: string, opts: LighthouseOptionsInterface
  */
 function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number, allResults: Array<Object> = []): Promise<any> {
     const urlPath = paths.shift();
-    log(''.padStart(10, '-'));
+    printer.print(''.padStart(10, '-'));
 
     if (!urlPath) {
         return Promise.resolve();
@@ -98,8 +101,8 @@ function coloredFlag(name: string, flag: Boolean): string {
  */
 function postReport(saveReport: Boolean, folder: string | null): void {
     if (saveReport) {
-        log(`Save report to: ${folder}`);
-        log('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
+        printer.print(`Save report to: ${folder}`);
+        printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
     }
 }
 
@@ -128,9 +131,9 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
     opts.disableNetworkThrottling = disableThrottling;
     opts.disableCpuThrottling = disableThrottling;
 
-    log(`Run Report: ${url}`);
+    printer.print(`Run Report: ${url}`);
 
-    log(`Config:`,
+    printer.print(`Config:`,
         `[${chromeFlags.join(';')}]`,
         coloredFlag('disableEmulation', disableEmulation),
         coloredFlag('disableThrottling', disableThrottling),
@@ -154,17 +157,19 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
  * Execute reporter
  * 
  */
-export function execute(configFile: string, port?: Number, logger?: Function): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port?: Number, logger?: PrinterInterface): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         throw new Error('No configfile');
     }
 
     if (logger) {
-        log = logger;
+        printer = logger;
+    } else {
+        printer = new NoopPrinter();
     }
 
     const configFilePath = resolve(process.cwd(), configFile);
-    log(`Config file: ${configFile}`);
+    printer.print(`Config file: ${configFile}`);
     if (!existsSync(configFile)) {
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }

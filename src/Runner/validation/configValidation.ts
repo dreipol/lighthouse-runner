@@ -1,6 +1,6 @@
 import * as joi from 'joi';
 
-import { LighthouseConfigInterface } from './Interfaces';
+import { LighthouseConfigInterface } from '../Interfaces';
 import Schema from './ConfigSchema';
 
 export function validate(config: LighthouseConfigInterface) {

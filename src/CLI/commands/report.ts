@@ -1,7 +1,7 @@
 import * as yargs from 'yargs';
 
 import { execute } from '../../Runner/index';
-import { info } from 'fancy-log';
+import ConsolePrinter from '../../Runner/Printer/ConsolePrinter';
 
 export default <yargs.CommandModule>({
     command: 'report',
@@ -17,6 +17,6 @@ export default <yargs.CommandModule>({
         }
     },
     handler(argv) {
-        execute(<string>argv.config, <Number>argv.port, info);
+        execute(<string>argv.config, <Number>argv.port, new ConsolePrinter());
     }
 });

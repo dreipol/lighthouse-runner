@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../Runner/index");
-const fancy_log_1 = require("fancy-log");
+const ConsolePrinter_1 = __importDefault(require("../../Runner/Printer/ConsolePrinter"));
 exports.default = ({
     command: 'report',
     describe: 'Create report for given config',
@@ -16,6 +19,6 @@ exports.default = ({
         }
     },
     handler(argv) {
-        index_1.execute(argv.config, argv.port, fancy_log_1.info);
+        index_1.execute(argv.config, argv.port, new ConsolePrinter_1.default());
     }
 });
