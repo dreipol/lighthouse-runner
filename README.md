@@ -1,6 +1,8 @@
 # dreihouse
 Create lighthouse report for a website
 
+[![CircleCI](https://circleci.com/gh/dreipol/lighthouse-runner/tree/master.svg?style=svg&circle-token=4738b5c5cde8e66a056114378acb9e3732146a35)](https://circleci.com/gh/dreipol/lighthouse-runner/tree/master)
+
 ## Requirements
 You need `@dreipol/lighthouse-config` installed locally in the project
 
