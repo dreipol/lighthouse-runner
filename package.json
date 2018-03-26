@@ -6,7 +6,7 @@
     "dreihouse": "./dist/CLI/index.js"
   },
   "scripts": {
-    "compile": "node_modules/.bin/tsc",
+    "compile": "rm -rf dist/* && node_modules/.bin/tsc",
     "test": "tsc && node_modules/.bin/mocha test/*.test.js --recursive -t 60000"
   },
   "repository": {

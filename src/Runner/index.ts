@@ -5,7 +5,7 @@ import { resolve as resolveUrl } from 'url';
 
 import runner from './lighthouseRunner';
 import writeReportFile from './writeReport';
-import checkBudget from './checkBudget';
+import { checkBudget, printBudget } from './budget';
 import { validate } from './configValidation';
 
 import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
@@ -33,13 +33,20 @@ function runReport(host: string, paths: string, opts: LighthouseOptionsInterface
             let allBudgetsReached = true;
             for (let i = 0; i < categories.length; i++) {
                 const category = categories[i];
-                const score = Math.round(category.score);
-                const budgetReached = checkBudget(category.id, score, budget);
-                printBudget(category.id, category.name, score, budget);
+                category.score = Math.round(category.score);
 
-                if (budgetReached === false) {
+                const isReached = checkBudget(category, budget);
+                let budgetText = printBudget(category, budget);
+
+                if (isReached === true) {
+                    budgetText = chalk.green(budgetText);
+                }
+                if (isReached === false) {
+                    budgetText = chalk.red(budgetText);
                     allBudgetsReached = false;
                 }
+
+                log(budgetText);
             }
 
             if (allBudgetsReached) {
@@ -73,28 +80,6 @@ function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsIn
         .catch((e: Error) => console.error(e));
 }
 
-/**
- * Print colored budget
- * @param categoryId 
- * @param name 
- * @param score 
- * @param budget 
- */
-function printBudget(categoryId: string, name: string, score: Number, budget: BudgetInterface): void {
-    const threshhold = budget[categoryId];
-
-    const isReached = checkBudget(categoryId, score, budget);
-    if (isReached === null) {
-        log(name, score);
-        return;
-    }
-
-    if (isReached) {
-        log(chalk.green(`${name}: ${score}/${threshhold}`));
-    } else {
-        log(chalk.red(`${name}: ${score}/${threshhold}`));
-    }
-}
 
 /**
  * Output colored flags

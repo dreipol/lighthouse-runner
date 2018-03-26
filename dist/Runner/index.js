@@ -8,7 +8,7 @@ const path_1 = require("path");
 const url_1 = require("url");
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const writeReport_1 = __importDefault(require("./writeReport"));
-const checkBudget_1 = __importDefault(require("./checkBudget"));
+const budget_1 = require("./budget");
 const configValidation_1 = require("./configValidation");
 const fs_1 = require("fs");
 let log = console.log;
@@ -25,12 +25,17 @@ function runReport(host, paths, opts, config, saveReport, budget, folder, port) 
         let allBudgetsReached = true;
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            const score = Math.round(category.score);
-            const budgetReached = checkBudget_1.default(category.id, score, budget);
-            printBudget(category.id, category.name, score, budget);
-            if (budgetReached === false) {
+            category.score = Math.round(category.score);
+            const isReached = budget_1.checkBudget(category, budget);
+            let budgetText = budget_1.printBudget(category, budget);
+            if (isReached === true) {
+                budgetText = chalk_1.default.green(budgetText);
+            }
+            if (isReached === false) {
+                budgetText = chalk_1.default.red(budgetText);
                 allBudgetsReached = false;
             }
+            log(budgetText);
         }
         if (allBudgetsReached) {
             log(chalk_1.default.bgGreen('Congrats! Budged reached!'));
@@ -53,20 +58,6 @@ function runReports(url, paths, opts, config, saveReport, budget, folder, port, 
         return allResults;
     })
         .catch((e) => console.error(e));
-}
-function printBudget(categoryId, name, score, budget) {
-    const threshhold = budget[categoryId];
-    const isReached = checkBudget_1.default(categoryId, score, budget);
-    if (isReached === null) {
-        log(name, score);
-        return;
-    }
-    if (isReached) {
-        log(chalk_1.default.green(`${name}: ${score}/${threshhold}`));
-    }
-    else {
-        log(chalk_1.default.red(`${name}: ${score}/${threshhold}`));
-    }
 }
 function coloredFlag(name, flag) {
     if (flag === true) {
