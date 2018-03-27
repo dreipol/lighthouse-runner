@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
-const writeReport_1 = require("./writeReport");
 const fs_1 = require("fs");
 const NoopPrinter_1 = __importDefault(require("./Printer/NoopPrinter"));
 const ReportRunner_1 = require("./ReportRunner");
+const NoopResultReporter_1 = __importDefault(require("./ResultReporter/NoopResultReporter"));
 function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
     const { printer } = meta;
@@ -25,10 +25,7 @@ function executeReport(meta, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return writeReport_1.setupFolder(saveReport, meta.reportFolder)
-        .then(() => {
-        return ReportRunner_1.runReports(meta, config, opts, port, reportPaths);
-    })
+    return ReportRunner_1.runReports(meta, config, opts, port, reportPaths)
         .then((results) => {
         if (saveReport) {
             printer.print(`Save report to: ${folder}`);
@@ -38,13 +35,9 @@ function executeReport(meta, config, port) {
     });
 }
 exports.executeReport = executeReport;
-function execute(configFile, port, logger, reporter) {
+function execute(configFile, port, printer = new NoopPrinter_1.default(), reporter = new NoopResultReporter_1.default()) {
     if (!configFile) {
-        throw new Error('No configfile');
-    }
-    let printer = new NoopPrinter_1.default();
-    if (logger) {
-        printer = logger;
+        throw new Error('No config file provided');
     }
     const configFilePath = path_1.resolve(process.cwd(), configFile);
     printer.print(`Config file: ${configFile}`);

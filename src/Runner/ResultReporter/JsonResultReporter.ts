@@ -1,13 +1,14 @@
-import { existsSync } from 'fs';
-import { resolve } from 'path';
+import {existsSync, writeFileSync} from 'fs';
+import {join, resolve} from 'path';
 
 import ResultReporterInterface from './Interface';
-import { createFolder } from './helpers';
-import { LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta } from '../Interfaces';
+import {createFolder, formatDate, getPathname} from './helpers';
+import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} from '../Interfaces';
+import {parse} from "url";
 
 export default class JsonResultReporter implements ResultReporterInterface {
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
-        const { saveReport, folder } = config;
+        const {saveReport, folder} = config;
         if (!saveReport || !folder) {
             return Promise.resolve();
         }
@@ -20,8 +21,21 @@ export default class JsonResultReporter implements ResultReporterInterface {
         return Promise.resolve();
     }
 
-    save(results: LighthouseReportResultInterface): Promise<any> {
-        console.log(results)
-        return Promise.resolve();
+    writeFile(url: string, folder: string, results: LighthouseReportResultInterface) {
+
+        const reportUrl = parse(url);
+        const pathname = getPathname(url);
+        const filenamePrefix = formatDate(new Date());
+        const filename = join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.json`);
+
+        writeFileSync(filename, JSON.stringify(results));
+    }
+
+    save(meta: RunnerMeta, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+        if (meta.reportFolder) {
+            this.writeFile(url, meta.reportFolder, results);
+            meta.printer.print(`Report created and saved`);
+        }
+        return Promise.resolve(results);
     }
 }

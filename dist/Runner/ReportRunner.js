@@ -8,15 +8,18 @@ const chalk_1 = __importDefault(require("chalk"));
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
 function runReport(meta, config, path, opts, port) {
-    const { url, saveReport, budget, folder, report } = config;
-    const { printer } = meta;
+    const { url, budget, report } = config;
+    const { printer, reporter } = meta;
     const site = url_1.resolve(url, path);
     printer.print(chalk_1.default.blue(`Run ${site}`));
     return lighthouseRunner_1.default(url, path, opts, report, port)
         .then((results) => {
-        if (saveReport && folder) {
-            printer.print(`Report created and saved`);
-        }
+        return reporter.setup(meta, config)
+            .then(() => {
+            return reporter.save(meta, site, results);
+        });
+    })
+        .then((results) => {
         const categories = results.reportCategories;
         let allBudgetsReached = true;
         for (let i = 0; i < categories.length; i++) {

@@ -2,7 +2,6 @@ import {resolve} from 'path';
 
 import {coloredFlag, composeMetaObject} from './helper';
 import {validate} from './validation/configValidation';
-import {setupFolder} from './writeReport';
 
 import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
 import {existsSync} from 'fs';
@@ -11,6 +10,7 @@ import NoopPrinter from './Printer/NoopPrinter';
 import PrinterInterface from './Printer/Interface';
 import {runReports} from './ReportRunner';
 import ResultReporterInterface from "./ResultReporter/Interface";
+import NoopResultReporter from "./ResultReporter/NoopResultReporter";
 
 
 /**
@@ -44,10 +44,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
         reportPaths = [paths];
     }
 
-    return setupFolder(saveReport, meta.reportFolder)
-        .then(() => {
-            return runReports(meta, config, opts, port, reportPaths)
-        })
+    return runReports(meta, config, opts, port, reportPaths)
         .then((results) => {
             if (saveReport) {
                 printer.print(`Save report to: ${folder}`);
@@ -62,14 +59,9 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, logger: PrinterInterface | null, reporter: ResultReporterInterface): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, printer: PrinterInterface = new NoopPrinter(), reporter: ResultReporterInterface = new NoopResultReporter()): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
-        throw new Error('No configfile');
-    }
-
-    let printer = new NoopPrinter();
-    if (logger) {
-        printer = logger;
+        throw new Error('No config file provided');
     }
 
     const configFilePath = resolve(process.cwd(), configFile);

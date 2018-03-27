@@ -20,19 +20,21 @@ function runReport(meta: RunnerMeta,
                    opts: LighthouseOptionsInterface,
                    port: Number | null): Promise<Array<ReportCategory>> {
 
-    const {url, saveReport, budget, folder, report} = config;
-    const {printer} = meta;
+    const {url, budget, report} = config;
+    const {printer, reporter} = meta;
     const site = resolveUrl(url, path);
 
     printer.print(chalk.blue(`Run ${site}`));
 
     return runner(url, path, opts, report, port)
         .then((results: LighthouseReportResultInterface) => {
-            if (saveReport && folder) {
-                // writeReportFile(folder, url, results);
-                printer.print(`Report created and saved`);
-            }
+            return reporter.setup(meta, config)
+                .then( () => {
+                    return reporter.save(meta, site, results);
+                })
+        })
 
+        .then((results: LighthouseReportResultInterface) => {
 
             const categories = results.reportCategories;
             let allBudgetsReached = true;

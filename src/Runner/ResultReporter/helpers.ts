@@ -1,6 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { parse } from 'url';
-import { join } from 'path';
 import mkdirp from 'mkdirp';
 
 /**
@@ -26,7 +24,7 @@ export function formatDate(date: Date): string {
 
 /**
  * Extract pathname for filename from url
- * 
+ *
  */
 export function getPathname(url: string): string {
 
@@ -44,8 +42,8 @@ export function getPathname(url: string): string {
 /**
 
 /**
- * 
- * @param path 
+ *
+ * @param path
  */
 export function createFolder(path: string): Promise<undefined> {
     return new Promise((res, rej) => {
@@ -56,23 +54,4 @@ export function createFolder(path: string): Promise<undefined> {
             return res();
         });
     });
-}
-
-/**
- * Write a report file
- *
- */
-export default function writeReportFile(configFolder: string, url: string, results: any): void {
-    const d = new Date();
-
-    if (!existsSync(configFolder)) {
-        mkdirSync(configFolder);
-    }
-
-    const reportUrl = parse(url);
-    const pathname = getPathname(url);
-    const filenamePrefix = formatDate(d);
-    const filename = join(configFolder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.json`);
-
-    writeFileSync(filename, JSON.stringify(results));
 }
