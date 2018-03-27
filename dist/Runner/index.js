@@ -12,7 +12,7 @@ const NoopPrinter_1 = __importDefault(require("./Printer/NoopPrinter"));
 const ReportRunner_1 = require("./ReportRunner");
 let printer;
 function executeReport(configPath, config, port) {
-    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, folder, budget } = config;
+    const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
     let reportFolder = null;
     if (folder) {
         reportFolder = path_1.resolve(configPath, folder);
@@ -31,7 +31,7 @@ function executeReport(configPath, config, port) {
     }
     return writeReport_1.setupFolder(saveReport, reportFolder)
         .then(() => {
-        return ReportRunner_1.runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port);
+        return ReportRunner_1.runReports(printer, config, opts, port, reportPaths);
     })
         .then((results) => {
         if (saveReport) {

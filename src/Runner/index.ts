@@ -18,8 +18,8 @@ let printer: PrinterInterface;
  * Run report with config
  *
  */
-export function executeReport(configPath: string, config: LighthouseConfigInterface, port?: Number): Promise<Array<Array<ReportCategory>>> {
-    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, folder, budget } = config;
+export function executeReport(configPath: string, config: LighthouseConfigInterface, port: Number | null): Promise<Array<Array<ReportCategory>>> {
+    const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
 
     let reportFolder: string | null = null;
     if (folder) {
@@ -51,7 +51,7 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
 
     return setupFolder(saveReport, reportFolder)
         .then(() => {
-            return runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+            return runReports(printer, config, opts, port, reportPaths)
         })
         .then((results) => {
             if (saveReport) {
@@ -66,7 +66,7 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
  * Execute reporter
  *
  */
-export function execute(configFile: string, port?: Number, logger?: PrinterInterface): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, logger?: PrinterInterface): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         throw new Error('No configfile');
     }

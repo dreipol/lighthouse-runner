@@ -7,10 +7,11 @@ const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
-function runReport(printer, host, paths, opts, config, saveReport, budget, folder, port) {
-    const url = url_1.resolve(host, paths);
-    printer.print(chalk_1.default.blue(`Run ${url}`));
-    return lighthouseRunner_1.default(host, paths, opts, config, port)
+function runReport(printer, config, path, opts, port) {
+    const { url, saveReport, budget, folder, report } = config;
+    const site = url_1.resolve(url, path);
+    printer.print(chalk_1.default.blue(`Run ${site}`));
+    return lighthouseRunner_1.default(url, path, opts, report, port)
         .then((results) => {
         if (saveReport && folder) {
             printer.print(`Report created and saved`);
@@ -37,17 +38,17 @@ function runReport(printer, host, paths, opts, config, saveReport, budget, folde
         return categories;
     });
 }
-function runReports(printer, url, paths, opts, config, saveReport, budget, folder, port, allResults = []) {
+function runReports(printer, config, opts, port, paths, allResults = []) {
     const urlPath = paths.shift();
     printer.print(''.padStart(10, '-'));
     if (!urlPath) {
         return Promise.resolve();
     }
-    return runReport(printer, url, urlPath, opts, config, saveReport, budget, folder, port)
+    return runReport(printer, config, urlPath, opts, port)
         .then((results) => {
         allResults.push(results);
         if (paths.length > 0) {
-            return runReports(printer, url, paths, opts, config, saveReport, budget, folder, port, allResults);
+            return runReports(printer, config, opts, port, paths, allResults);
         }
         return allResults;
     })

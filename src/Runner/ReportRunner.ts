@@ -1,28 +1,38 @@
-
-import { resolve as resolveUrl } from 'url';
+import {resolve as resolveUrl} from 'url';
 import chalk from 'chalk';
 
 import PrinterInterface from './Printer/Interface';
 import runner from './lighthouseRunner';
-import { checkBudget, getScoreString } from './budget';
+import {checkBudget, getScoreString} from './budget';
 
-import { LighthouseReportConfigInterface, LighthouseOptionsInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
+import {
+    LighthouseOptionsInterface,
+    LighthouseReportResultInterface,
+    ReportCategory, LighthouseConfigInterface
+} from './Interfaces';
 
 /**
  * Run report
  *
  */
-function runReport(printer: PrinterInterface, host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
-    const url = resolveUrl(host, paths);
+function runReport(printer: PrinterInterface,
+                   config: LighthouseConfigInterface,
+                   path: string,
+                   opts: LighthouseOptionsInterface,
+                   port: Number | null): Promise<Array<ReportCategory>> {
 
-    printer.print(chalk.blue(`Run ${url}`));
+    const {url, saveReport, budget, folder, report} = config;
+    const site = resolveUrl(url, path);
 
-    return runner(host, paths, opts, config, port)
+    printer.print(chalk.blue(`Run ${site}`));
+
+    return runner(url, path, opts, report, port)
         .then((results: LighthouseReportResultInterface) => {
             if (saveReport && folder) {
                 // writeReportFile(folder, url, results);
                 printer.print(`Report created and saved`);
             }
+
 
             const categories = results.reportCategories;
             let allBudgetsReached = true;
@@ -54,7 +64,7 @@ function runReport(printer: PrinterInterface, host: string, paths: string, opts:
 /**
  * Run multiple urls synchronously
  */
-export function runReports(printer: PrinterInterface, url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number, allResults: Array<Object> = []): Promise<any> {
+export function runReports(printer: PrinterInterface, config: LighthouseConfigInterface, opts: LighthouseOptionsInterface, port: Number | null, paths: Array<string>, allResults: Array<Object> = []): Promise<any> {
     const urlPath = paths.shift();
     printer.print(''.padStart(10, '-'));
 
@@ -62,12 +72,12 @@ export function runReports(printer: PrinterInterface, url: string, paths: Array<
         return Promise.resolve();
     }
 
-    return runReport(printer, url, urlPath, opts, config, saveReport, budget, folder, port)
+    return runReport(printer, config, urlPath, opts, port)
         .then((results) => {
             allResults.push(results);
 
             if (paths.length > 0) {
-                return runReports(printer, url, paths, opts, config, saveReport, budget, folder, port, allResults);
+                return runReports(printer, config, opts, port, paths, allResults);
             }
 
             return allResults;
