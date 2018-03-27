@@ -4,8 +4,12 @@ import {execute} from "../Runner";
 import NoopLogger from "../Runner/Logger/NoopLogger";
 import JsonResultPersister from "../Runner/ResultPersister/JsonResultPersister";
 import ConsoleLogger from "../Runner/Logger/ConsoleLogger";
+const {version} = require ('../../package.json');
 
 const program = require('commander');
+
+program
+  .version(version);
 
 program
     .command('report')
@@ -22,6 +26,7 @@ program
         if (type === 'json') {
             persister = new JsonResultPersister();
         }
+        printer.print(`Version ${version}`);
 
         return execute(config, port, printer, persister)
             .catch(console.error);
