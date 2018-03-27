@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../Runner/index");
 const ConsoleLogger_1 = __importDefault(require("../../Runner/Logger/ConsoleLogger"));
