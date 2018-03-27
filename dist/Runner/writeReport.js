@@ -1,8 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const url_1 = require("url");
 const path_1 = require("path");
+const mkdirp_1 = __importDefault(require("mkdirp"));
 function formatDate(date) {
     let year = date.getUTCFullYear().toString();
     let month = date.getUTCMonth().toString();
@@ -27,6 +31,24 @@ function getPathname(url) {
     pathname = pathname.replace(/\//g, '_');
     return pathname;
 }
+function setupFolder(saveReport, reportFolder) {
+    if (saveReport && (reportFolder && !fs_1.existsSync(reportFolder))) {
+        return createFolder(reportFolder);
+    }
+    return Promise.resolve();
+}
+exports.setupFolder = setupFolder;
+function createFolder(path) {
+    return new Promise((res, rej) => {
+        mkdirp_1.default(path, (err) => {
+            if (err) {
+                return rej(err);
+            }
+            return res();
+        });
+    });
+}
+exports.createFolder = createFolder;
 function writeReportFile(configFolder, url, results) {
     const d = new Date();
     if (!fs_1.existsSync(configFolder)) {

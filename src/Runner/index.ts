@@ -3,6 +3,7 @@ import { resolve, dirname } from 'path';
 
 import { coloredFlag } from './helper';
 import { validate } from './validation/configValidation';
+import { setupFolder } from './writeReport';
 
 import { LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory } from './Interfaces';
 import { existsSync } from 'fs';
@@ -23,10 +24,6 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
     let reportFolder: string | null = null;
     if (folder) {
         reportFolder = resolve(configPath, folder);
-    }
-
-    if (saveReport && (reportFolder && !existsSync(reportFolder))) {
-        return Promise.reject(new Error(`Report folder ${reportFolder} not found`))
     }
 
     const opts: LighthouseOptionsInterface = {
@@ -52,7 +49,10 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
         reportPaths = [paths];
     }
 
-    return runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+    return setupFolder(saveReport, reportFolder)
+        .then(() => {
+            return runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+        })
         .then((results) => {
             if (saveReport) {
                 printer.print(`Save report to: ${folder}`);

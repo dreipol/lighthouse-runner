@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
+const writeReport_1 = require("./writeReport");
 const fs_1 = require("fs");
 const NoopPrinter_1 = __importDefault(require("./Printer/NoopPrinter"));
 const ReportRunner_1 = require("./ReportRunner");
@@ -15,9 +16,6 @@ function executeReport(configPath, config, port) {
     let reportFolder = null;
     if (folder) {
         reportFolder = path_1.resolve(configPath, folder);
-    }
-    if (saveReport && (reportFolder && !fs_1.existsSync(reportFolder))) {
-        return Promise.reject(new Error(`Report folder ${reportFolder} not found`));
     }
     const opts = {
         chromeFlags,
@@ -31,7 +29,10 @@ function executeReport(configPath, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return ReportRunner_1.runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+    return writeReport_1.setupFolder(saveReport, reportFolder)
+        .then(() => {
+        return ReportRunner_1.runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port);
+    })
         .then((results) => {
         if (saveReport) {
             printer.print(`Save report to: ${folder}`);

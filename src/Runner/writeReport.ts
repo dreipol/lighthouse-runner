@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { parse } from 'url';
 import { join } from 'path';
+import mkdirp from 'mkdirp';
 
 /**
  *  Format date
@@ -38,6 +39,34 @@ function getPathname(url: string): string {
     pathname = pathname.replace(/(^\/)|(\/$)/g, '');
     pathname = pathname.replace(/\//g, '_');
     return pathname;
+}
+
+/**
+ * 
+ * @param saveReport 
+ * @param reportFolder 
+ */
+export function setupFolder(saveReport: Boolean, reportFolder: string | null, ): Promise<void> {
+    if (saveReport && (reportFolder && !existsSync(reportFolder))) {
+        return createFolder(reportFolder)
+    }
+
+    return Promise.resolve();
+}
+
+/**
+ * 
+ * @param path 
+ */
+export function createFolder(path: string): Promise<undefined> {
+    return new Promise((res, rej) => {
+        mkdirp(path, (err) => {
+            if (err) {
+                return rej(err);
+            }
+            return res();
+        });
+    });
 }
 
 /**
