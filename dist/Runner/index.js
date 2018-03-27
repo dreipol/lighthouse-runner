@@ -10,13 +10,9 @@ const writeReport_1 = require("./writeReport");
 const fs_1 = require("fs");
 const NoopPrinter_1 = __importDefault(require("./Printer/NoopPrinter"));
 const ReportRunner_1 = require("./ReportRunner");
-let printer;
-function executeReport(configPath, config, port) {
+function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
-    let reportFolder = null;
-    if (folder) {
-        reportFolder = path_1.resolve(configPath, folder);
-    }
+    const { printer } = meta;
     const opts = {
         chromeFlags,
     };
@@ -29,9 +25,9 @@ function executeReport(configPath, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return writeReport_1.setupFolder(saveReport, reportFolder)
+    return writeReport_1.setupFolder(saveReport, meta.reportFolder)
         .then(() => {
-        return ReportRunner_1.runReports(printer, config, opts, port, reportPaths);
+        return ReportRunner_1.runReports(meta, config, opts, port, reportPaths);
     })
         .then((results) => {
         if (saveReport) {
@@ -42,15 +38,13 @@ function executeReport(configPath, config, port) {
     });
 }
 exports.executeReport = executeReport;
-function execute(configFile, port, logger) {
+function execute(configFile, port, logger, reporter) {
     if (!configFile) {
         throw new Error('No configfile');
     }
+    let printer = new NoopPrinter_1.default();
     if (logger) {
         printer = logger;
-    }
-    else {
-        printer = new NoopPrinter_1.default();
     }
     const configFilePath = path_1.resolve(process.cwd(), configFile);
     printer.print(`Config file: ${configFile}`);
@@ -58,9 +52,10 @@ function execute(configFile, port, logger) {
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
     const config = require(configFilePath);
+    const meta = helper_1.composeMetaObject(configFile, config, printer, reporter);
     return configValidation_1.validate(config)
         .then((validatedConfig) => {
-        return executeReport(path_1.dirname(configFilePath), validatedConfig, port);
+        return executeReport(meta, validatedConfig, port);
     });
 }
 exports.execute = execute;

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../Runner/index");
 const ConsolePrinter_1 = __importDefault(require("../../Runner/Printer/ConsolePrinter"));
 const NoopPrinter_1 = __importDefault(require("../../Runner/Printer/NoopPrinter"));
+const JsonResultReporter_1 = __importDefault(require("../../Runner/ResultReporter/JsonResultReporter"));
 exports.default = ({
     command: 'report',
     describe: 'Create report for given config',
@@ -25,6 +26,6 @@ exports.default = ({
     },
     handler(argv) {
         const printer = argv.silent ? new NoopPrinter_1.default() : new ConsolePrinter_1.default();
-        index_1.execute(argv.config, argv.port, printer);
+        index_1.execute(argv.config, argv.port, printer, new JsonResultReporter_1.default());
     }
 });

@@ -1,30 +1,25 @@
+import {resolve} from 'path';
 
-import { resolve, dirname } from 'path';
+import {coloredFlag, composeMetaObject} from './helper';
+import {validate} from './validation/configValidation';
+import {setupFolder} from './writeReport';
 
-import { coloredFlag } from './helper';
-import { validate } from './validation/configValidation';
-import { setupFolder } from './writeReport';
-
-import { LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory } from './Interfaces';
-import { existsSync } from 'fs';
+import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
+import {existsSync} from 'fs';
 
 import NoopPrinter from './Printer/NoopPrinter';
 import PrinterInterface from './Printer/Interface';
-import { runReports } from './ReportRunner';
+import {runReports} from './ReportRunner';
+import ResultReporterInterface from "./ResultReporter/Interface";
 
-let printer: PrinterInterface;
 
 /**
  * Run report with config
  *
  */
-export function executeReport(configPath: string, config: LighthouseConfigInterface, port: Number | null): Promise<Array<Array<ReportCategory>>> {
-    const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
-
-    let reportFolder: string | null = null;
-    if (folder) {
-        reportFolder = resolve(configPath, folder);
-    }
+export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterface, port: Number | null): Promise<Array<Array<ReportCategory>>> {
+    const {url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder} = config;
+    const {printer} = meta;
 
     const opts: LighthouseOptionsInterface = {
         chromeFlags,
@@ -49,9 +44,9 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
         reportPaths = [paths];
     }
 
-    return setupFolder(saveReport, reportFolder)
+    return setupFolder(saveReport, meta.reportFolder)
         .then(() => {
-            return runReports(printer, config, opts, port, reportPaths)
+            return runReports(meta, config, opts, port, reportPaths)
         })
         .then((results) => {
             if (saveReport) {
@@ -62,19 +57,19 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
         });
 }
 
+
 /**
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, logger?: PrinterInterface): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, logger: PrinterInterface | null, reporter: ResultReporterInterface): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         throw new Error('No configfile');
     }
 
+    let printer = new NoopPrinter();
     if (logger) {
         printer = logger;
-    } else {
-        printer = new NoopPrinter();
     }
 
     const configFilePath = resolve(process.cwd(), configFile);
@@ -85,8 +80,10 @@ export function execute(configFile: string, port: Number | null, logger?: Printe
 
     const config = require(configFilePath);
 
+    const meta = composeMetaObject(configFile, config, printer, reporter);
+
     return validate(config)
         .then((validatedConfig) => {
-            return executeReport(dirname(configFilePath), validatedConfig, port);
+            return executeReport(meta, validatedConfig, port);
         })
 }

@@ -3,6 +3,7 @@ import * as yargs from 'yargs';
 import { execute } from '../../Runner/index';
 import ConsolePrinter from '../../Runner/Printer/ConsolePrinter';
 import NoopPrinter from '../../Runner/Printer/NoopPrinter';
+import JsonResultReporter from "../../Runner/ResultReporter/JsonResultReporter";
 
 export default <yargs.CommandModule>({
     command: 'report',
@@ -23,6 +24,6 @@ export default <yargs.CommandModule>({
     },
     handler(argv) {
         const printer = argv.silent ? new NoopPrinter() : new ConsolePrinter();
-        execute(<string>argv.config, <Number>argv.port, printer);
+        execute(<string>argv.config, <Number>argv.port, printer, new JsonResultReporter());
     }
 });

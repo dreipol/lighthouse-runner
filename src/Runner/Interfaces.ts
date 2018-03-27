@@ -1,4 +1,6 @@
 import { LaunchedChrome as Chrome, Results } from 'lighthouse/typings/externs';
+import PrinterInterface from "./Printer/Interface";
+import ResultReporterInterface from "./ResultReporter/Interface";
 
 export interface LaunchedChrome {
     chrome?: Chrome | null,
@@ -54,4 +56,7 @@ export interface ReportCategory {
 export interface RunnerMeta {
     configFolder: string;
     configFile: string;
+    reportFolder: string|null;
+    printer: PrinterInterface;
+    reporter: ResultReporterInterface;
 }

@@ -7,8 +7,9 @@ const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
-function runReport(printer, config, path, opts, port) {
+function runReport(meta, config, path, opts, port) {
     const { url, saveReport, budget, folder, report } = config;
+    const { printer } = meta;
     const site = url_1.resolve(url, path);
     printer.print(chalk_1.default.blue(`Run ${site}`));
     return lighthouseRunner_1.default(url, path, opts, report, port)
@@ -38,17 +39,18 @@ function runReport(printer, config, path, opts, port) {
         return categories;
     });
 }
-function runReports(printer, config, opts, port, paths, allResults = []) {
+function runReports(meta, config, opts, port, paths, allResults = []) {
     const urlPath = paths.shift();
+    const { printer } = meta;
     printer.print(''.padStart(10, '-'));
     if (!urlPath) {
         return Promise.resolve();
     }
-    return runReport(printer, config, urlPath, opts, port)
+    return runReport(meta, config, urlPath, opts, port)
         .then((results) => {
         allResults.push(results);
         if (paths.length > 0) {
-            return runReports(printer, config, opts, port, paths, allResults);
+            return runReports(meta, config, opts, port, paths, allResults);
         }
         return allResults;
     })
