@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 
-import { execute } from '../../Runner/index';
+import {execute} from '../../Runner/index';
 import ConsoleLogger from '../../Runner/Logger/ConsoleLogger';
 import NoopLogger from '../../Runner/Logger/NoopLogger';
 import JsonResultPersister from "../../Runner/ResultPersister/JsonResultPersister";
@@ -28,15 +28,16 @@ export default <yargs.CommandModule>({
             default: 'json',
         }
     },
-    handler(argv) {
+    async handler(argv) {
         const {type} = argv;
         const printer = argv.silent ? new NoopLogger() : new ConsoleLogger();
-        let persister =new NoopResultPersister();
+        let persister = new NoopResultPersister();
 
-        if(type === 'json'){
+        if (type === 'json') {
             persister = new JsonResultPersister();
         }
 
-        execute(<string>argv.config, <Number>argv.port, printer, persister);
+        return await execute(<string>argv.config, <Number>argv.port, printer, persister)
+            .catch(console.error);
     }
 });

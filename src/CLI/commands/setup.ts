@@ -13,7 +13,7 @@ export default <CommandModule>({
         }
     },
 
-    handler(argv) {
-        writeDefaultConfig(<string>argv.config);
+    async handler(argv) {
+        return await writeDefaultConfig(<string>argv.config);
     }
 });

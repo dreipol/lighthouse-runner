@@ -54,7 +54,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
  */
 export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter(), reporter: ResultPersisterInterface = new NoopResultPersister()): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
-        throw new Error('No config file provided');
+        return Promise.reject(new Error('No config file provided'));
     }
 
     const configFilePath = resolve(process.cwd(), configFile);
@@ -67,6 +67,7 @@ export function execute(configFile: string, port: Number | null, printer: Logger
 
     const meta = composeMetaObject(configFile, config, printer, reporter);
 
+    // @ts-ignore
     return validate(config)
         .then((validatedConfig) => {
             return executeReport(meta, validatedConfig, port);

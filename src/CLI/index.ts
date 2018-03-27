@@ -6,4 +6,4 @@ import report from './commands/report';
 require('yargs')
     .command(setup)
     .command(report)
-    .argv
+    .argv;

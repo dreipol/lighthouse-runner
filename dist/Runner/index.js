@@ -30,7 +30,7 @@ function executeReport(meta, config, port) {
 exports.executeReport = executeReport;
 function execute(configFile, port, printer = new NoopLogger_1.default(), reporter = new NoopResultPersister_1.default()) {
     if (!configFile) {
-        throw new Error('No config file provided');
+        return Promise.reject(new Error('No config file provided'));
     }
     const configFilePath = path_1.resolve(process.cwd(), configFile);
     printer.print(`Config file: ${configFile}`);
