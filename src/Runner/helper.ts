@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import {dirname, resolve} from "path";
 
-import PrinterInterface from "./Printer/Interface";
-import ResultReporterInterface from "./ResultReporter/Interface";
+import LoggerInterface from "./Logger/LoggerInterface";
+import ResultPersisterInterface from "./ResultPersister/ResultPersisterInterface";
 import {LighthouseConfigInterface, RunnerMeta} from "./Interfaces";
 
 /**
@@ -21,10 +21,10 @@ export function coloredFlag(name: string, flag: Boolean): string {
  * @param {string} configFile
  * @param {LighthouseConfigInterface} config
  * @param {PrinterInterface} printer
- * @param {ResultReporterInterface} reporter
+ * @param {ResultPersisterInterface} reporter
  * @return {RunnerMeta}
  */
-export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: PrinterInterface, reporter: ResultReporterInterface): RunnerMeta {
+export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface, reporter: ResultPersisterInterface): RunnerMeta {
     let reportFolder: string | null = null;
     const configPath = dirname(configFile);
 

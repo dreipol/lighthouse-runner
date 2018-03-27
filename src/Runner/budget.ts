@@ -18,7 +18,6 @@ export function checkBudget(caregory: ReportCategory, budget: BudgetInterface): 
     }
 }
 
-
 /**
  * Print colored budget
  */

@@ -6,11 +6,11 @@ import {validate} from './validation/configValidation';
 import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
 import {existsSync} from 'fs';
 
-import NoopPrinter from './Printer/NoopPrinter';
-import PrinterInterface from './Printer/Interface';
+import NoopPrinter from './Logger/NoopLogger';
+import LoggerInterface from './Logger/LoggerInterface';
 import {runReports} from './ReportRunner';
-import ResultReporterInterface from "./ResultReporter/Interface";
-import NoopResultReporter from "./ResultReporter/NoopResultReporter";
+import ResultPersisterInterface from "./ResultPersister/ResultPersisterInterface";
+import NoopResultPersister from "./ResultPersister/NoopResultPersister";
 
 
 /**
@@ -59,7 +59,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, printer: PrinterInterface = new NoopPrinter(), reporter: ResultReporterInterface = new NoopResultReporter()): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter(), reporter: ResultPersisterInterface = new NoopResultPersister()): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         throw new Error('No config file provided');
     }

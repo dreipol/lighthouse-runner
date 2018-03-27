@@ -1,6 +1,6 @@
 import { LaunchedChrome as Chrome, Results } from 'lighthouse/typings/externs';
-import PrinterInterface from "./Printer/Interface";
-import ResultReporterInterface from "./ResultReporter/Interface";
+import PrinterInterface from "./Logger/LoggerInterface";
+import ResultReporterInterface from "./ResultPersister/ResultPersisterInterface";
 
 export interface LaunchedChrome {
     chrome?: Chrome | null,

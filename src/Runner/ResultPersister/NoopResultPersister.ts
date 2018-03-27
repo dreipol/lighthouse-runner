@@ -1,7 +1,7 @@
-import ResultReporterInterface from './Interface';
+import ResultReporterInterface from './ResultPersisterInterface';
 import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} from '../Interfaces';
 
-export default class NoopResultReporter implements ResultReporterInterface {
+export default class NoopResultPersister implements ResultReporterInterface {
     // @ts-ignore
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
         return Promise.resolve();

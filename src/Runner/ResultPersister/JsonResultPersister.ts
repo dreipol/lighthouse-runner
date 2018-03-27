@@ -1,12 +1,12 @@
 import {existsSync, writeFileSync} from 'fs';
+import {parse} from "url";
 import {join, resolve} from 'path';
 
-import ResultReporterInterface from './Interface';
+import ResultReporterInterface from './ResultPersisterInterface';
 import {createFolder, formatDate, getPathname} from './helpers';
 import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} from '../Interfaces';
-import {parse} from "url";
 
-export default class JsonResultReporter implements ResultReporterInterface {
+export default class JsonResultPersister implements ResultReporterInterface {
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
         const {saveReport, folder} = config;
         if (!saveReport || !folder) {

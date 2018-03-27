@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../Runner/index");
-const ConsolePrinter_1 = __importDefault(require("../../Runner/Printer/ConsolePrinter"));
-const NoopPrinter_1 = __importDefault(require("../../Runner/Printer/NoopPrinter"));
-const JsonResultReporter_1 = __importDefault(require("../../Runner/ResultReporter/JsonResultReporter"));
+const ConsoleLogger_1 = __importDefault(require("../../Runner/Logger/ConsoleLogger"));
+const NoopLogger_1 = __importDefault(require("../../Runner/Logger/NoopLogger"));
+const JsonResultPersister_1 = __importDefault(require("../../Runner/ResultPersister/JsonResultPersister"));
+const NoopResultPersister_1 = __importDefault(require("../../Runner/ResultPersister/NoopResultPersister"));
 exports.default = ({
     command: 'report',
     describe: 'Create report for given config',
@@ -22,10 +23,20 @@ exports.default = ({
         silent: {
             required: false,
             description: 'Hide output'
+        },
+        type: {
+            required: false,
+            description: 'Output type output',
+            default: 'json',
         }
     },
     handler(argv) {
-        const printer = argv.silent ? new NoopPrinter_1.default() : new ConsolePrinter_1.default();
-        index_1.execute(argv.config, argv.port, printer, new JsonResultReporter_1.default());
+        const { type } = argv;
+        const printer = argv.silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();
+        let persister = new NoopResultPersister_1.default();
+        if (type === 'json') {
+            persister = new JsonResultPersister_1.default();
+        }
+        index_1.execute(argv.config, argv.port, printer, persister);
     }
 });

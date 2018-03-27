@@ -1,9 +1,10 @@
 import * as yargs from 'yargs';
 
 import { execute } from '../../Runner/index';
-import ConsolePrinter from '../../Runner/Printer/ConsolePrinter';
-import NoopPrinter from '../../Runner/Printer/NoopPrinter';
-import JsonResultReporter from "../../Runner/ResultReporter/JsonResultReporter";
+import ConsoleLogger from '../../Runner/Logger/ConsoleLogger';
+import NoopLogger from '../../Runner/Logger/NoopLogger';
+import JsonResultPersister from "../../Runner/ResultPersister/JsonResultPersister";
+import NoopResultPersister from "../../Runner/ResultPersister/NoopResultPersister";
 
 export default <yargs.CommandModule>({
     command: 'report',
@@ -20,10 +21,22 @@ export default <yargs.CommandModule>({
         silent: {
             required: false,
             description: 'Hide output'
+        },
+        type: {
+            required: false,
+            description: 'Output type output',
+            default: 'json',
         }
     },
     handler(argv) {
-        const printer = argv.silent ? new NoopPrinter() : new ConsolePrinter();
-        execute(<string>argv.config, <Number>argv.port, printer, new JsonResultReporter());
+        const {type} = argv;
+        const printer = argv.silent ? new NoopLogger() : new ConsoleLogger();
+        let persister =new NoopResultPersister();
+
+        if(type === 'json'){
+            persister = new JsonResultPersister();
+        }
+
+        execute(<string>argv.config, <Number>argv.port, printer, persister);
     }
 });

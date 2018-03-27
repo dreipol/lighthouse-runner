@@ -7,9 +7,9 @@ const path_1 = require("path");
 const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
 const fs_1 = require("fs");
-const NoopPrinter_1 = __importDefault(require("./Printer/NoopPrinter"));
+const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = require("./ReportRunner");
-const NoopResultReporter_1 = __importDefault(require("./ResultReporter/NoopResultReporter"));
+const NoopResultPersister_1 = __importDefault(require("./ResultPersister/NoopResultPersister"));
 function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
     const { printer } = meta;
@@ -35,7 +35,7 @@ function executeReport(meta, config, port) {
     });
 }
 exports.executeReport = executeReport;
-function execute(configFile, port, printer = new NoopPrinter_1.default(), reporter = new NoopResultReporter_1.default()) {
+function execute(configFile, port, printer = new NoopLogger_1.default(), reporter = new NoopResultPersister_1.default()) {
     if (!configFile) {
         throw new Error('No config file provided');
     }
