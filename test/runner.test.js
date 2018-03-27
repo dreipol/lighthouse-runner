@@ -1,6 +1,6 @@
 const { start, stop } = require('./data/simpleServer');
 const { execute } = require('../dist/Runner/index');
-const { printBudget } = require('../dist/Runner/budget');
+const { getScoreString } = require('../dist/Runner/budget');
 
 const { expect } = require('chai');
 
@@ -29,7 +29,7 @@ describe('Run report', function () {
     });
 
     it('Create report with budget', () => {
-        const result = printBudget({
+        const result = getScoreString({
             id: 'PWA',
             name: 'PWA',
             score: 100
@@ -41,7 +41,7 @@ describe('Run report', function () {
     });
 
     it('Create report with disabled budget', () => {
-        const result = printBudget({
+        const result = getScoreString({
             id: 'PWA',
             name: 'PWA',
             score: 100
@@ -53,7 +53,7 @@ describe('Run report', function () {
     });
 
     it('Create report with no budget', () => {
-        const result = printBudget({
+        const result = getScoreString({
             id: 'PWA',
             name: 'PWA',
             score: 100

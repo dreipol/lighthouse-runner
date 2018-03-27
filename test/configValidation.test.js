@@ -1,4 +1,4 @@
-const { validate } = require('../dist/Runner/configValidation');
+const { validate } = require('../dist/Runner/validation/configValidation');
 
 const { expect } = require('chai');
 

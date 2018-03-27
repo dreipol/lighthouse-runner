@@ -22,7 +22,7 @@ export function checkBudget(caregory: ReportCategory, budget: BudgetInterface): 
 /**
  * Print colored budget
  */
-export function printBudget(category: ReportCategory, budget: BudgetInterface): string {
+export function getScoreString(category: ReportCategory, budget: BudgetInterface): string {
     const { id, name, score } = category;
     const threshhold = budget[id];
 

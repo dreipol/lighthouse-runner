@@ -14,7 +14,7 @@ function checkBudget(caregory, budget) {
     }
 }
 exports.checkBudget = checkBudget;
-function printBudget(category, budget) {
+function getScoreString(category, budget) {
     const { id, name, score } = category;
     const threshhold = budget[id];
     if (threshhold === undefined || threshhold === null || threshhold === false) {
@@ -22,4 +22,4 @@ function printBudget(category, budget) {
     }
     return `${name}: ${score}/${threshhold}`;
 }
-exports.printBudget = printBudget;
+exports.getScoreString = getScoreString;

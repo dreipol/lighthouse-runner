@@ -1,111 +1,17 @@
 
-import chalk from 'chalk';
 import { resolve, dirname } from 'path';
-import { resolve as resolveUrl } from 'url';
 
-import runner from './lighthouseRunner';
-import writeReportFile from './writeReport';
-import { checkBudget, printBudget } from './budget';
+import { coloredFlag } from './helper';
 import { validate } from './validation/configValidation';
 
-import { LighthouseReportConfigInterface, LighthouseOptionsInterface, LighthouseConfigInterface, BudgetInterface, LighthouseReportResultInterface, ReportCategory } from './Interfaces';
+import { LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory } from './Interfaces';
 import { existsSync } from 'fs';
 
 import NoopPrinter from './Printer/NoopPrinter';
 import PrinterInterface from './Printer/Interface';
+import { runReports } from './ReportRunner';
 
 let printer: PrinterInterface;
-
-/**
- * Run report
- * 
- */
-function runReport(host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
-    const url = resolveUrl(host, paths);
-
-    printer.print(chalk.blue(`Run ${url}`));
-
-    return runner(host, paths, opts, config, port)
-        .then((results: LighthouseReportResultInterface) => {
-            if (saveReport && folder) {
-                writeReportFile(folder, url, results);
-                printer.print(`Report created and saved`);
-            }
-
-            const categories = results.reportCategories;
-            let allBudgetsReached = true;
-            for (let i = 0; i < categories.length; i++) {
-                const category = categories[i];
-                category.score = Math.round(category.score);
-
-                const isReached = checkBudget(category, budget);
-                let budgetText = printBudget(category, budget);
-
-                if (isReached === true) {
-                    budgetText = chalk.green(budgetText);
-                }
-                if (isReached === false) {
-                    budgetText = chalk.red(budgetText);
-                    allBudgetsReached = false;
-                }
-
-                printer.print(budgetText);
-            }
-
-            if (allBudgetsReached) {
-                printer.print(chalk.bgGreen('Congrats! Budged reached!'));
-            }
-            return categories;
-        });
-}
-
-/**
- * Run multiple urls synchronously
- */
-function runReports(url: string, paths: Array<string>, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number, allResults: Array<Object> = []): Promise<any> {
-    const urlPath = paths.shift();
-    printer.print(''.padStart(10, '-'));
-
-    if (!urlPath) {
-        return Promise.resolve();
-    }
-
-    return runReport(url, urlPath, opts, config, saveReport, budget, folder, port)
-        .then((results) => {
-            allResults.push(results);
-
-            if (paths.length > 0) {
-                return runReports(url, paths, opts, config, saveReport, budget, folder, port, allResults);
-            }
-
-            return allResults;
-        })
-        .catch((e: Error) => console.error(e));
-}
-
-
-/**
- * Output colored flags
- *
- */
-function coloredFlag(name: string, flag: Boolean): string {
-    if (flag === true) {
-        return chalk.green(name);
-    }
-    return chalk.red(name);
-}
-
-/**
- * Run post code after report finished
- * 
- */
-function postReport(saveReport: Boolean, folder: string | null): void {
-    if (saveReport) {
-        printer.print(`Save report to: ${folder}`);
-        printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
-    }
-}
-
 
 /**
  * Run report with config
@@ -146,9 +52,12 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
         reportPaths = [paths];
     }
 
-    return runReports(url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
+    return runReports(printer, url, reportPaths, opts, report, saveReport, budget, reportFolder, port)
         .then((results) => {
-            postReport(saveReport, reportFolder);
+            if (saveReport) {
+                printer.print(`Save report to: ${folder}`);
+                printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
+            }
             return results;
         });
 }
