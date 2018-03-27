@@ -18,7 +18,7 @@ import NoopResultPersister from "./ResultPersister/NoopResultPersister";
  *
  */
 export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterface, port: Number | null): Promise<Array<Array<ReportCategory>>> {
-    const {url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder} = config;
+    const {url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling} = config;
     const {printer} = meta;
 
     const opts: LighthouseOptionsInterface = {
@@ -45,13 +45,6 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
     }
 
     return runReports(meta, config, opts, port, reportPaths)
-        .then((results) => {
-            if (saveReport) {
-                printer.print(`Save report to: ${folder}`);
-                printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
-            }
-            return results;
-        });
 }
 
 

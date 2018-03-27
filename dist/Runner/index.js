@@ -11,7 +11,7 @@ const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = require("./ReportRunner");
 const NoopResultPersister_1 = __importDefault(require("./ResultPersister/NoopResultPersister"));
 function executeReport(meta, config, port) {
-    const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling, folder } = config;
+    const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling } = config;
     const { printer } = meta;
     const opts = {
         chromeFlags,
@@ -25,14 +25,7 @@ function executeReport(meta, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return ReportRunner_1.runReports(meta, config, opts, port, reportPaths)
-        .then((results) => {
-        if (saveReport) {
-            printer.print(`Save report to: ${folder}`);
-            printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
-        }
-        return results;
-    });
+    return ReportRunner_1.runReports(meta, config, opts, port, reportPaths);
 }
 exports.executeReport = executeReport;
 function execute(configFile, port, printer = new NoopLogger_1.default(), reporter = new NoopResultPersister_1.default()) {

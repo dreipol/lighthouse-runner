@@ -35,7 +35,6 @@ function runReport(meta: RunnerMeta,
         })
 
         .then((results: LighthouseReportResultInterface) => {
-
             const categories = results.reportCategories;
             let allBudgetsReached = true;
             for (let i = 0; i < categories.length; i++) {

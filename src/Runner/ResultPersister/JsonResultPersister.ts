@@ -32,9 +32,13 @@ export default class JsonResultPersister implements ResultReporterInterface {
     }
 
     save(meta: RunnerMeta, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
-        if (meta.reportFolder) {
-            this.writeFile(url, meta.reportFolder, results);
-            meta.printer.print(`Report created and saved`);
+        const {printer, reportFolder} = meta;
+
+        if (reportFolder) {
+            this.writeFile(url, reportFolder, results);
+            printer.print(`Report created and saved`);
+            printer.print(`Save report to: ${reportFolder}`);
+            printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
         }
         return Promise.resolve(results);
     }
