@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../../Runner/index");
 const ConsoleLogger_1 = __importDefault(require("../../Runner/Logger/ConsoleLogger"));
@@ -38,7 +38,7 @@ exports.default = ({
             default: 'json',
         }
     },
-    handler(argv) {
+    handler: function (argv) {
         return __awaiter(this, void 0, void 0, function* () {
             const { type } = argv;
             const printer = argv.silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();

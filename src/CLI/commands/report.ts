@@ -28,7 +28,7 @@ export default <yargs.CommandModule>({
             default: 'json',
         }
     },
-    async handler(argv) {
+    handler : async function(argv) {
         const {type} = argv;
         const printer = argv.silent ? new NoopLogger() : new ConsoleLogger();
         let persister = new NoopResultPersister();
