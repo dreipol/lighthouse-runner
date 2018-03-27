@@ -3,7 +3,6 @@ import { resolve as resolveUrl } from 'url';
 import chalk from 'chalk';
 
 import PrinterInterface from './Printer/Interface';
-import writeReportFile from './writeReport';
 import runner from './lighthouseRunner';
 import { checkBudget, getScoreString } from './budget';
 
@@ -11,7 +10,7 @@ import { LighthouseReportConfigInterface, LighthouseOptionsInterface, BudgetInte
 
 /**
  * Run report
- * 
+ *
  */
 function runReport(printer: PrinterInterface, host: string, paths: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, saveReport: Boolean, budget: BudgetInterface, folder?: string | null, port?: Number): Promise<Array<ReportCategory>> {
     const url = resolveUrl(host, paths);
@@ -21,7 +20,7 @@ function runReport(printer: PrinterInterface, host: string, paths: string, opts:
     return runner(host, paths, opts, config, port)
         .then((results: LighthouseReportResultInterface) => {
             if (saveReport && folder) {
-                writeReportFile(folder, url, results);
+                // writeReportFile(folder, url, results);
                 printer.print(`Report created and saved`);
             }
 

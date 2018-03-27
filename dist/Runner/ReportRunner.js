@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
-const writeReport_1 = __importDefault(require("./writeReport"));
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
 function runReport(printer, host, paths, opts, config, saveReport, budget, folder, port) {
@@ -14,7 +13,6 @@ function runReport(printer, host, paths, opts, config, saveReport, budget, folde
     return lighthouseRunner_1.default(host, paths, opts, config, port)
         .then((results) => {
         if (saveReport && folder) {
-            writeReport_1.default(folder, url, results);
             printer.print(`Report created and saved`);
         }
         const categories = results.reportCategories;

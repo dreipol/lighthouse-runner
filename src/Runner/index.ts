@@ -16,10 +16,10 @@ let printer: PrinterInterface;
 
 /**
  * Run report with config
- * 
+ *
  */
 export function executeReport(configPath: string, config: LighthouseConfigInterface, port?: Number): Promise<Array<Array<ReportCategory>>> {
-    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, budget, folder } = config;
+    const { url, paths, report, chromeFlags, saveReport, disableEmulation, disableThrottling, folder, budget } = config;
 
     let reportFolder: string | null = null;
     if (folder) {
@@ -64,7 +64,7 @@ export function executeReport(configPath: string, config: LighthouseConfigInterf
 
 /**
  * Execute reporter
- * 
+ *
  */
 export function execute(configFile: string, port?: Number, logger?: PrinterInterface): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {

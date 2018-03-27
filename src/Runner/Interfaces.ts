@@ -50,3 +50,8 @@ export interface ReportCategory {
     description: string;
     audits: Array<Object>
 }
+
+export interface RunnerMeta {
+    configFolder: string;
+    configFile: string;
+}
