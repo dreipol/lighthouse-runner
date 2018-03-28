@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const NoopResultPersister_1 = __importDefault(require("../Runner/ResultPersister/NoopResultPersister"));
-const Runner_1 = require("../Runner");
-const NoopLogger_1 = __importDefault(require("../Runner/Logger/NoopLogger"));
-const JsonResultPersister_1 = __importDefault(require("../Runner/ResultPersister/JsonResultPersister"));
-const ConsoleLogger_1 = __importDefault(require("../Runner/Logger/ConsoleLogger"));
-const { version } = require('../../package.json');
 const program = require('commander');
+const { version } = require('../../package.json');
+const lib_js_1 = require("./lib.js");
 program
     .version(version);
 program
@@ -20,14 +21,18 @@ program
     .option('--silent', 'Output type')
     .option('--port <port>', 'Output type')
     .action(function (command) {
-    const { config, type, silent, port } = command;
-    const printer = silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();
-    let persister = new NoopResultPersister_1.default();
-    if (type === 'json') {
-        persister = new JsonResultPersister_1.default();
-    }
-    printer.print(`Version ${version}`);
-    return Runner_1.execute(config, port, printer, persister)
-        .catch(console.error);
+    return __awaiter(this, void 0, void 0, function* () {
+        const { config, type, silent, port } = command;
+        yield lib_js_1.report(config, type, silent, port);
+    });
+});
+program
+    .command('setup')
+    .option('--config <folder>', 'Use config file')
+    .action(function (command) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { config } = command;
+        yield lib_js_1.setup(config);
+    });
 });
 program.parse(process.argv);

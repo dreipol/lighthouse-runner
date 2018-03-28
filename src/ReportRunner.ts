@@ -30,10 +30,9 @@ function runReport(meta: RunnerMeta,
         .then((results: LighthouseReportResultInterface) => {
             return reporter.setup(meta, config)
                 .then( () => {
-                    return reporter.save(meta, site, results);
-                })
+                    return reporter.save(meta, config, site, results);
+                });
         })
-
         .then((results: LighthouseReportResultInterface) => {
             const categories = results.reportCategories;
             let allBudgetsReached = true;

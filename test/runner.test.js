@@ -1,6 +1,7 @@
+'use strict';
 const { start, stop } = require('./data/simpleServer');
-const { execute } = require('../dist/Runner/index');
-const { getScoreString } = require('../dist/Runner/budget');
+const { execute } = require('../dist/index');
+const { getScoreString } = require('../dist/budget');
 
 const { expect } = require('chai');
 

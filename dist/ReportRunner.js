@@ -16,7 +16,7 @@ function runReport(meta, config, path, opts, port) {
         .then((results) => {
         return reporter.setup(meta, config)
             .then(() => {
-            return reporter.save(meta, site, results);
+            return reporter.save(meta, config, site, results);
         });
     })
         .then((results) => {

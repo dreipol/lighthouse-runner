@@ -3,5 +3,5 @@ import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} 
 export default interface ResultPersisterInterface {
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any>;
 
-    save(meta: RunnerMeta, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface>;
+    save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface>;
 }

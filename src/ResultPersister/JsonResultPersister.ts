@@ -1,6 +1,6 @@
 import {existsSync, writeFileSync} from 'fs';
 import {parse} from "url";
-import {join, resolve} from 'path';
+import {join} from 'path';
 
 import ResultReporterInterface from './ResultPersisterInterface';
 import {createFolder, formatDate, getPathname} from './helpers';
@@ -9,11 +9,12 @@ import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} 
 export default class JsonResultPersister implements ResultReporterInterface {
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
         const {saveReport, folder} = config;
-        if (!saveReport || !folder) {
+        const {reportFolder} = meta;
+
+        if (!saveReport || !folder || !reportFolder) {
             return Promise.resolve();
         }
 
-        let reportFolder: string = resolve(meta.configFolder, folder);
         if (!existsSync(reportFolder)) {
             return createFolder(reportFolder)
         }
@@ -31,10 +32,11 @@ export default class JsonResultPersister implements ResultReporterInterface {
         writeFileSync(filename, JSON.stringify(results));
     }
 
-    save(meta: RunnerMeta, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+    save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
         const {printer, reportFolder} = meta;
+        const {saveReport} = config;
 
-        if (reportFolder) {
+        if (reportFolder && saveReport) {
             this.writeFile(url, reportFolder, results);
             printer.print(`Report created and saved`);
             printer.print(`Save report to: ${reportFolder}`);

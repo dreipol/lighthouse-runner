@@ -4,7 +4,7 @@ import glob from 'glob';
 import chalk from 'chalk';
 import { info as log } from 'fancy-log';
 
-/** 
+/**
  * Get templatefolder from installed module
  */
 function getConfigModulePath(baseDir: string): Promise<string> {
@@ -60,7 +60,7 @@ function copyFile(file: string, target: string): Promise<void> {
 
 /**
  * Settingup default configuration
- * 
+ *
  */
 export default function writeDefaultConfig(configFolder: string): Promise<void> {
     const baseDir = process.cwd();

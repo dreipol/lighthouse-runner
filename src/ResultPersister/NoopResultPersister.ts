@@ -8,7 +8,7 @@ export default class NoopResultPersister implements ResultReporterInterface {
     }
 
     // @ts-ignore
-    save(meta: RunnerMeta, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+    save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
         return Promise.resolve(results);
     }
 }

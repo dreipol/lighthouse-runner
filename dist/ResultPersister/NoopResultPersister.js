@@ -4,7 +4,7 @@ class NoopResultPersister {
     setup(meta, config) {
         return Promise.resolve();
     }
-    save(meta, url, results) {
+    save(meta, config, url, results) {
         return Promise.resolve(results);
     }
 }

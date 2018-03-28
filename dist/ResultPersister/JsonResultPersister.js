@@ -7,10 +7,10 @@ const helpers_1 = require("./helpers");
 class JsonResultPersister {
     setup(meta, config) {
         const { saveReport, folder } = config;
-        if (!saveReport || !folder) {
+        const { reportFolder } = meta;
+        if (!saveReport || !folder || !reportFolder) {
             return Promise.resolve();
         }
-        let reportFolder = path_1.resolve(meta.configFolder, folder);
         if (!fs_1.existsSync(reportFolder)) {
             return helpers_1.createFolder(reportFolder);
         }
@@ -23,9 +23,10 @@ class JsonResultPersister {
         const filename = path_1.join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.json`);
         fs_1.writeFileSync(filename, JSON.stringify(results));
     }
-    save(meta, url, results) {
+    save(meta, config, url, results) {
         const { printer, reportFolder } = meta;
-        if (reportFolder) {
+        const { saveReport } = config;
+        if (reportFolder && saveReport) {
             this.writeFile(url, reportFolder, results);
             printer.print(`Report created and saved`);
             printer.print(`Save report to: ${reportFolder}`);

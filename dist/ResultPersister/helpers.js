@@ -33,6 +33,7 @@ function getPathname(url) {
 exports.getPathname = getPathname;
 function createFolder(path) {
     return new Promise((res, rej) => {
+        console.log(path);
         mkdirp_1.default(path, (err) => {
             if (err) {
                 return rej(err);
