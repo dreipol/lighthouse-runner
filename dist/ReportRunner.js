@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
@@ -33,12 +33,12 @@ function runReport(meta, config, path, opts, port) {
         if (allBudgetsReached) {
             printer.print(chalk_1.default.bgGreen('Congrats! Budged reached!'));
         }
-        return results;
-    })
-        .then((results) => {
         return reporter.setup(meta, config)
             .then(() => {
             return reporter.save(meta, config, site, results);
+        })
+            .then(() => {
+            return categories;
         });
     });
 }

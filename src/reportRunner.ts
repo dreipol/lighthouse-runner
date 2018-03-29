@@ -8,7 +8,7 @@ import {
     LighthouseOptionsInterface,
     LighthouseReportResultInterface,
     LighthouseConfigInterface,
-    RunnerMeta
+    RunnerMeta, ReportCategory
 } from './Interfaces';
 
 /**
@@ -19,7 +19,7 @@ function runReport(meta: RunnerMeta,
                    config: LighthouseConfigInterface,
                    path: string,
                    opts: LighthouseOptionsInterface,
-                   port: Number | null): Promise<LighthouseReportResultInterface> {
+                   port: Number | null): Promise<Array<ReportCategory>> {
 
     const {url, budget, report} = config;
     const {printer, reporter} = meta;
@@ -52,13 +52,14 @@ function runReport(meta: RunnerMeta,
             if (allBudgetsReached) {
                 printer.print(chalk.bgGreen('Congrats! Budged reached!'));
             }
-            return results;
-        })
-        .then((results: LighthouseReportResultInterface) => {
+
             return reporter.setup(meta, config)
                 .then(() => {
                     return reporter.save(meta, config, site, results);
-                });
+                })
+                .then(() => {
+                    return categories;
+                })
         })
 }
 
