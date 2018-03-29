@@ -58,5 +58,5 @@ export interface RunnerMeta {
     configFile: string;
     reportFolder: string|null;
     printer: PrinterInterface;
-    reporter: ResultReporterInterface;
+    persisters: Array<ResultReporterInterface>
 }

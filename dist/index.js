@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const helper_1 = require("./helper");
@@ -28,7 +28,7 @@ function executeReport(meta, config, port) {
     return reportRunner_1.runReports(meta, config, opts, port, reportPaths);
 }
 exports.executeReport = executeReport;
-function execute(configFile, port, printer = new NoopLogger_1.default(), reporter = new NoopResultPersister_1.default()) {
+function execute(configFile, port, printer = new NoopLogger_1.default(), persisters = [new NoopResultPersister_1.default()]) {
     if (!configFile) {
         return Promise.reject(new Error('No config file provided'));
     }
@@ -38,7 +38,7 @@ function execute(configFile, port, printer = new NoopLogger_1.default(), reporte
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
     const config = require(configFilePath);
-    const meta = helper_1.composeMetaObject(configFile, config, printer, reporter);
+    const meta = helper_1.composeMetaObject(configFile, config, printer, persisters);
     return configValidation_1.validate(config)
         .then((validatedConfig) => {
         return executeReport(meta, validatedConfig, port);

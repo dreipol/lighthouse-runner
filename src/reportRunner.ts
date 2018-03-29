@@ -22,7 +22,7 @@ function runReport(meta: RunnerMeta,
                    port: Number | null): Promise<Array<ReportCategory>> {
 
     const {url, budget, report} = config;
-    const {printer, reporter} = meta;
+    const {printer, persisters} = meta;
     const site = resolveUrl(url, path);
 
     printer.print(chalk.blue(`Run ${site}`));
@@ -53,14 +53,23 @@ function runReport(meta: RunnerMeta,
                 printer.print(chalk.bgGreen('Congrats! Budged reached!'));
             }
 
-            return reporter.setup(meta, config)
-                .then(() => {
-                    return reporter.save(meta, config, site, results);
-                })
+            const promises = [];
+            for (let i = 0; i < persisters.length; i++) {
+                const persister = persisters[i];
+                promises.push(
+                    persister.setup(meta, config)
+                        .then(() => {
+                            return persister.save(meta, config, site, results);
+                        })
+                );
+            }
+
+            return Promise.all(promises)
                 .then(() => {
                     return categories;
                 })
         })
+
 }
 
 /**

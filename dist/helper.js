@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const chalk_1 = __importDefault(require("chalk"));
 const path_1 = require("path");
@@ -12,7 +12,7 @@ function coloredFlag(name, flag) {
     return chalk_1.default.red(name);
 }
 exports.coloredFlag = coloredFlag;
-function composeMetaObject(configFile, config, printer, reporter) {
+function composeMetaObject(configFile, config, printer, persisters) {
     let reportFolder = null;
     const configPath = path_1.dirname(configFile);
     if (config.folder) {
@@ -23,7 +23,7 @@ function composeMetaObject(configFile, config, printer, reporter) {
         configFolder: configPath,
         reportFolder,
         printer,
-        reporter,
+        persisters
     };
 }
 exports.composeMetaObject = composeMetaObject;

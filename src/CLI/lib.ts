@@ -6,21 +6,28 @@ import JsonResultPersister from "../ResultPersister/JsonResultPersister";
 import ConsoleLogger from "../Logger/ConsoleLogger";
 import writeDefaultConfig from '../setup/writeDefaultConfig.js';
 import HTMLResultPersister from "../ResultPersister/HTMLResultPersister";
+import KeenResultPersister from "../ResultPersister/KeenResultPersister";
 
 export async function report(config: string, type: string, silent: boolean, port: number | null) {
 
     const printer = silent ? new NoopLogger() : new ConsoleLogger();
-    let persister = new NoopResultPersister();
+    const persisters = [];
+    persisters.push(new NoopResultPersister());
+    const types: Array<string> = type.split('|');
 
-    if (type === 'json') {
-        persister = new JsonResultPersister();
+    if (types.indexOf('json')  > -1) {
+        persisters.push(new JsonResultPersister());
     }
 
-    if (type === 'html') {
-        persister = new HTMLResultPersister();
+    if (types.indexOf('html') > -1) {
+        persisters.push(new HTMLResultPersister());
     }
 
-    return await execute(config, port, printer, persister)
+    if (types.indexOf('keen') > -1) {
+        persisters.push(new KeenResultPersister());
+    }
+
+    return await execute(config, port, printer, persisters)
         .catch(console.error);
 }
 

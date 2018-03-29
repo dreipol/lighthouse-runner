@@ -52,7 +52,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter(), reporter: ResultPersisterInterface = new NoopResultPersister()): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter(), persisters: Array<ResultPersisterInterface> = [new NoopResultPersister()]): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         return Promise.reject(new Error('No config file provided'));
     }
@@ -65,7 +65,7 @@ export function execute(configFile: string, port: Number | null, printer: Logger
 
     const config = require(configFilePath);
 
-    const meta = composeMetaObject(configFile, config, printer, reporter);
+    const meta = composeMetaObject(configFile, config, printer, persisters);
 
     // @ts-ignore
     return validate(config)

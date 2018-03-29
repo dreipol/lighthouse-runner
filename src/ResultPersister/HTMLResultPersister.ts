@@ -24,13 +24,14 @@ export default class HTMLResultPersister implements ResultReporterInterface {
 
 
     save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
-        const {reportFolder} = meta;
+        const {reportFolder, printer} = meta;
         const {saveReport} = config;
 
         if (reportFolder && saveReport) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
             writeFile(url, reportFolder, html, 'html');
+            printer.print('HTML File created')
         }
         return Promise.resolve(results);
     }

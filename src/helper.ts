@@ -24,18 +24,19 @@ export function coloredFlag(name: string, flag: Boolean): string {
  * @param {ResultPersisterInterface} reporter
  * @return {RunnerMeta}
  */
-export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface, reporter: ResultPersisterInterface): RunnerMeta {
+export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface, persisters: Array<ResultPersisterInterface>): RunnerMeta {
     let reportFolder: string | null = null;
     const configPath = dirname(configFile);
 
     if (config.folder) {
         reportFolder = resolve(configPath, config.folder);
     }
+
     return {
         configFile,
         configFolder: configPath,
         reportFolder,
         printer,
-        reporter,
+        persisters
     }
 }

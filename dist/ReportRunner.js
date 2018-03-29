@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
@@ -9,7 +9,7 @@ const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
 function runReport(meta, config, path, opts, port) {
     const { url, budget, report } = config;
-    const { printer, reporter } = meta;
+    const { printer, persisters } = meta;
     const site = url_1.resolve(url, path);
     printer.print(chalk_1.default.blue(`Run ${site}`));
     return lighthouseRunner_1.default(url, path, opts, report, port)
@@ -33,10 +33,15 @@ function runReport(meta, config, path, opts, port) {
         if (allBudgetsReached) {
             printer.print(chalk_1.default.bgGreen('Congrats! Budged reached!'));
         }
-        return reporter.setup(meta, config)
-            .then(() => {
-            return reporter.save(meta, config, site, results);
-        })
+        const promises = [];
+        for (let i = 0; i < persisters.length; i++) {
+            const persister = persisters[i];
+            promises.push(persister.setup(meta, config)
+                .then(() => {
+                return persister.save(meta, config, site, results);
+            }));
+        }
+        return Promise.all(promises)
             .then(() => {
             return categories;
         });

@@ -16,12 +16,13 @@ class HTMLResultPersister {
         return Promise.resolve();
     }
     save(meta, config, url, results) {
-        const { reportFolder } = meta;
+        const { reportFolder, printer } = meta;
         const { saveReport } = config;
         if (reportFolder && saveReport) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
             helpers_1.writeFile(url, reportFolder, html, 'html');
+            printer.print('HTML File created');
         }
         return Promise.resolve(results);
     }

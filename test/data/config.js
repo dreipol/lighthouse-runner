@@ -1,8 +1,8 @@
 
 module.exports = {
-    url: 'http://localhost:8000',
+    url: 'https://dreipol.github.io',
     paths: [
-        '/',
+        '/lighthouse-runner',
     ],
     folder: "./reports",
     chromeFlags: ['--headless'],
