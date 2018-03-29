@@ -47,7 +47,6 @@ export function getPathname(url: string): string {
  */
 export function createFolder(path: string): Promise<undefined> {
     return new Promise((res, rej) => {
-        console.log(path);
 
         mkdirp(path, (err) => {
             if (err) {
