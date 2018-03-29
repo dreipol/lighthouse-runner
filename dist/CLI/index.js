@@ -15,6 +15,15 @@ const lib_js_1 = require("./lib.js");
 program
     .version(version);
 program
+    .command('setup')
+    .option('--config <folder>', 'Use config file')
+    .action(function (command) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { config } = command;
+        yield lib_js_1.setup(config);
+    });
+});
+program
     .command('report')
     .option('--config <file>', 'Use config file')
     .option('--type <type>', 'Output type')
@@ -24,15 +33,6 @@ program
     return __awaiter(this, void 0, void 0, function* () {
         const { config, type, silent, port } = command;
         yield lib_js_1.report(config, type, silent, port);
-    });
-});
-program
-    .command('setup')
-    .option('--config <folder>', 'Use config file')
-    .action(function (command) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { config } = command;
-        yield lib_js_1.setup(config);
     });
 });
 program.parse(process.argv);

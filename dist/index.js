@@ -1,14 +1,14 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
 const fs_1 = require("fs");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
-const ReportRunner_1 = require("./ReportRunner");
+const reportRunner_1 = require("./reportRunner");
 const NoopResultPersister_1 = __importDefault(require("./ResultPersister/NoopResultPersister"));
 function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling } = config;
@@ -25,7 +25,7 @@ function executeReport(meta, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return ReportRunner_1.runReports(meta, config, opts, port, reportPaths);
+    return reportRunner_1.runReports(meta, config, opts, port, reportPaths);
 }
 exports.executeReport = executeReport;
 function execute(configFile, port, printer = new NoopLogger_1.default(), reporter = new NoopResultPersister_1.default()) {
@@ -42,6 +42,9 @@ function execute(configFile, port, printer = new NoopLogger_1.default(), reporte
     return configValidation_1.validate(config)
         .then((validatedConfig) => {
         return executeReport(meta, validatedConfig, port);
+    })
+        .catch((e) => {
+        console.error(e);
     });
 }
 exports.execute = execute;

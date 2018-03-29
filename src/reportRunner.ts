@@ -7,7 +7,8 @@ import {checkBudget, getScoreString} from './budget';
 import {
     LighthouseOptionsInterface,
     LighthouseReportResultInterface,
-    ReportCategory, LighthouseConfigInterface, RunnerMeta
+    LighthouseConfigInterface,
+    RunnerMeta
 } from './Interfaces';
 
 /**
@@ -18,7 +19,7 @@ function runReport(meta: RunnerMeta,
                    config: LighthouseConfigInterface,
                    path: string,
                    opts: LighthouseOptionsInterface,
-                   port: Number | null): Promise<Array<ReportCategory>> {
+                   port: Number | null): Promise<LighthouseReportResultInterface> {
 
     const {url, budget, report} = config;
     const {printer, reporter} = meta;
@@ -27,12 +28,6 @@ function runReport(meta: RunnerMeta,
     printer.print(chalk.blue(`Run ${site}`));
 
     return runner(url, path, opts, report, port)
-        .then((results: LighthouseReportResultInterface) => {
-            return reporter.setup(meta, config)
-                .then( () => {
-                    return reporter.save(meta, config, site, results);
-                });
-        })
         .then((results: LighthouseReportResultInterface) => {
             const categories = results.reportCategories;
             let allBudgetsReached = true;
@@ -57,8 +52,14 @@ function runReport(meta: RunnerMeta,
             if (allBudgetsReached) {
                 printer.print(chalk.bgGreen('Congrats! Budged reached!'));
             }
-            return categories;
-        });
+            return results;
+        })
+        .then((results: LighthouseReportResultInterface) => {
+            return reporter.setup(meta, config)
+                .then(() => {
+                    return reporter.save(meta, config, site, results);
+                });
+        })
 }
 
 /**

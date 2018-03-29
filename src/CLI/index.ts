@@ -10,6 +10,15 @@ program
     .version(version);
 
 program
+    .command('setup')
+    .option('--config <folder>', 'Use config file')
+    .action(async function (command: Command){
+         const {config} = command;
+         await setup(config);
+    });
+
+
+program
     .command('report')
     .option('--config <file>', 'Use config file')
     .option('--type <type>', 'Output type')
@@ -20,12 +29,5 @@ program
         await report(config, type, silent, port);
     });
 
-program
-    .command('setup')
-    .option('--config <folder>', 'Use config file')
-    .action(async function (command: Command){
-         const {config} = command;
-         await setup(config);
-    });
 
 program.parse(process.argv);

@@ -8,7 +8,7 @@ import {existsSync} from 'fs';
 
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
-import {runReports} from './ReportRunner';
+import {runReports} from './reportRunner';
 import ResultPersisterInterface from "./ResultPersister/ResultPersisterInterface";
 import NoopResultPersister from "./ResultPersister/NoopResultPersister";
 
@@ -71,5 +71,8 @@ export function execute(configFile: string, port: Number | null, printer: Logger
     return validate(config)
         .then((validatedConfig) => {
             return executeReport(meta, validatedConfig, port);
+        })
+        .catch( (e) =>{
+            console.error(e);
         })
 }
