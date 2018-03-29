@@ -5,6 +5,7 @@ import NoopLogger from "../Logger/NoopLogger";
 import JsonResultPersister from "../ResultPersister/JsonResultPersister";
 import ConsoleLogger from "../Logger/ConsoleLogger";
 import writeDefaultConfig from '../setup/writeDefaultConfig.js';
+import HTMLResultPersister from "../ResultPersister/HTMLResultPersister";
 
 export async function report(config: string, type: string, silent: boolean, port: number | null) {
 
@@ -13,6 +14,10 @@ export async function report(config: string, type: string, silent: boolean, port
 
     if (type === 'json') {
         persister = new JsonResultPersister();
+    }
+
+    if (type === 'html') {
+        persister = new HTMLResultPersister();
     }
 
     return await execute(config, port, printer, persister)

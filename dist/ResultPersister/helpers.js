@@ -1,10 +1,12 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const mkdirp_1 = __importDefault(require("mkdirp"));
+const path_1 = require("path");
+const fs_1 = require("fs");
 function formatDate(date) {
     let year = date.getUTCFullYear().toString();
     let month = date.getUTCMonth().toString();
@@ -42,3 +44,11 @@ function createFolder(path) {
     });
 }
 exports.createFolder = createFolder;
+function writeFile(url, folder, content, type) {
+    const reportUrl = url_1.parse(url);
+    const pathname = getPathname(url);
+    const filenamePrefix = formatDate(new Date());
+    const filename = path_1.join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
+    fs_1.writeFileSync(filename, content);
+}
+exports.writeFile = writeFile;

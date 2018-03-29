@@ -1,5 +1,7 @@
-import { parse } from 'url';
+import {parse} from 'url';
 import mkdirp from 'mkdirp';
+import {join} from "path";
+import {writeFileSync} from "fs";
 
 /**
  *  Format date
@@ -41,7 +43,7 @@ export function getPathname(url: string): string {
 
 /**
 
-/**
+ /**
  *
  * @param path
  */
@@ -55,4 +57,14 @@ export function createFolder(path: string): Promise<undefined> {
             return res();
         });
     });
+}
+
+export function writeFile(url: string, folder: string, content: string, type: string) {
+
+    const reportUrl = parse(url);
+    const pathname = getPathname(url);
+    const filenamePrefix = formatDate(new Date());
+    const filename = join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
+
+    writeFileSync(filename, content);
 }

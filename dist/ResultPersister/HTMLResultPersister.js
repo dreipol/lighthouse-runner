@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
+const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 const helpers_1 = require("./helpers");
-class JsonResultPersister {
+class HTMLResultPersister {
     setup(meta, config) {
         const { saveReport, folder } = config;
         const { reportFolder } = meta;
@@ -15,15 +16,14 @@ class JsonResultPersister {
         return Promise.resolve();
     }
     save(meta, config, url, results) {
-        const { printer, reportFolder } = meta;
+        const { reportFolder } = meta;
         const { saveReport } = config;
         if (reportFolder && saveReport) {
-            helpers_1.writeFile(url, reportFolder, JSON.stringify(results), 'json');
-            printer.print(`Report created and saved`);
-            printer.print(`Save report to: ${reportFolder}`);
-            printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
+            const generator = new ReportGenerator();
+            const html = generator.generateReportHtml(results);
+            helpers_1.writeFile(url, reportFolder, html, 'html');
         }
         return Promise.resolve(results);
     }
 }
-exports.default = JsonResultPersister;
+exports.default = HTMLResultPersister;
