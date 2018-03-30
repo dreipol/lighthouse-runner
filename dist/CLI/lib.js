@@ -19,7 +19,7 @@ const JsonResultPersister_1 = __importDefault(require("../ResultPersister/JsonRe
 const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
 const writeDefaultConfig_js_1 = __importDefault(require("../setup/writeDefaultConfig.js"));
 const HTMLResultPersister_1 = __importDefault(require("../ResultPersister/HTMLResultPersister"));
-const KeenResultPersister_1 = __importDefault(require("../ResultPersister/KeenResultPersister"));
+const GraphiteResultPersister_1 = __importDefault(require("../ResultPersister/GraphiteResultPersister"));
 function report(config, type, silent, port) {
     return __awaiter(this, void 0, void 0, function* () {
         const printer = silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();
@@ -32,8 +32,8 @@ function report(config, type, silent, port) {
         if (types.indexOf('html') > -1) {
             persisters.push(new HTMLResultPersister_1.default());
         }
-        if (types.indexOf('keen') > -1) {
-            persisters.push(new KeenResultPersister_1.default());
+        if (types.indexOf('graphite') > -1) {
+            persisters.push(new GraphiteResultPersister_1.default());
         }
         return yield _1.execute(config, port, printer, persisters)
             .catch(console.error);

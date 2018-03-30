@@ -17,6 +17,11 @@ module.exports = {
         accessibility: 70,
         'best-practices': 70,
     },
+    persisters: {
+        graphite : {
+            host: "localhost",
+        }
+    },
     report: {
         settings: {},
         passes: [

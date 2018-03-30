@@ -21,6 +21,11 @@ exports.default = Joi.object().keys({
     disableThrottling: Joi.boolean().required(),
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
+    persisters: Joi.object().keys({
+        graphite: Joi.object().keys({
+            host: Joi.string(),
+        })
+    }),
     report: Joi.object().keys({
         settings: Joi.object(),
         passes: Joi.array(),

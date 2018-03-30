@@ -6,7 +6,7 @@ import JsonResultPersister from "../ResultPersister/JsonResultPersister";
 import ConsoleLogger from "../Logger/ConsoleLogger";
 import writeDefaultConfig from '../setup/writeDefaultConfig.js';
 import HTMLResultPersister from "../ResultPersister/HTMLResultPersister";
-import KeenResultPersister from "../ResultPersister/KeenResultPersister";
+import KeenResultPersister from "../ResultPersister/GraphiteResultPersister";
 
 export async function report(config: string, type: string, silent: boolean, port: number | null) {
 
@@ -23,7 +23,7 @@ export async function report(config: string, type: string, silent: boolean, port
         persisters.push(new HTMLResultPersister());
     }
 
-    if (types.indexOf('keen') > -1) {
+    if (types.indexOf('graphite') > -1) {
         persisters.push(new KeenResultPersister());
     }
 

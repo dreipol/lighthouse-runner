@@ -25,6 +25,15 @@ export interface LighthouseConfigInterface {
     disableEmulation: Boolean;
     disableThrottling: Boolean;
     budget: BudgetInterface;
+    persisters?: PersisterConfigInterface
+}
+
+export interface PersisterConfigInterface {
+    graphite?: GraphitePersisterConfigInterface
+}
+
+export interface GraphitePersisterConfigInterface {
+    host: string
 }
 
 export interface BudgetInterface {
