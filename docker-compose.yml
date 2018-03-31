@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - "80:80"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024"
+      - "8080:8080"
+      - "8126:8126"
+      - "8125:8125"
