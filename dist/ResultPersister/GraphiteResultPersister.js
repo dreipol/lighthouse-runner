@@ -20,7 +20,7 @@ class GraphiteResultPersister {
         const { persisters } = config;
         return new Promise((res, rej) => {
             if (!persisters || !persisters.graphite || !persisters.graphite.host) {
-                return rej(new Error());
+                return rej(new Error('persisters.graphite.host not found in the config'));
             }
             this.graphite = new GraphiteClient(persisters.graphite.host, 2003, 'UTF-8', 3000, function () {
             });
@@ -35,7 +35,12 @@ class GraphiteResultPersister {
     }
     save(meta, config, url, results) {
         const { printer } = meta;
-        const metrics = this.prepareData(url, results.reportCategories);
+        const { persisters } = config;
+        if (!persisters || !persisters.graphite || !persisters.graphite.id || !persisters.graphite.host) {
+            return Promise.reject(new Error('persisters.graphite not found or incomplete config'));
+        }
+        let metrics = {};
+        metrics[persisters.graphite.id] = this.prepareData(url, results.reportCategories);
         return new Promise((res) => {
             this.graphite.write(metrics, Date.now(), (err) => {
                 printer.print("Failed to write metrics to metrics server. err: " + err);

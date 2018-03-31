@@ -23,7 +23,8 @@ exports.default = Joi.object().keys({
     budget: Joi.object().required(),
     persisters: Joi.object().keys({
         graphite: Joi.object().keys({
-            host: Joi.string(),
+            host: Joi.string().required(),
+            id: Joi.string().required(),
         })
     }),
     report: Joi.object().keys({

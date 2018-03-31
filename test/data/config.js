@@ -20,6 +20,7 @@ module.exports = {
     persisters: {
         graphite : {
             host: "localhost",
+            id: 'lighthouse-runner',
         }
     },
     report: {

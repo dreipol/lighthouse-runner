@@ -33,7 +33,8 @@ export interface PersisterConfigInterface {
 }
 
 export interface GraphitePersisterConfigInterface {
-    host: string
+    host: string,
+    id: string,
 }
 
 export interface BudgetInterface {

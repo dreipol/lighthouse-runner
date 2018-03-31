@@ -25,9 +25,10 @@ export default class GraphiteResultPersister implements ResultReporterInterface 
 
     setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
         const {persisters} = config;
+
         return new Promise((res, rej) => {
             if (!persisters || !persisters.graphite || !persisters.graphite.host) {
-                return rej(new Error());
+                return rej(new Error('persisters.graphite.host not found in the config'));
             }
 
             this.graphite = new GraphiteClient(persisters.graphite.host, 2003, 'UTF-8', 3000, function () {
@@ -48,8 +49,14 @@ export default class GraphiteResultPersister implements ResultReporterInterface 
     //@ts-ignore
     save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
         const {printer} = meta;
+        const {persisters} = config;
 
-        const metrics = this.prepareData(url, results.reportCategories);
+        if (!persisters || !persisters.graphite || !persisters.graphite.id || !persisters.graphite.host) {
+            return Promise.reject(new Error('persisters.graphite not found or incomplete config'));
+        }
+
+        let metrics:any = {};
+        metrics[persisters.graphite.id] = this.prepareData(url, results.reportCategories);
 
         return new Promise((res) => {
             this.graphite.write(metrics, Date.now(), (err: Error) => {
