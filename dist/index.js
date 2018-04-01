@@ -36,7 +36,9 @@ function execute(configFile, port, printer = new NoopLogger_1.default()) {
     if (!fs_1.existsSync(configFile)) {
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
-    const config = helper_1.remapPersisterNames(require(configFilePath));
+    let config = require(configFilePath);
+    printer.print(`Using persisters: ${config.persisters.modules}`);
+    config = helper_1.remapPersisterNames(config);
     const meta = helper_1.composeMetaObject(configFile, config, printer);
     return configValidation_1.validate(config)
         .then((validatedConfig) => {

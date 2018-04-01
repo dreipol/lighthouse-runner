@@ -61,7 +61,9 @@ export function execute(configFile: string, port: Number | null, printer: Logger
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
 
-    const config = remapPersisterNames(require(configFilePath));
+    let config: LighthouseConfigInterface = require(configFilePath);
+    printer.print(`Using persisters: ${config.persisters.modules}`);
+    config = remapPersisterNames(config);
 
     const meta = composeMetaObject(configFile, config, printer);
 
