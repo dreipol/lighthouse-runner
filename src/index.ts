@@ -8,7 +8,7 @@ import {existsSync} from 'fs';
 
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
-import {runReports} from './reportRunner';
+import {runReports} from './ReportRunner';
 
 
 /**

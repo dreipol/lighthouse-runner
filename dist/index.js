@@ -8,7 +8,7 @@ const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
 const fs_1 = require("fs");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
-const reportRunner_1 = require("./reportRunner");
+const ReportRunner_1 = require("./ReportRunner");
 function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling } = config;
     const { printer } = meta;
@@ -24,7 +24,7 @@ function executeReport(meta, config, port) {
     if (!Array.isArray(paths)) {
         reportPaths = [paths];
     }
-    return reportRunner_1.runReports(meta, config, opts, port, reportPaths);
+    return ReportRunner_1.runReports(meta, config, opts, port, reportPaths);
 }
 exports.executeReport = executeReport;
 function execute(configFile, port, printer = new NoopLogger_1.default()) {
