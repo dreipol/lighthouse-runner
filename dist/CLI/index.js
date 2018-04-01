@@ -26,13 +26,12 @@ program
 program
     .command('report')
     .option('--config <file>', 'Use config file')
-    .option('--type <type>', 'Output type')
     .option('--silent', 'Output type')
     .option('--port <port>', 'Output type')
     .action(function (command) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { config, type, silent, port } = command;
-        yield lib_js_1.report(config, type, silent, port);
+        const { config, silent, port } = command;
+        yield lib_js_1.report(config, silent, port);
     });
 });
 program.parse(process.argv);

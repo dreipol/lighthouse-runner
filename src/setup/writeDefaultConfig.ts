@@ -59,7 +59,7 @@ function copyFile(file: string, target: string): Promise<void> {
 }
 
 /**
- * Settingup default configuration
+ * Setting up default configuration
  *
  */
 export default function writeDefaultConfig(configFolder: string): Promise<void> {

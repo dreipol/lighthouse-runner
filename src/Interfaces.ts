@@ -1,6 +1,5 @@
-import { LaunchedChrome as Chrome, Results } from 'lighthouse/typings/externs';
+import {LaunchedChrome as Chrome, Results} from 'lighthouse/typings/externs';
 import PrinterInterface from "./Logger/LoggerInterface";
-import ResultReporterInterface from "./ResultPersister/ResultPersisterInterface";
 
 export interface LaunchedChrome {
     chrome?: Chrome | null,
@@ -25,16 +24,17 @@ export interface LighthouseConfigInterface {
     disableEmulation: Boolean;
     disableThrottling: Boolean;
     budget: BudgetInterface;
-    persisters?: PersisterConfigInterface
+    persisters: PersisterConfigInterface;
 }
 
 export interface PersisterConfigInterface {
-    graphite?: GraphitePersisterConfigInterface
+    modules?: Array<string>;
+    graphite?: GraphitePersisterConfigInterface;
 }
 
 export interface GraphitePersisterConfigInterface {
-    host: string,
-    id: string,
+    host: string;
+    id: string;
 }
 
 export interface BudgetInterface {
@@ -52,7 +52,7 @@ export interface LighthouseReportConfigInterface {
 }
 
 export interface LighthouseReportResultInterface extends Results {
-    reportCategories: Array<ReportCategory>
+    reportCategories: Array<ReportCategory>;
 }
 
 export interface ReportCategory {
@@ -60,13 +60,16 @@ export interface ReportCategory {
     id: string;
     name: string;
     description: string;
-    audits: Array<Object>
+    audits: Array<Object>;
 }
 
 export interface RunnerMeta {
     configFolder: string;
     configFile: string;
-    reportFolder: string|null;
+    reportFolder: string | null;
     printer: PrinterInterface;
-    persisters: Array<ResultReporterInterface>
+}
+
+export interface MappedPersisterNameToFileInterface {
+    [index: string]: string | undefined;
 }

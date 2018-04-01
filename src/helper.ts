@@ -2,8 +2,13 @@ import chalk from 'chalk';
 import {dirname, resolve} from "path";
 
 import LoggerInterface from "./Logger/LoggerInterface";
-import ResultPersisterInterface from "./ResultPersister/ResultPersisterInterface";
-import {LighthouseConfigInterface, RunnerMeta} from "./Interfaces";
+import {LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterface} from "./Interfaces";
+
+const MAPPED_PERSISTERS: MappedPersisterNameToFileInterface = {
+    'html': './ResultPersister/HTMLResultPersister',
+    'json': './ResultPersister/JSONResultPersister',
+    'graphite': './ResultPersister/GraphiteResultPersister',
+};
 
 /**
  * Output colored flags
@@ -24,7 +29,7 @@ export function coloredFlag(name: string, flag: Boolean): string {
  * @param {ResultPersisterInterface} reporter
  * @return {RunnerMeta}
  */
-export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface, persisters: Array<ResultPersisterInterface>): RunnerMeta {
+export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface): RunnerMeta {
     let reportFolder: string | null = null;
     const configPath = dirname(configFile);
 
@@ -37,6 +42,33 @@ export function composeMetaObject(configFile: string, config: LighthouseConfigIn
         configFolder: configPath,
         reportFolder,
         printer,
-        persisters
     }
+}
+
+/**
+ * <remap given n persister names to functions
+ */
+export function remapPersisterNames(config: LighthouseConfigInterface) {
+    const {modules} = config.persisters;
+    if (!modules) {
+        return config;
+    }
+    let mappedModules = [];
+    for (let i = 0; i < modules.length; i++) {
+        const module = modules[i];
+        if (typeof module === 'string') {
+            const funcFile = MAPPED_PERSISTERS[module];
+            if (funcFile) {
+                mappedModules.push(require(funcFile).default);
+            }
+        }
+
+        if (typeof module === 'function') {
+            mappedModules.push(module);
+        }
+    }
+
+    config.persisters.modules = mappedModules;
+
+    return config;
 }

@@ -22,6 +22,7 @@ exports.default = Joi.object().keys({
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
     persisters: Joi.object().keys({
+        modules: Joi.array(),
         graphite: Joi.object().keys({
             host: Joi.string().required(),
             id: Joi.string().required(),

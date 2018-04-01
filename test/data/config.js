@@ -18,6 +18,9 @@ module.exports = {
         'best-practices': 70,
     },
     persisters: {
+        modules: [
+            'html'
+        ],
         graphite : {
             host: "localhost",
             id: 'lighthouse-runner',

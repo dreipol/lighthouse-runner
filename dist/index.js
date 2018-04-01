@@ -9,7 +9,6 @@ const configValidation_1 = require("./validation/configValidation");
 const fs_1 = require("fs");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const reportRunner_1 = require("./reportRunner");
-const NoopResultPersister_1 = __importDefault(require("./ResultPersister/NoopResultPersister"));
 function executeReport(meta, config, port) {
     const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling } = config;
     const { printer } = meta;
@@ -28,7 +27,7 @@ function executeReport(meta, config, port) {
     return reportRunner_1.runReports(meta, config, opts, port, reportPaths);
 }
 exports.executeReport = executeReport;
-function execute(configFile, port, printer = new NoopLogger_1.default(), persisters = [new NoopResultPersister_1.default()]) {
+function execute(configFile, port, printer = new NoopLogger_1.default()) {
     if (!configFile) {
         return Promise.reject(new Error('No config file provided'));
     }
@@ -37,8 +36,8 @@ function execute(configFile, port, printer = new NoopLogger_1.default(), persist
     if (!fs_1.existsSync(configFile)) {
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
-    const config = require(configFilePath);
-    const meta = helper_1.composeMetaObject(configFile, config, printer, persisters);
+    const config = helper_1.remapPersisterNames(require(configFilePath));
+    const meta = helper_1.composeMetaObject(configFile, config, printer);
     return configValidation_1.validate(config)
         .then((validatedConfig) => {
         return executeReport(meta, validatedConfig, port);

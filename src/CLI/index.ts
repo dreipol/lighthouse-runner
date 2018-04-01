@@ -21,12 +21,11 @@ program
 program
     .command('report')
     .option('--config <file>', 'Use config file')
-    .option('--type <type>', 'Output type')
     .option('--silent', 'Output type')
     .option('--port <port>', 'Output type')
     .action(async function (command: Command) {
-        const {config, type, silent, port} = command;
-        await report(config, type, silent, port);
+        const {config, silent, port} = command;
+        await report(config, silent, port);
     });
 
 

@@ -24,7 +24,7 @@ The `--setup` flag tells `dreihouse` to create an inital setup. It copies some d
 
 ## Usage
 
-    $ dreihouse report --config path/to/config/desktop.js {--port 8521}
+    $ dreihouse report --config path/to/config/desktop.js {--port 8521} {--quiet}
 
 ### Arguments 
 | option     | optional | description                                                                  |

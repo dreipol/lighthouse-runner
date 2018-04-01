@@ -1,38 +1,44 @@
 import {existsSync} from 'fs';
+
 const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 
-import ResultReporterInterface from './ResultPersisterInterface';
 import {createFolder, writeFile} from './helpers';
 import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} from '../Interfaces';
 
-export default class HTMLResultPersister implements ResultReporterInterface {
-    setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
-        const {saveReport, folder} = config;
-        const {reportFolder} = meta;
+/**
+ * Setup required folders
+ */
+function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
+    const {saveReport, folder} = config;
+    const {reportFolder} = meta;
 
-        if (!saveReport || !folder || !reportFolder) {
-            return Promise.resolve();
-        }
-
-        if (!existsSync(reportFolder)) {
-            return createFolder(reportFolder)
-        }
-
+    if (!saveReport || !folder || !reportFolder) {
         return Promise.resolve();
     }
 
-
-
-    save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
-        const {reportFolder, printer} = meta;
-        const {saveReport} = config;
-
-        if (reportFolder && saveReport) {
-            const generator = new ReportGenerator();
-            const html = generator.generateReportHtml(results);
-            writeFile(url, reportFolder, html, 'html');
-            printer.print('HTML File created')
-        }
-        return Promise.resolve(results);
+    if (!existsSync(reportFolder)) {
+        return createFolder(reportFolder)
     }
+
+    return Promise.resolve();
 }
+
+/**
+ * Create html file with reporter result
+ */
+export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+    return setup(meta, config)
+        .then(() => {
+            const {reportFolder, printer} = meta;
+            const {saveReport} = config;
+
+            if (reportFolder && saveReport) {
+                const generator = new ReportGenerator();
+                const html = generator.generateReportHtml(results);
+                writeFile(url, reportFolder, html, 'html');
+                printer.print('HTML File created')
+            }
+            return results;
+        });
+}
+

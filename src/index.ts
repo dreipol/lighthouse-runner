@@ -1,6 +1,6 @@
 import {resolve} from 'path';
 
-import {coloredFlag, composeMetaObject} from './helper';
+import {coloredFlag, composeMetaObject, remapPersisterNames} from './helper';
 import {validate} from './validation/configValidation';
 
 import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
@@ -9,8 +9,6 @@ import {existsSync} from 'fs';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
 import {runReports} from './reportRunner';
-import ResultPersisterInterface from "./ResultPersister/ResultPersisterInterface";
-import NoopResultPersister from "./ResultPersister/NoopResultPersister";
 
 
 /**
@@ -52,7 +50,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter(), persisters: Array<ResultPersisterInterface> = [new NoopResultPersister()]): Promise<Array<Array<ReportCategory>>> {
+export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter()): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         return Promise.reject(new Error('No config file provided'));
     }
@@ -63,9 +61,9 @@ export function execute(configFile: string, port: Number | null, printer: Logger
         return Promise.reject(new Error(`File not found at ${configFile}`));
     }
 
-    const config = require(configFilePath);
+    const config = remapPersisterNames(require(configFilePath));
 
-    const meta = composeMetaObject(configFile, config, printer, persisters);
+    const meta = composeMetaObject(configFile, config, printer);
 
     // @ts-ignore
     return validate(config)

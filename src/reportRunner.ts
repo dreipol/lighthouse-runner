@@ -8,8 +8,57 @@ import {
     LighthouseOptionsInterface,
     LighthouseReportResultInterface,
     LighthouseConfigInterface,
-    RunnerMeta, ReportCategory
+    RunnerMeta, ReportCategory, BudgetInterface, PersisterConfigInterface
 } from './Interfaces';
+
+/**
+ * Postprocess the result from the reporter
+ */
+function handleResult(meta: RunnerMeta, categories: Array<ReportCategory>, budget: BudgetInterface): void {
+    const {printer} = meta;
+
+    let allBudgetsReached = true;
+    for (let i = 0; i < categories.length; i++) {
+        const category = categories[i];
+        category.score = Math.round(category.score);
+
+        const isReached = checkBudget(category, budget);
+        let budgetText = getScoreString(category, budget);
+
+        if (isReached === true) {
+            budgetText = chalk.green(budgetText);
+        }
+        if (isReached === false) {
+            budgetText = chalk.red(budgetText);
+            allBudgetsReached = false;
+        }
+
+        printer.print(budgetText);
+    }
+
+    if (allBudgetsReached) {
+        printer.print(chalk.bgGreen('Congrats! Budged reached!'));
+    }
+}
+
+/**
+ * Run all configured persisters
+ */
+function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site: string, results: LighthouseReportResultInterface, persisters: PersisterConfigInterface):Promise<Array<void>> {
+    const promises = [];
+    const modules = persisters.modules;
+    if (modules) {
+        for (let i = 0; i < modules.length; i++) {
+            const persister = modules[i];
+            promises.push(
+                //@ts-ignore
+                persister(meta, config, site, results)
+            );
+        }
+    }
+
+    return Promise.all(promises)
+}
 
 /**
  * Run report
@@ -21,8 +70,8 @@ function runReport(meta: RunnerMeta,
                    opts: LighthouseOptionsInterface,
                    port: Number | null): Promise<Array<ReportCategory>> {
 
-    const {url, budget, report} = config;
-    const {printer, persisters} = meta;
+    const {url, budget, report, persisters} = config;
+    const {printer} = meta;
     const site = resolveUrl(url, path);
 
     printer.print(chalk.blue(`Run ${site}`));
@@ -30,41 +79,9 @@ function runReport(meta: RunnerMeta,
     return runner(url, path, opts, report, port)
         .then((results: LighthouseReportResultInterface) => {
             const categories = results.reportCategories;
-            let allBudgetsReached = true;
-            for (let i = 0; i < categories.length; i++) {
-                const category = categories[i];
-                category.score = Math.round(category.score);
+            handleResult(meta, categories, budget);
 
-                const isReached = checkBudget(category, budget);
-                let budgetText = getScoreString(category, budget);
-
-                if (isReached === true) {
-                    budgetText = chalk.green(budgetText);
-                }
-                if (isReached === false) {
-                    budgetText = chalk.red(budgetText);
-                    allBudgetsReached = false;
-                }
-
-                printer.print(budgetText);
-            }
-
-            if (allBudgetsReached) {
-                printer.print(chalk.bgGreen('Congrats! Budged reached!'));
-            }
-
-            const promises = [];
-            for (let i = 0; i < persisters.length; i++) {
-                const persister = persisters[i];
-                promises.push(
-                    persister.setup(meta, config)
-                        .then(() => {
-                            return persister.save(meta, config, site, results);
-                        })
-                );
-            }
-
-            return Promise.all(promises)
+            return runPersisters(meta, config, site, results, persisters)
                 .then(() => {
                     return categories;
                 })
