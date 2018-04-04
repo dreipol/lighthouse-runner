@@ -6,7 +6,7 @@ import {LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterfac
 
 const MAPPED_PERSISTERS: MappedPersisterNameToFileInterface = {
     'html': './ResultPersister/HTMLResultPersister',
-    'json': './ResultPersister/JSONResultPersister',
+    'json': './ResultPersister/JsonResultPersister',
     'graphite': './ResultPersister/GraphiteResultPersister',
 };
 

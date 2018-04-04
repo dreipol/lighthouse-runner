@@ -19,12 +19,8 @@ module.exports = {
     },
     persisters: {
         modules: [
-            'html'
-        ],
-        graphite : {
-            host: "localhost",
-            id: 'lighthouse-runner',
-        }
+            'html', "json"
+        ]
     },
     report: {
         settings: {},

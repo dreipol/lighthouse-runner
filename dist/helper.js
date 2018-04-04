@@ -7,7 +7,7 @@ const chalk_1 = __importDefault(require("chalk"));
 const path_1 = require("path");
 const MAPPED_PERSISTERS = {
     'html': './ResultPersister/HTMLResultPersister',
-    'json': './ResultPersister/JSONResultPersister',
+    'json': './ResultPersister/JsonResultPersister',
     'graphite': './ResultPersister/GraphiteResultPersister',
 };
 function coloredFlag(name, flag) {
