@@ -1,11 +1,12 @@
 import chalk from 'chalk';
-import {dirname, resolve} from "path";
+import { dirname, resolve } from "path";
 
 import LoggerInterface from "./Logger/LoggerInterface";
-import {LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterface} from "./Interfaces";
+import { LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterface } from "./Interfaces";
 
 const MAPPED_PERSISTERS: MappedPersisterNameToFileInterface = {
     'html': './ResultPersister/HTMLResultPersister',
+    'html-dashboard': './ResultPersister/HTMLDashboardResultPersister',
     'json': './ResultPersister/JsonResultPersister',
     'graphite': './ResultPersister/GraphiteResultPersister',
 };
@@ -49,7 +50,7 @@ export function composeMetaObject(configFile: string, config: LighthouseConfigIn
  * <remap given n persister names to functions
  */
 export function remapPersisterNames(config: LighthouseConfigInterface) {
-    const {modules} = config.persisters;
+    const { modules } = config.persisters;
     if (!modules) {
         return config;
     }

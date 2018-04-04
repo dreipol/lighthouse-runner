@@ -1,7 +1,7 @@
-import {parse} from 'url';
+import { parse } from 'url';
 import mkdirp from 'mkdirp';
-import {join} from "path";
-import {writeFileSync} from "fs";
+import { join } from "path";
+import { writeFileSync, readFileSync } from "fs";
 
 /**
  *  Format date
@@ -59,12 +59,16 @@ export function createFolder(path: string): Promise<undefined> {
     });
 }
 
-export function writeFile(url: string, folder: string, content: string, type: string) {
+export function writeFile(url: string, folder: string, content: string, type: string, prefix: string = '') {
 
     const reportUrl = parse(url);
     const pathname = getPathname(url);
     const filenamePrefix = formatDate(new Date());
-    const filename = join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
+    const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
 
     writeFileSync(filename, content);
+}
+
+export function readFile(path: string) {
+    return readFileSync(path, 'utf8');
 }

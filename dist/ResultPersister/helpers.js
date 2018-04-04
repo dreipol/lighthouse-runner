@@ -1,7 +1,7 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
 const mkdirp_1 = __importDefault(require("mkdirp"));
@@ -44,11 +44,15 @@ function createFolder(path) {
     });
 }
 exports.createFolder = createFolder;
-function writeFile(url, folder, content, type) {
+function writeFile(url, folder, content, type, prefix = '') {
     const reportUrl = url_1.parse(url);
     const pathname = getPathname(url);
     const filenamePrefix = formatDate(new Date());
-    const filename = path_1.join(folder, `${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
+    const filename = path_1.join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
     fs_1.writeFileSync(filename, content);
 }
 exports.writeFile = writeFile;
+function readFile(path) {
+    return fs_1.readFileSync(path, 'utf8');
+}
+exports.readFile = readFile;

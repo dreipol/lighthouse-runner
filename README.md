@@ -50,3 +50,51 @@ the sessions & cookies created previously and we can pass the lockdown page.
 - run your report command with that portnumber as a parameter
     
     `dreihouse report --config path/to/config.js --port 56723`
+
+# Setup Circle CI
+## npm command
+In order to autromate the circle ci report we have to create a npm run command
+
+    "scripts": {
+        "report": "./node_modules/.bin/dreihouse report --config ./lighthouse/lh.prod.desktop.js --silent"
+    }
+
+## sezup circle onfig yml
+Then we have to add some steps or a workflow to run the command and persist the artifacts
+
+    version: 2
+
+    general:
+    artifacts:
+        - "~/repo/reports"
+
+    jobs:
+    report:
+        docker:
+        # specify the version you desire here
+        - image: circleci/node:8.9-browsers
+        working_directory: ~/repo
+        steps:
+        - checkout
+        - restore_cache:
+            keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+        - run: npm install
+        - run: npm run report
+        - store_artifacts:
+            path: ~/repo/reports
+            destination: lighthouse
+
+
+
+    workflows:
+    version: 2
+    build_and_report:
+        jobs:
+        - report
+
+Note: You need a dockerimage that includes some Browsere: `circleci/node:8.9-browsers`.
+Otherwise install and set `CHROME_PATH` manually 
