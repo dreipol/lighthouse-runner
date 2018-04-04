@@ -64,6 +64,9 @@ function generateReportHtml(categories: Array<ReportCategory>) {
                 value: [30, 90]
             }
         },
+        size: {
+            height: 340
+        },
         bindto: '#chart'
     };
     return content.replace('INJECT_CONFIG', JSON.stringify(options));
