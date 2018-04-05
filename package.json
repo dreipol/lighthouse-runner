@@ -35,7 +35,7 @@
     "request-promise": "^4.2.2"
   },
   "peerDependencies": {
-    "@dreipol/lighthouse-config": "^0.3.0"
+    "@dreipol/lighthouse-config": "^0.4.0"
   },
   "devDependencies": {
     "@dreipol/eslint-config": "^2.0.2",
