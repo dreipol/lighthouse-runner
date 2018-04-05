@@ -1,15 +1,18 @@
-import { existsSync } from 'fs';
-import { resolve } from 'path';
+import {existsSync} from 'fs';
+import {resolve} from 'path';
 
-import { createFolder, writeFile, readFile } from './helpers';
-import { LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta, ReportCategory } from '../Interfaces';
+import {createFolder, writeFile, readFile} from './helpers';
+import {
+    LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta, ReportCategory,
+    BudgetInterface
+} from '../Interfaces';
 
 /**
  * Setup required folders
  */
 function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any> {
-    const { saveReport, folder } = config;
-    const { reportFolder } = meta;
+    const {saveReport, folder} = config;
+    const {reportFolder} = meta;
 
     if (!saveReport || !folder || !reportFolder) {
         return Promise.resolve();
@@ -22,9 +25,13 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
     return Promise.resolve();
 }
 
-function generateReportHtml(categories: Array<ReportCategory>) {
+function generateReportHtml(url: string, categories: Array<ReportCategory>, budget: BudgetInterface) {
     const shrinkedCategories = categories.map((item) => {
-        return { name: item.name, score: item.score };
+        return item.score;
+    });
+
+    const shrinkedBudget = categories.map( (item) => {
+        return budget[item.id] ? budget[item.id] : null;
     });
 
     const categoryNames = categories.map((item) => {
@@ -34,10 +41,10 @@ function generateReportHtml(categories: Array<ReportCategory>) {
     let content = readFile(resolve(__dirname, '../../Templates/dashboard.html'));
     const options = {
         data: {
-            json: shrinkedCategories,
-            keys: {
-                value: ["score"]
-            },
+            columns: [
+                ['Report', ...shrinkedCategories],
+                ['Budget', ...shrinkedBudget],
+            ],
             type: "bar",
             labels: true
         },
@@ -59,16 +66,16 @@ function generateReportHtml(categories: Array<ReportCategory>) {
             show: false
         },
         color: {
-            pattern: ["#607D8B"],
-            threshold: {
-                value: [30, 90]
-            }
+            pattern: ["#607D8B", "#66bb6a"],
         },
         size: {
             height: 340
         },
         bindto: '#chart'
     };
+
+
+    content = content.replace('INJECT_URL', url);
     return content.replace('INJECT_CONFIG', JSON.stringify(options));
 }
 
@@ -78,11 +85,11 @@ function generateReportHtml(categories: Array<ReportCategory>) {
 export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
     return setup(meta, config)
         .then(() => {
-            const { reportFolder, printer } = meta;
-            const { saveReport } = config;
+            const {reportFolder, printer} = meta;
+            const {saveReport} = config;
 
             if (reportFolder && saveReport) {
-                const html = generateReportHtml(results.reportCategories);
+                const html = generateReportHtml(url, results.reportCategories, config.budget);
                 writeFile(url, reportFolder, html, 'html', 'dashboard_');
                 printer.print('HTML Dashboard File created')
             }

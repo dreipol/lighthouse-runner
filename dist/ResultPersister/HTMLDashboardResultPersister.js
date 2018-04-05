@@ -14,9 +14,12 @@ function setup(meta, config) {
     }
     return Promise.resolve();
 }
-function generateReportHtml(categories) {
+function generateReportHtml(url, categories, budget) {
     const shrinkedCategories = categories.map((item) => {
-        return { name: item.name, score: item.score };
+        return item.score;
+    });
+    const shrinkedBudget = categories.map((item) => {
+        return budget[item.id] ? budget[item.id] : null;
     });
     const categoryNames = categories.map((item) => {
         return item.name;
@@ -24,10 +27,10 @@ function generateReportHtml(categories) {
     let content = helpers_1.readFile(path_1.resolve(__dirname, '../../Templates/dashboard.html'));
     const options = {
         data: {
-            json: shrinkedCategories,
-            keys: {
-                value: ["score"]
-            },
+            columns: [
+                ['Report', ...shrinkedCategories],
+                ['Budget', ...shrinkedBudget],
+            ],
             type: "bar",
             labels: true
         },
@@ -49,16 +52,14 @@ function generateReportHtml(categories) {
             show: false
         },
         color: {
-            pattern: ["#607D8B"],
-            threshold: {
-                value: [30, 90]
-            }
+            pattern: ["#607D8B", "#66bb6a"],
         },
         size: {
             height: 340
         },
         bindto: '#chart'
     };
+    content = content.replace('INJECT_URL', url);
     return content.replace('INJECT_CONFIG', JSON.stringify(options));
 }
 function save(meta, config, url, results) {
@@ -67,7 +68,7 @@ function save(meta, config, url, results) {
         const { reportFolder, printer } = meta;
         const { saveReport } = config;
         if (reportFolder && saveReport) {
-            const html = generateReportHtml(results.reportCategories);
+            const html = generateReportHtml(url, results.reportCategories, config.budget);
             helpers_1.writeFile(url, reportFolder, html, 'html', 'dashboard_');
             printer.print('HTML Dashboard File created');
         }

@@ -1,23 +1,29 @@
 <html>
 
-    <head>
-        <title>Project Dashboard</title>
-        <meta charset="UTF-8" />
-        <script src="https://d3js.org/d3.v4.min.js"></script>
+<head>
+    <title>Project Dashboard</title>
+    <meta charset="UTF-8"/>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
-        <link href="https://naver.github.io/billboard.js/release/latest/dist/billboard.min.css" rel="stylesheet">
-        <script src="https://naver.github.io/billboard.js/release/latest/dist/billboard.min.js"></script>
-    </head>
+    <link href="https://naver.github.io/billboard.js/release/latest/dist/billboard.min.css" rel="stylesheet">
+    <script src="https://naver.github.io/billboard.js/release/latest/dist/billboard.min.js"></script>
+    <style>
+        html {
+            font-family: "Helvetica Neue";
+        }
+    </style>
+</head>
 
-    <body>
-        <div id="chart"></div>
+<body>
+<h2>INJECT_URL</h2>
+<div id="chart"></div>
 
-        <script>
-            (function () {
-                var config = INJECT_CONFIG;
-                bb.generate(config);
-            })();
-        </script>
-    </body>
+<script>
+    (function () {
+        var config = INJECT_CONFIG;
+        bb.generate(config);
+    })();
+</script>
+</body>
 
 </html>
