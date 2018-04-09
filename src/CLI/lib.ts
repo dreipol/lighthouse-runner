@@ -5,9 +5,7 @@ import ConsoleLogger from "../Logger/ConsoleLogger";
 import writeDefaultConfig from '../setup/writeDefaultConfig.js';
 
 export async function report(config: string, silent: boolean, port: number | null) {
-
     const printer = silent ? new NoopLogger() : new ConsoleLogger();
-
     return await execute(config, port, printer)
 }
 

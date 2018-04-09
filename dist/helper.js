@@ -8,8 +8,8 @@ const path_1 = require("path");
 const MAPPED_PERSISTERS = {
     'html': './ResultPersister/HTMLResultPersister',
     'html-dashboard': './ResultPersister/HTMLDashboardResultPersister',
+    'json-dashboard': './ResultPersister/JsonDashboardResultPersister',
     'json': './ResultPersister/JsonResultPersister',
-    'graphite': './ResultPersister/GraphiteResultPersister',
 };
 function coloredFlag(name, flag) {
     if (flag === true) {

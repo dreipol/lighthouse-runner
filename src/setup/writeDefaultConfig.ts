@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import { info as log } from 'fancy-log';
 
 /**
- * Get templatefolder from installed module
+ * Get template folder from installed module
  */
 function getConfigModulePath(baseDir: string): Promise<string> {
     return new Promise((res, rej) => {
@@ -18,7 +18,7 @@ function getConfigModulePath(baseDir: string): Promise<string> {
 }
 
 /**
- * Get all templatefiles from module
+ * Get all template files from module
  */
 function getTemplateFiles(templateFolder: string): Promise<Array<string>> {
     return new Promise((res, rej) => {
@@ -32,7 +32,7 @@ function getTemplateFiles(templateFolder: string): Promise<Array<string>> {
 }
 
 /**
- * Copy all templatefiles
+ * Copy all template files
  */
 function copyFiles(files: Array<string>, target: string): Promise<Array<any>> {
     let promises = [];

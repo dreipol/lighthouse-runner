@@ -1,12 +1,12 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
-}
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
+const fs_1 = require("fs");
 const helper_1 = require("./helper");
 const configValidation_1 = require("./validation/configValidation");
-const fs_1 = require("fs");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = require("./ReportRunner");
 function executeReport(meta, config, port) {
@@ -43,9 +43,6 @@ function execute(configFile, port, printer = new NoopLogger_1.default()) {
     return configValidation_1.validate(config)
         .then((validatedConfig) => {
         return executeReport(meta, validatedConfig, port);
-    })
-        .catch((e) => {
-        console.error(e);
     });
 }
 exports.execute = execute;

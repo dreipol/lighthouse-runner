@@ -57,7 +57,6 @@ function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptionsInter
         });
 }
 
-
 /**
  * Run single report for given url
  *

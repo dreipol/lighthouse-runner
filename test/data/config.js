@@ -1,4 +1,3 @@
-
 module.exports = {
     url: 'https://dreipol.github.io',
     paths: [
@@ -19,7 +18,10 @@ module.exports = {
     },
     persisters: {
         modules: [
-            'html', "html-dashboard"
+            'html',
+            "html-dashboard",
+            "json",
+            "json-dashboard",
         ]
     },
     report: {
@@ -216,13 +218,13 @@ module.exports = {
             'manual-pwa-checks': {
                 title: 'Additional items to manually check',
                 description: 'These checks are required by the baseline ' +
-                    '[PWA Checklist](https://developers.google.com/web/progressive-web-apps/checklist) but are ' +
-                    'not automatically checked by Lighthouse. They do not affect your score but it\'s important that you verify them manually.',
+                '[PWA Checklist](https://developers.google.com/web/progressive-web-apps/checklist) but are ' +
+                'not automatically checked by Lighthouse. They do not affect your score but it\'s important that you verify them manually.',
             },
             'seo-mobile': {
                 title: 'Mobile Friendly',
                 description: 'Make sure your pages are mobile friendly so users don’t have to pinch or zoom ' +
-                    'in order to read the content pages. [Learn more](https://developers.google.com/search/mobile-sites/).',
+                'in order to read the content pages. [Learn more](https://developers.google.com/search/mobile-sites/).',
             },
             'seo-content': {
                 title: 'Content Best Practices',
@@ -352,8 +354,8 @@ module.exports = {
             'seo': {
                 name: 'SEO',
                 description: 'These checks ensure that your page is optimized for search engine results ranking. ' +
-                    'There are additional factors Lighthouse does not check that may affect your search ranking. ' +
-                    '[Learn more](https://support.google.com/webmasters/answer/35769).',
+                'There are additional factors Lighthouse does not check that may affect your search ranking. ' +
+                '[Learn more](https://support.google.com/webmasters/answer/35769).',
                 audits: [
                     { id: 'viewport', weight: 1, group: 'seo-mobile' },
                     { id: 'document-title', weight: 1, group: 'seo-content' },

@@ -46,7 +46,7 @@ function runReport(meta, config, path, opts, port) {
     printer.print(chalk_1.default.blue(`Run ${site}`));
     return lighthouseRunner_1.default(url, path, opts, report, port)
         .then((results) => {
-        const categories = results.reportCategories;
+        const categories = results.reportCategories.slice(0);
         handleResult(meta, categories, budget);
         return runPersisters(meta, config, site, results, persisters)
             .then(() => {

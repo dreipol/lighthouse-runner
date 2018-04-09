@@ -25,7 +25,10 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
     return Promise.resolve();
 }
 
-function generateReportHtml(url: string, categories: Array<ReportCategory>, budget: BudgetInterface) {
+/**
+ * Generate HTML for dashboard
+ */
+function generateReportHtml(url: string, categories: Array<ReportCategory>, budget: BudgetInterface): string {
     const shrinkedCategories = categories.map((item) => {
         return item.score;
     });
@@ -74,7 +77,6 @@ function generateReportHtml(url: string, categories: Array<ReportCategory>, budg
         bindto: '#chart'
     };
 
-
     content = content.replace('INJECT_URL', url);
     return content.replace('INJECT_CONFIG', JSON.stringify(options));
 }
@@ -90,7 +92,7 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
 
             if (reportFolder && saveReport) {
                 const html = generateReportHtml(url, results.reportCategories, config.budget);
-                writeFile(url, reportFolder, html, 'html', 'dashboard_');
+                writeFile(url, reportFolder, html, 'html', '','dashboard');
                 printer.print('HTML Dashboard File created')
             }
             return results;

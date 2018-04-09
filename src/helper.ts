@@ -7,8 +7,8 @@ import { LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterfa
 const MAPPED_PERSISTERS: MappedPersisterNameToFileInterface = {
     'html': './ResultPersister/HTMLResultPersister',
     'html-dashboard': './ResultPersister/HTMLDashboardResultPersister',
+    'json-dashboard': './ResultPersister/JsonDashboardResultPersister',
     'json': './ResultPersister/JsonResultPersister',
-    'graphite': './ResultPersister/GraphiteResultPersister',
 };
 
 /**
@@ -24,11 +24,7 @@ export function coloredFlag(name: string, flag: Boolean): string {
 
 /**
  *
- * @param {string} configFile
- * @param {LighthouseConfigInterface} config
- * @param {PrinterInterface} printer
- * @param {ResultPersisterInterface} reporter
- * @return {RunnerMeta}
+ * Create meta object that is available nearly everywhere
  */
 export function composeMetaObject(configFile: string, config: LighthouseConfigInterface, printer: LoggerInterface): RunnerMeta {
     let reportFolder: string | null = null;

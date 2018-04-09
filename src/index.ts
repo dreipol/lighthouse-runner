@@ -1,11 +1,9 @@
 import {resolve} from 'path';
+import {existsSync} from 'fs';
 
 import {coloredFlag, composeMetaObject, remapPersisterNames} from './helper';
 import {validate} from './validation/configValidation';
-
 import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
-import {existsSync} from 'fs';
-
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
 import {runReports} from './ReportRunner';
@@ -45,7 +43,6 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
     return runReports(meta, config, opts, port, reportPaths)
 }
 
-
 /**
  * Execute reporter
  *
@@ -67,12 +64,8 @@ export function execute(configFile: string, port: Number | null, printer: Logger
 
     const meta = composeMetaObject(configFile, config, printer);
 
-    // @ts-ignore
     return validate(config)
-        .then((validatedConfig) => {
+        .then((validatedConfig: LighthouseConfigInterface) => {
             return executeReport(meta, validatedConfig, port);
-        })
-        .catch( (e) =>{
-            console.error(e);
-        })
+        });
 }

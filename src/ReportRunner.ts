@@ -12,7 +12,7 @@ import {
 } from './Interfaces';
 
 /**
- * Postprocess the result from the reporter
+ * Post process the result from the reporter
  */
 function handleResult(meta: RunnerMeta, categories: Array<ReportCategory>, budget: BudgetInterface): void {
     const {printer} = meta;
@@ -44,7 +44,7 @@ function handleResult(meta: RunnerMeta, categories: Array<ReportCategory>, budge
 /**
  * Run all configured persisters
  */
-function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site: string, results: LighthouseReportResultInterface, persisters: PersisterConfigInterface):Promise<Array<void>> {
+function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site: string, results: LighthouseReportResultInterface, persisters: PersisterConfigInterface): Promise<Array<void>> {
     const promises = [];
     const modules = persisters.modules;
     if (modules) {
@@ -78,15 +78,14 @@ function runReport(meta: RunnerMeta,
 
     return runner(url, path, opts, report, port)
         .then((results: LighthouseReportResultInterface) => {
-            const categories = results.reportCategories;
+            const categories = results.reportCategories.slice(0);
             handleResult(meta, categories, budget);
 
             return runPersisters(meta, config, site, results, persisters)
                 .then(() => {
                     return categories;
-                })
-        })
-
+                });
+        });
 }
 
 /**

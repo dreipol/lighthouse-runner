@@ -69,7 +69,7 @@ function save(meta, config, url, results) {
         const { saveReport } = config;
         if (reportFolder && saveReport) {
             const html = generateReportHtml(url, results.reportCategories, config.budget);
-            helpers_1.writeFile(url, reportFolder, html, 'html', 'dashboard_');
+            helpers_1.writeFile(url, reportFolder, html, 'html', '', 'dashboard');
             printer.print('HTML Dashboard File created');
         }
         return results;

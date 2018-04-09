@@ -42,10 +42,7 @@ export function getPathname(url: string): string {
 }
 
 /**
-
- /**
- *
- * @param path
+ * create a folder
  */
 export function createFolder(path: string): Promise<undefined> {
     return new Promise((res, rej) => {
@@ -59,16 +56,22 @@ export function createFolder(path: string): Promise<undefined> {
     });
 }
 
-export function writeFile(url: string, folder: string, content: string, type: string, prefix: string = '') {
+/**
+ * Write file
+ */
+export function writeFile(url: string, folder: string, content: string, type: string, prefix: string = '', suffix: string = ''): void {
 
     const reportUrl = parse(url);
     const pathname = getPathname(url);
     const filenamePrefix = formatDate(new Date());
-    const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${type}`);
+    const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${suffix}.${type}`);
 
     writeFileSync(filename, content);
 }
 
-export function readFile(path: string) {
+/**
+ * Read file
+ */
+export function readFile(path: string): string {
     return readFileSync(path, 'utf8');
 }

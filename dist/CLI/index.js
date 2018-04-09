@@ -11,27 +11,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const program = require('commander');
 const { version } = require('../../package.json');
-const lib_js_1 = require("./lib.js");
+const lib_1 = require("./lib");
 program
     .version(version);
 program
-    .command('setup')
-    .option('--config <folder>', 'Use config file')
-    .action(function (command) {
+    .command('setup <folder>')
+    .description('Setup default configuration')
+    .action(function (folder) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { config } = command;
-        yield lib_js_1.setup(config);
+        yield lib_1.setup(folder);
     });
 });
 program
-    .command('report')
-    .option('--config <file>', 'Use config file')
-    .option('--silent', 'Output type')
-    .option('--port <port>', 'Output type')
-    .action(function (command) {
+    .command('report <file>')
+    .description('Run report with configuration')
+    .option('-s, --silent', 'Output type')
+    .option('-p, --port <port>', 'Use given port for debugging')
+    .action(function (file, command) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { config, silent, port } = command;
-        yield lib_js_1.report(config, silent, port);
+        const { silent, port } = command;
+        yield lib_1.report(file, silent, port);
     });
 });
 program.parse(process.argv);
