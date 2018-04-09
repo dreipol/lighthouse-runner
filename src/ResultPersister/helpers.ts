@@ -64,7 +64,10 @@ export function writeFile(url: string, folder: string, content: string, type: st
     const reportUrl = parse(url);
     const pathname = getPathname(url);
     const filenamePrefix = formatDate(new Date());
-    const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${suffix}.${type}`);
+    if(suffix){
+        suffix = `.${suffix}`
+    }
+    const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}${suffix}.${type}`);
 
     writeFileSync(filename, content);
 }

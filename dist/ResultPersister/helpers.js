@@ -48,7 +48,10 @@ function writeFile(url, folder, content, type, prefix = '', suffix = '') {
     const reportUrl = url_1.parse(url);
     const pathname = getPathname(url);
     const filenamePrefix = formatDate(new Date());
-    const filename = path_1.join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}.${suffix}.${type}`);
+    if (suffix) {
+        suffix = `.${suffix}`;
+    }
+    const filename = path_1.join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}${suffix}.${type}`);
     fs_1.writeFileSync(filename, content);
 }
 exports.writeFile = writeFile;
