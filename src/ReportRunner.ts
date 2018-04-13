@@ -14,7 +14,7 @@ import {
 /**
  * Post process the result from the reporter
  */
-function handleResult(meta: RunnerMeta, categories: Array<ReportCategory>, budget: BudgetInterface): void {
+function printResults(meta: RunnerMeta, categories: Array<ReportCategory>, budget: BudgetInterface): void {
     const {printer} = meta;
 
     let allBudgetsReached = true;
@@ -44,7 +44,7 @@ function handleResult(meta: RunnerMeta, categories: Array<ReportCategory>, budge
 /**
  * Run all configured persisters
  */
-function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site: string, results: LighthouseReportResultInterface, persisters: PersisterConfigInterface): Promise<Array<void>> {
+function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site: string, results: LighthouseReportResultInterface, persisters: PersisterConfigInterface): Promise<Array<string>> {
     const promises = [];
     const modules = persisters.modules;
     if (modules) {
@@ -58,6 +58,13 @@ function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site
     }
 
     return Promise.all(promises)
+        .then((files) => {
+            return files.filter((item) => {
+                if (item) {
+                    return item;
+                }
+            });
+        });
 }
 
 /**
@@ -68,7 +75,7 @@ function runReport(meta: RunnerMeta,
                    config: LighthouseConfigInterface,
                    path: string,
                    opts: LighthouseOptionsInterface,
-                   port: Number | null): Promise<Array<ReportCategory>> {
+                   port: Number | null): Promise<LighthouseReportResultInterface> {
 
     const {url, budget, report, persisters} = config;
     const {printer} = meta;
@@ -78,12 +85,13 @@ function runReport(meta: RunnerMeta,
 
     return runner(url, path, opts, report, port)
         .then((results: LighthouseReportResultInterface) => {
-            const categories = results.reportCategories.slice(0);
-            handleResult(meta, categories, budget);
+            const categories = results.reportCategories;
+            printResults(meta, categories, budget);
 
             return runPersisters(meta, config, site, results, persisters)
-                .then(() => {
-                    return categories;
+                .then((files) => {
+                    results.files = files;
+                    return results;
                 });
         });
 }

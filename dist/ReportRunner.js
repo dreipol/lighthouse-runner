@@ -7,7 +7,7 @@ const url_1 = require("url");
 const chalk_1 = __importDefault(require("chalk"));
 const lighthouseRunner_1 = __importDefault(require("./lighthouseRunner"));
 const budget_1 = require("./budget");
-function handleResult(meta, categories, budget) {
+function printResults(meta, categories, budget) {
     const { printer } = meta;
     let allBudgetsReached = true;
     for (let i = 0; i < categories.length; i++) {
@@ -37,7 +37,14 @@ function runPersisters(meta, config, site, results, persisters) {
             promises.push(persister(meta, config, site, results));
         }
     }
-    return Promise.all(promises);
+    return Promise.all(promises)
+        .then((files) => {
+        return files.filter((item) => {
+            if (item) {
+                return item;
+            }
+        });
+    });
 }
 function runReport(meta, config, path, opts, port) {
     const { url, budget, report, persisters } = config;
@@ -46,11 +53,12 @@ function runReport(meta, config, path, opts, port) {
     printer.print(chalk_1.default.blue(`Run ${site}`));
     return lighthouseRunner_1.default(url, path, opts, report, port)
         .then((results) => {
-        const categories = results.reportCategories.slice(0);
-        handleResult(meta, categories, budget);
+        const categories = results.reportCategories;
+        printResults(meta, categories, budget);
         return runPersisters(meta, config, site, results, persisters)
-            .then(() => {
-            return categories;
+            .then((files) => {
+            results.files = files;
+            return results;
         });
     });
 }

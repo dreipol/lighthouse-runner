@@ -48,6 +48,7 @@ export interface LighthouseReportConfigInterface {
 }
 
 export interface LighthouseReportResultInterface extends Results {
+    files: Array<string>;
     reportCategories: Array<ReportCategory>;
 }
 

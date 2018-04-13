@@ -2,6 +2,7 @@
 const { start, stop } = require('./data/simpleServer');
 const { execute } = require('../dist/index');
 
+const { existsSync } = require('fs');
 const rimraf = require('rimraf');
 const { expect } = require('chai');
 
@@ -24,8 +25,12 @@ describe('Run report', function () {
         return execute('./test/data/config.js', null)
             .then(results => {
                 expect(results).to.have.lengthOf(1);
-                const routeReport = results.shift();
-                const category = routeReport.shift();
+                const result = results.shift();
+                const reportCategories = result.reportCategories;
+                expect(reportCategories).to.have.lengthOf(5);
+
+                const category = reportCategories.shift();
+
 
                 expect(category).to.have.property('name');
                 expect(category).to.have.property('description');
@@ -35,10 +40,19 @@ describe('Run report', function () {
             });
     });
 
-    it.skip('Create report', () => {
+    it('Create persister files', () => {
         return execute('./test/data/config.js', null)
             .then(results => {
                 expect(results).to.have.lengthOf(1);
+                const result = results.shift();
+                const { files } = result;
+
+                expect(result).to.have.property('files');
+                expect(files).to.have.lengthOf(4);
+
+                for (let i = 0; i < files.length; i++) {
+                    expect(existsSync(files[i])).to.be.true;
+                }
             });
     });
 
