@@ -8,6 +8,7 @@ const DEFAULT_CONFIG = {
         '/',
     ],
     folder: "./reports",
+    tag: 'default',
     chromeFlags: ['--headless'],
     disableEmulation: true,
     disableThrottling: true,

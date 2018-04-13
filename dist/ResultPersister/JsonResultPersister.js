@@ -19,9 +19,8 @@ function save(meta, config, url, results) {
         const { printer, reportFolder } = meta;
         const { saveReport } = config;
         if (reportFolder && saveReport) {
-            const filenamne = helpers_1.writeFile(url, reportFolder, JSON.stringify(results), 'json', config.persisters.prefix);
-            printer.print(`Report created and saved`);
-            printer.print(`Save report to: ${reportFolder}`);
+            const filenamne = helpers_1.writeFile(url, reportFolder, JSON.stringify(results), 'json', config.tag);
+            printer.print('JSON File created');
             printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
             return filenamne;
         }

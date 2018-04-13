@@ -92,7 +92,7 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
 
             if (reportFolder && saveReport) {
                 const html = generateReportHtml(url, results.reportCategories, config.budget);
-                const file = writeFile(url, reportFolder, html, 'html', config.persisters.prefix,'dashboard');
+                const file = writeFile(url, reportFolder, html, 'html', config.tag,'dashboard');
                 printer.print('HTML Dashboard File created')
                 return file;
             }

@@ -22,7 +22,7 @@ function save(meta, config, url, results) {
         if (reportFolder && saveReport) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
-            const filename = helpers_1.writeFile(url, reportFolder, html, 'html', config.persisters.prefix);
+            const filename = helpers_1.writeFile(url, reportFolder, html, 'html', config.tag);
             printer.print('HTML File created');
             return filename;
         }

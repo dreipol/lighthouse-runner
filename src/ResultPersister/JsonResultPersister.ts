@@ -33,9 +33,8 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
             const {saveReport} = config;
 
             if (reportFolder && saveReport) {
-                const filenamne = writeFile(url, reportFolder, JSON.stringify(results), 'json', config.persisters.prefix);
-                printer.print(`Report created and saved`);
-                printer.print(`Save report to: ${reportFolder}`);
+                const filenamne = writeFile(url, reportFolder, JSON.stringify(results), 'json', config.tag);
+                printer.print('JSON File created');
                 printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
                 return filenamne;
             }

@@ -49,15 +49,15 @@ function generateReportJson(url: string, categories: Array<ReportCategory>, budg
 /**
  * Create html file with reporter result
  */
-export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<string|undefined> {
+export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<string | undefined> {
     return setup(meta, config)
         .then(() => {
             const {reportFolder, printer} = meta;
             const {saveReport} = config;
 
             if (reportFolder && saveReport) {
-                const json = generateReportJson(url, results.reportCategories.slice(0), config.budget, config.persisters.prefix);
-                const filename = writeFile(url, reportFolder, json, 'json', config.persisters.prefix, 'dashboard');
+                const json = generateReportJson(url, results.reportCategories.slice(0), config.budget, config.tag);
+                const filename = writeFile(url, reportFolder, json, 'json', config.tag, 'dashboard');
                 printer.print('JSON Dashboard File created');
                 return filename;
             }

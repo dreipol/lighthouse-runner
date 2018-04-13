@@ -25,12 +25,11 @@ export interface LighthouseConfigInterface {
     disableThrottling: Boolean;
     budget: BudgetInterface;
     persisters: PersisterConfigInterface;
+    tag: string;
 }
 
 export interface PersisterConfigInterface {
     modules?: Array<string>;
-    prefix?: string;
-
 }
 
 export interface BudgetInterface {

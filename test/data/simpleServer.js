@@ -3,7 +3,7 @@ const port = 8000;
 
 const requestHandler = (request, response) => {
     response.end('Hello Node.js Server!');
-}
+};
 
 const server = http.createServer(requestHandler);
 
@@ -29,4 +29,4 @@ function start() {
 module.exports = {
     stop,
     start
-}
+};

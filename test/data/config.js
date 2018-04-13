@@ -4,6 +4,7 @@ module.exports = {
         '/lighthouse-runner',
     ],
     folder: "./reports",
+    tag: 'test',
     chromeFlags: ['--headless'],
     disableEmulation: true,
     disableThrottling: true,
@@ -17,7 +18,6 @@ module.exports = {
         'best-practices': 70,
     },
     persisters: {
-        prefix: 'test',
         modules: [
             'html',
             "html-dashboard",

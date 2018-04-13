@@ -8,14 +8,14 @@ export default Joi.object().keys({
             is: true,
             then: Joi.string().required(),
         }),
+    tag: Joi.string().required(),
     chromeFlags: Joi.array().items(Joi.string()).required(),
     disableEmulation: Joi.boolean().required(),
     disableThrottling: Joi.boolean().required(),
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
     persisters: Joi.object().keys({
-        prefix: Joi.string(),
-        modules:Joi.array(),
+        modules: Joi.array(),
     }),
     report: Joi.object().keys({
         settings: Joi.object(),

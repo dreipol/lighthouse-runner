@@ -35,7 +35,7 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
             if (reportFolder && saveReport) {
                 const generator = new ReportGenerator();
                 const html = generator.generateReportHtml(results);
-                const filename = writeFile(url, reportFolder, html, 'html', config.persisters.prefix);
+                const filename = writeFile(url, reportFolder, html, 'html', config.tag);
                 printer.print('HTML File created');
                 return filename;
             }
