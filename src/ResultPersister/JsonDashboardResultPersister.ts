@@ -27,7 +27,7 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
 /**
  * Generate HTML for dashboard
  */
-function generateReportJson(url: string, categories: Array<ReportCategory>, budget: BudgetInterface): string {
+function generateReportJson(url: string, categories: Array<ReportCategory>, budget: BudgetInterface, tag?: string): string {
 
     //@ts-ignore
     const _categories = categories.map((item) => {
@@ -39,7 +39,8 @@ function generateReportJson(url: string, categories: Array<ReportCategory>, budg
     const content = {
         categories: _categories,
         budget,
-        url
+        url,
+        tag
     };
 
     return JSON.stringify(content)
@@ -55,7 +56,7 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
             const {saveReport} = config;
 
             if (reportFolder && saveReport) {
-                const json = generateReportJson(url, results.reportCategories.slice(0), config.budget);
+                const json = generateReportJson(url, results.reportCategories.slice(0), config.budget, config.persisters.prefix);
                 const filename = writeFile(url, reportFolder, json, 'json', config.persisters.prefix, 'dashboard');
                 printer.print('JSON Dashboard File created');
                 return filename;
