@@ -8,7 +8,7 @@ export default Joi.object().keys({
             is: true,
             then: Joi.string().required(),
         }),
-    tag: Joi.string().required(),
+    tag: Joi.string().default('report').required(),
     chromeFlags: Joi.array().items(Joi.string()).required(),
     disableEmulation: Joi.boolean().required(),
     disableThrottling: Joi.boolean().required(),
