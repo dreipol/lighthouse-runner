@@ -22,10 +22,11 @@ function save(meta, config, url, results) {
         if (reportFolder && saveReport) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
-            helpers_1.writeFile(url, reportFolder, html, 'html');
+            const filename = helpers_1.writeFile(url, reportFolder, html, 'html', config.persisters.prefix);
             printer.print('HTML File created');
+            return filename;
         }
-        return results;
+        return;
     });
 }
 exports.default = save;

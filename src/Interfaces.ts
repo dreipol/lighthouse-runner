@@ -29,12 +29,8 @@ export interface LighthouseConfigInterface {
 
 export interface PersisterConfigInterface {
     modules?: Array<string>;
-    graphite?: GraphitePersisterConfigInterface;
-}
+    prefix?: string;
 
-export interface GraphitePersisterConfigInterface {
-    host: string;
-    id: string;
 }
 
 export interface BudgetInterface {

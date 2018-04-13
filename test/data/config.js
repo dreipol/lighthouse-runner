@@ -17,6 +17,7 @@ module.exports = {
         'best-practices': 70,
     },
     persisters: {
+        prefix: 'test',
         modules: [
             'html',
             "html-dashboard",

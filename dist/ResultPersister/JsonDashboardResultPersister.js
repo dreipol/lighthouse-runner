@@ -33,10 +33,11 @@ function save(meta, config, url, results) {
         const { saveReport } = config;
         if (reportFolder && saveReport) {
             const json = generateReportJson(url, results.reportCategories.slice(0), config.budget);
-            helpers_1.writeFile(url, reportFolder, json, 'json', '', 'dashboard');
+            const filename = helpers_1.writeFile(url, reportFolder, json, 'json', config.persisters.prefix, 'dashboard');
             printer.print('JSON Dashboard File created');
+            return filename;
         }
-        return results;
+        return;
     });
 }
 exports.default = save;

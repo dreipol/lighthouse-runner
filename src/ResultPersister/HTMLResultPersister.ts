@@ -26,7 +26,7 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
 /**
  * Create html file with reporter result
  */
-export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<string|undefined> {
     return setup(meta, config)
         .then(() => {
             const {reportFolder, printer} = meta;
@@ -35,10 +35,12 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
             if (reportFolder && saveReport) {
                 const generator = new ReportGenerator();
                 const html = generator.generateReportHtml(results);
-                writeFile(url, reportFolder, html, 'html');
-                printer.print('HTML File created')
+                const filename = writeFile(url, reportFolder, html, 'html', config.persisters.prefix);
+                printer.print('HTML File created');
+                return filename;
             }
-            return results;
+
+            return;
         });
 }
 

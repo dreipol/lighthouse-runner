@@ -59,7 +59,7 @@ export function createFolder(path: string): Promise<undefined> {
 /**
  * Write file
  */
-export function writeFile(url: string, folder: string, content: string, type: string, prefix: string = '', suffix: string = ''): void {
+export function writeFile(url: string, folder: string, content: string, type: string, prefix: string = '', suffix: string = ''): string {
 
     const reportUrl = parse(url);
     const pathname = getPathname(url);
@@ -67,9 +67,15 @@ export function writeFile(url: string, folder: string, content: string, type: st
     if(suffix){
         suffix = `.${suffix}`
     }
+
+    if(prefix){
+        prefix = `${prefix}.`
+    }
+
     const filename = join(folder, `${prefix}${filenamePrefix}__${reportUrl.hostname}__${pathname}${suffix}.${type}`);
 
     writeFileSync(filename, content);
+    return filename;
 }
 
 /**

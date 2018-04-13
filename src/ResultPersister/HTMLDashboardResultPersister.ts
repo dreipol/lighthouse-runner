@@ -84,7 +84,7 @@ function generateReportHtml(url: string, categories: Array<ReportCategory>, budg
 /**
  * Create html file with reporter result
  */
-export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<string|undefined> {
     return setup(meta, config)
         .then(() => {
             const {reportFolder, printer} = meta;
@@ -92,10 +92,11 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
 
             if (reportFolder && saveReport) {
                 const html = generateReportHtml(url, results.reportCategories, config.budget);
-                writeFile(url, reportFolder, html, 'html', '','dashboard');
+                const file = writeFile(url, reportFolder, html, 'html', config.persisters.prefix,'dashboard');
                 printer.print('HTML Dashboard File created')
+                return file;
             }
-            return results;
+            return;
         });
 }
 

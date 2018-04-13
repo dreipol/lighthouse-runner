@@ -26,18 +26,20 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
  * Create json file with reporter result
  *
  */
-export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<LighthouseReportResultInterface> {
+export default function save(meta: RunnerMeta, config: LighthouseConfigInterface, url: string, results: LighthouseReportResultInterface): Promise<string|undefined> {
     return setup(meta, config)
         .then(() => {
             const {printer, reportFolder} = meta;
             const {saveReport} = config;
 
             if (reportFolder && saveReport) {
-                writeFile(url, reportFolder, JSON.stringify(results), 'json');
+                const filenamne = writeFile(url, reportFolder, JSON.stringify(results), 'json', config.persisters.prefix);
                 printer.print(`Report created and saved`);
                 printer.print(`Save report to: ${reportFolder}`);
                 printer.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
+                return filenamne;
             }
-            return results;
+
+            return;
         });
 }
