@@ -23,7 +23,8 @@ function generateReportJson(url, categories, budget, tag) {
         categories: _categories,
         budget,
         url,
-        tag
+        tag,
+        key: `${tag}:${url}`
     };
     return JSON.stringify(content);
 }

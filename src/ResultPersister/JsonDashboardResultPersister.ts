@@ -40,7 +40,8 @@ function generateReportJson(url: string, categories: Array<ReportCategory>, budg
         categories: _categories,
         budget,
         url,
-        tag
+        tag,
+        key: `${tag}:${url}`
     };
 
     return JSON.stringify(content)

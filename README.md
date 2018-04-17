@@ -19,7 +19,9 @@ Then run
 
     dreihouse setup path/to/configfolder
 
-The `--setup` flag tells `dreihouse` to create an inital setup. It copies some default config files from the `@dreipol/lighthouse-config` module.
+The `setup` command tells `dreihouse` to create an initial setup. 
+It copies some default config files from the `@dreipol/lighthouse-config` module.
+After the files have been created, modify the config to your flavour
 
 ## Usage
 
@@ -50,49 +52,49 @@ the sessions & cookies created previously and we can pass the lockdown page.
     `dreihouse report path/to/config.js --port 56723`
 
 # Setup Circle CI
-## npm command
-In order to autromate the circle ci report we have to create a npm run command
-
-    "scripts": {
-        "report": "./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.desktop.js --silent"
-    }
-
-## sezup circle onfig yml
-Then we have to add some steps or a workflow to run the command and persist the artifacts
+## setup circle config yml
+Example config file: 
 
     version: 2
-
-    general:
-    artifacts:
-        - "~/repo/reports"
-
     jobs:
-    report:
+      build:
         docker:
-        # specify the version you desire here
-        - image: circleci/node:8.9-browsers
+          - image: circleci/node:8.9-browsers
         working_directory: ~/repo
         steps:
-        - checkout
-        - restore_cache:
-            keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+          
+          - checkout
+          
+          - restore_cache:
+              keys:
+              - v1-npm-dependencies-{{ checksum "package.json" }}
+          
+          - run:
+              name: install
+              command: |
+                npm i
+          
+          - run:
+              name: install dreihouse
+              command: |
+                npm i @dreipol/lighthouse-audits@0.5.0
+                npm i @dreipol/lighthouse-config@0.6.0
+                npm i @dreipol/lighthouse-runner@0.17.2
+          
+          - save_cache:
+              paths:
+                -  ~/repo/node_modules
+              key: v1-npm-dependencies-{{ checksum "package.json" }}
+          
+          - run:
+              name: run report
+              command: |
+                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.desktop.js
+                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.mobile.js    
+          
+          - store_artifacts:
+              path: ~/repo/reports
+              destination: lighthouse
 
-        - run: npm install
-        - run: npm run report
-        - store_artifacts:
-            path: ~/repo/reports
-            destination: lighthouse
-
-
-
-    workflows:
-    version: 2
-    build_and_report:
-        jobs:
-        - report
-
-Note: You need a dockerimage that includes some Browsere: `circleci/node:8.9-browsers`.
+Note: You need a dockerimage that includes some browses: `circleci/node:8.9-browsers`.
 Otherwise install and set `CHROME_PATH` manually
