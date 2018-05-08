@@ -1,7 +1,9 @@
 import {existsSync} from 'fs';
 
 import {createFolder, writeFile} from './helpers';
-import {LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta} from '../Interfaces';
+import RunnerMeta from "../Interfaces/RunnerMeta";
+import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
 
 
 /**

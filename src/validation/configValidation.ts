@@ -1,7 +1,7 @@
 import * as joi from 'joi';
 
-import { LighthouseConfigInterface } from '../Interfaces';
 import Schema from './ConfigSchema';
+import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
 
 export function validate(config: LighthouseConfigInterface): Promise<LighthouseConfigInterface>  {
     const result = joi.validate(config, Schema);

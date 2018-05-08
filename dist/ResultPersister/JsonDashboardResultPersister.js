@@ -19,14 +19,13 @@ function generateReportJson(url, categories, budget, tag) {
         delete item.audits;
         return item;
     });
-    const content = {
+    return {
         categories: _categories,
         budget,
         url,
         tag,
         key: `${tag}:${url}`
     };
-    return JSON.stringify(content);
 }
 function save(meta, config, url, results) {
     return setup(meta, config)
@@ -35,7 +34,7 @@ function save(meta, config, url, results) {
         const { saveReport } = config;
         if (reportFolder && saveReport) {
             const json = generateReportJson(url, results.reportCategories.slice(0), config.budget, config.tag);
-            const filename = helpers_1.writeFile(url, reportFolder, json, 'json', config.tag, 'dashboard');
+            const filename = helpers_1.writeFile(url, reportFolder, JSON.stringify(json), 'json', config.tag, 'dashboard');
             printer.print('JSON Dashboard File created');
             return filename;
         }

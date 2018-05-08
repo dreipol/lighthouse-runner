@@ -1,8 +1,9 @@
-import { BudgetInterface, ReportCategory } from './Interfaces';
-
 /**
  * Check scores against configured budget and make colored output
  */
+import ReportCategory from "./Interfaces/ReportCategory";
+import BudgetInterface from "./Interfaces/BudgetInterface";
+
 export function checkBudget(caregory: ReportCategory, budget: BudgetInterface): Boolean | null {
     const { id, score } = caregory;
     const threshhold = budget[id];

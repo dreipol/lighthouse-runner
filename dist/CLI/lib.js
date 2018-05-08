@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require("../");
 const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
-const writeDefaultConfig_js_1 = __importDefault(require("../setup/writeDefaultConfig.js"));
+const writeDefaultConfig_js_1 = __importDefault(require("./writeDefaultConfig.js"));
 function report(config, silent, port) {
     return __awaiter(this, void 0, void 0, function* () {
         const printer = silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();

@@ -2,10 +2,11 @@ import {existsSync} from 'fs';
 import {resolve} from 'path';
 
 import {createFolder, writeFile, readFile} from './helpers';
-import {
-    LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta, ReportCategory,
-    BudgetInterface
-} from '../Interfaces';
+import RunnerMeta from "../Interfaces/RunnerMeta";
+import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import ReportCategory from "../Interfaces/ReportCategory";
+import BudgetInterface from "../Interfaces/BudgetInterface";
+import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
 
 /**
  * Setup required folders

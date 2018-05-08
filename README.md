@@ -77,9 +77,9 @@ Example config file:
           - run:
               name: install dreihouse
               command: |
-                npm i @dreipol/lighthouse-audits@0.5.0
-                npm i @dreipol/lighthouse-config@0.6.0
-                npm i @dreipol/lighthouse-runner@0.17.2
+                npm i @dreipol/lighthouse-audits@0.5
+                npm i @dreipol/lighthouse-config@0.6
+                npm i @dreipol/lighthouse-runner@0.17
           
           - save_cache:
               paths:

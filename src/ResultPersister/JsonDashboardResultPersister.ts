@@ -1,10 +1,12 @@
 import {existsSync} from 'fs';
 
 import {createFolder, writeFile} from './helpers';
-import {
-    LighthouseReportResultInterface, LighthouseConfigInterface, RunnerMeta, ReportCategory,
-    BudgetInterface
-} from '../Interfaces';
+import RunnerMeta from "../Interfaces/RunnerMeta";
+import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import ReportCategory from "../Interfaces/ReportCategory";
+import BudgetInterface from "../Interfaces/BudgetInterface";
+import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
+import ReportResult from "../Interfaces/ReportResult";
 
 /**
  * Setup required folders
@@ -27,7 +29,7 @@ function setup(meta: RunnerMeta, config: LighthouseConfigInterface): Promise<any
 /**
  * Generate HTML for dashboard
  */
-function generateReportJson(url: string, categories: Array<ReportCategory>, budget: BudgetInterface, tag?: string): string {
+function generateReportJson(url: string, categories: Array<ReportCategory>, budget: BudgetInterface, tag: string): ReportResult {
 
     //@ts-ignore
     const _categories = categories.map((item) => {
@@ -36,15 +38,13 @@ function generateReportJson(url: string, categories: Array<ReportCategory>, budg
         return item;
     });
 
-    const content = {
+    return {
         categories: _categories,
         budget,
         url,
         tag,
         key: `${tag}:${url}`
     };
-
-    return JSON.stringify(content)
 }
 
 /**
@@ -58,7 +58,7 @@ export default function save(meta: RunnerMeta, config: LighthouseConfigInterface
 
             if (reportFolder && saveReport) {
                 const json = generateReportJson(url, results.reportCategories.slice(0), config.budget, config.tag);
-                const filename = writeFile(url, reportFolder, json, 'json', config.tag, 'dashboard');
+                const filename = writeFile(url, reportFolder, JSON.stringify(json), 'json', config.tag, 'dashboard');
                 printer.print('JSON Dashboard File created');
                 return filename;
             }

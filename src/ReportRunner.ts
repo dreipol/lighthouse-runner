@@ -3,13 +3,14 @@ import chalk from 'chalk';
 
 import runner from './lighthouseRunner';
 import {checkBudget, getScoreString} from './budget';
+import RunnerMeta from "./Interfaces/RunnerMeta";
+import ReportCategory from "./Interfaces/ReportCategory";
+import BudgetInterface from "./Interfaces/BudgetInterface";
+import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
+import LighthouseReportResultInterface from "./Interfaces/LighthouseReportResultInterface";
+import PersisterConfigInterface from "./Interfaces/PersisterConfigInterface";
+import LighthouseOptions from "./Interfaces/LighthouseOptions";
 
-import {
-    LighthouseOptionsInterface,
-    LighthouseReportResultInterface,
-    LighthouseConfigInterface,
-    RunnerMeta, ReportCategory, BudgetInterface, PersisterConfigInterface
-} from './Interfaces';
 
 /**
  * Post process the result from the reporter
@@ -74,7 +75,7 @@ function runPersisters(meta: RunnerMeta, config: LighthouseConfigInterface, site
 function runReport(meta: RunnerMeta,
                    config: LighthouseConfigInterface,
                    path: string,
-                   opts: LighthouseOptionsInterface,
+                   opts: LighthouseOptions,
                    port: Number | null): Promise<LighthouseReportResultInterface> {
 
     const {url, budget, report, persisters} = config;
@@ -99,7 +100,7 @@ function runReport(meta: RunnerMeta,
 /**
  * Run multiple urls synchronously
  */
-export function runReports(meta: RunnerMeta, config: LighthouseConfigInterface, opts: LighthouseOptionsInterface, port: Number | null, paths: Array<string>, allResults: Array<Object> = []): Promise<any> {
+export function runReports(meta: RunnerMeta, config: LighthouseConfigInterface, opts: LighthouseOptions, port: Number | null, paths: Array<string>, allResults: Array<Object> = []): Promise<any> {
     const urlPath = paths.shift();
     const {printer} = meta;
 

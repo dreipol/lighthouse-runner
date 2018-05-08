@@ -1,8 +1,10 @@
 import chalk from 'chalk';
 import { dirname, resolve } from "path";
 
-import LoggerInterface from "./Logger/LoggerInterface";
-import { LighthouseConfigInterface, RunnerMeta, MappedPersisterNameToFileInterface } from "./Interfaces";
+import LoggerInterface from "./Interfaces/LoggerInterface";
+import MappedPersisterNameToFileInterface from "./Interfaces/MappedPersisterNameToFileInterface";
+import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
+import RunnerMeta from "./Interfaces/RunnerMeta";
 
 const MAPPED_PERSISTERS: MappedPersisterNameToFileInterface = {
     'html': './ResultPersister/HTMLResultPersister',

@@ -3,10 +3,13 @@ import {existsSync} from 'fs';
 
 import {coloredFlag, composeMetaObject, remapPersisterNames} from './helper';
 import {validate} from './validation/configValidation';
-import {LighthouseOptionsInterface, LighthouseConfigInterface, ReportCategory, RunnerMeta} from './Interfaces';
 import NoopPrinter from './Logger/NoopLogger';
-import LoggerInterface from './Logger/LoggerInterface';
+import LoggerInterface from './Interfaces/LoggerInterface';
 import {runReports} from './ReportRunner';
+import RunnerMeta from "./Interfaces/RunnerMeta";
+import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
+import ReportCategory from "./Interfaces/ReportCategory";
+import LighthouseOptions from "./Interfaces/LighthouseOptions";
 
 
 /**
@@ -17,7 +20,7 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
     const {url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling} = config;
     const {printer} = meta;
 
-    const opts: LighthouseOptionsInterface = {
+    const opts: LighthouseOptions = {
         chromeFlags,
     };
 

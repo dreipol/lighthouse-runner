@@ -1,15 +1,19 @@
+import LighthouseOptions from "./Interfaces/LighthouseOptions";
+
 const lighthouse = require('lighthouse');
 import { launch } from 'chrome-launcher';
 import { resolve } from 'url';
 import { LaunchedChrome as Chrome } from 'lighthouse/typings/externs';
+import LaunchedChrome from "./Interfaces/LaunchedChrome";
+import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
+import LighthouseReportResultInterface from "./Interfaces/LighthouseReportResultInterface";
 
-import { LaunchedChrome, LighthouseOptionsInterface, LighthouseReportConfigInterface, LighthouseReportResultInterface } from './Interfaces';
 
 /**
  * Start either a new chrome instance or get port from passed arguments
  *
  */
-function getChromePort(opts: LighthouseOptionsInterface, port: Number | null): Promise<LaunchedChrome> {
+function getChromePort(opts: LighthouseOptions, port: Number | null): Promise<LaunchedChrome> {
     if (port) {
         return Promise.resolve({
             port: port,
@@ -26,7 +30,7 @@ function getChromePort(opts: LighthouseOptionsInterface, port: Number | null): P
 /**
  * Start and run lighthouse
  */
-function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, port: Number | null): Promise<LighthouseReportResultInterface> {
+function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptions, config: LighthouseConfigInterface, port: Number | null): Promise<LighthouseReportResultInterface> {
     return getChromePort(opts, port)
         .then(({ chrome, port }) => {
             opts.port = port;
@@ -61,7 +65,7 @@ function launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptionsInter
  * Run single report for given url
  *
  */
-export default function runReport(targetUrl: string, urlPath: string, opts: LighthouseOptionsInterface, config: LighthouseReportConfigInterface, port: Number | null): Promise<LighthouseReportResultInterface> {
+export default function runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: LighthouseConfigInterface, port: Number | null): Promise<LighthouseReportResultInterface> {
     let url = resolve(targetUrl, urlPath);
 
     return launchChromeAndRunLighthouse(url, opts, config, port);
