@@ -56,13 +56,13 @@ export default class Dreihouse {
             reportPaths = [paths];
         }
 
-        const reporters = ReporterModuleLoader.load(reportFolder, this.config, this.logger, this.config.persisters.modules);
+        const reporters = ReporterModuleLoader.load(reportFolder, this.config, this.logger, this.config.reporters.modules);
         const runner = new ReportRunner(this.logger, this.config, port, opts, reporters);
         return await runner.createReports(reportPaths)
     }
 
     public async execute(port: Number | null): Promise<Array<ReportCategory[]>> {
-        this.logger.print(`Using persisters: ${this.config.persisters.modules}`);
+        this.logger.print(`Using persisters: ${this.config.reporters.modules}`);
         const reportFolder = resolve(dirname(this.configFile), this.config.folder);
         return await this.executeReport(reportFolder, port);
     }

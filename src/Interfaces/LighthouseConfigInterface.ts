@@ -1,5 +1,5 @@
 import BudgetInterface from "./BudgetInterface";
-import PersisterConfigInterface from "./PersisterConfigInterface";
+import ReportersConfigInterface from "./ReportersConfigInterface";
 
 export default interface LighthouseConfigInterface {
     url: string;
@@ -11,6 +11,6 @@ export default interface LighthouseConfigInterface {
     disableEmulation: Boolean;
     disableThrottling: Boolean;
     budget: BudgetInterface;
-    persisters: PersisterConfigInterface;
+    reporters: ReportersConfigInterface;
     tag: string;
 }

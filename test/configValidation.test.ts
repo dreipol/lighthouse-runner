@@ -13,7 +13,7 @@ const DEFAULT_CONFIG = {
     disableEmulation: true,
     disableThrottling: true,
     saveReport: true,
-    persisters: {
+    reporters: {
         modules: []
     },
     budget: {

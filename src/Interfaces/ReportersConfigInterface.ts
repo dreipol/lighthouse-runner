@@ -1,5 +1,5 @@
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
 
-export default interface PersisterConfigInterface {
+export default interface ReportersConfigInterface {
     modules: Array<string | ResultReporterInterface>;
 }
