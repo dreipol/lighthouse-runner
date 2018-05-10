@@ -5,6 +5,7 @@ import HTMLResultPersister from "../ResultReporter/HTMLResultPersister";
 import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
 import LoggerInterface from "../Logger/LoggerInterface";
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
+import CLIReporter from "../ResultReporter/CLIReporter";
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -13,13 +14,14 @@ const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractResultReporter> }
     'json': JsonResultReporter,
     'json-dashboard': DashboardJsonResultReporter,
     'html': HTMLResultPersister,
+    'cli': CLIReporter,
 };
 
 export default class ReporterModuleLoader {
 
     static getMappedReporter(key: string) {
         if (!MAPPED_REPORTERS[key]) {
-            console.warn(`No reporterfor ${key} found`);
+            console.warn(`No reporter for ${key} found`);
             return null;
         }
 

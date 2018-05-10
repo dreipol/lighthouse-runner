@@ -20,9 +20,9 @@ module.exports = {
     reporters: {
         modules: [
             'html',
-            "html-dashboard",
             "json",
             "json-dashboard",
+            "cli"
         ]
     },
     report: {

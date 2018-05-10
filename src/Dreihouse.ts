@@ -1,7 +1,6 @@
 import {dirname, resolve} from 'path';
 import {existsSync} from 'fs';
 
-import {coloredFlag} from './utils/helper';
 import ConfigValidator from './Validator/ConfigValidator';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
@@ -10,7 +9,6 @@ import DreihouseConfig from "./Interfaces/Config/DreihouseConfig";
 import ReportCategory from "./Interfaces/ReportCategory";
 import LighthouseOptions from "./Interfaces/LighthouseOptions";
 import ReporterModuleLoader from "./ReporterModuleLoader/ReporterModuleLoader";
-
 
 export default class Dreihouse {
     configFile: string;
@@ -22,7 +20,6 @@ export default class Dreihouse {
         this.logger = logger;
 
         const configFilePath = resolve(process.cwd(), this.configFile);
-        logger.print(`Config file: ${this.configFile}`);
         if (!existsSync(this.configFile)) {
             throw new Error(`File not found at ${this.configFile}`);
         }
@@ -31,7 +28,7 @@ export default class Dreihouse {
     }
 
     private async executeReport(reportFolder: string, port: Number | null): Promise<Array<Array<ReportCategory>>> {
-        const {url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling} = this.config;
+        const {paths, chromeFlags, disableEmulation, disableThrottling} = this.config;
 
         const opts: LighthouseOptions = {
             chromeFlags,
@@ -40,15 +37,6 @@ export default class Dreihouse {
         opts.disableDeviceEmulation = disableEmulation;
         opts.disableNetworkThrottling = disableThrottling;
         opts.disableCpuThrottling = disableThrottling;
-
-        this.logger.print(`Run Report: ${url}`);
-
-        this.logger.print(`Config:`,
-            `[${chromeFlags.join(';')}]`,
-            coloredFlag('disableEmulation', disableEmulation),
-            coloredFlag('disableThrottling', disableThrottling),
-            coloredFlag('saveReport', saveReport)
-        );
 
         let reportPaths: Array<string> = paths;
 
@@ -62,7 +50,6 @@ export default class Dreihouse {
     }
 
     public async execute(port: Number | null): Promise<Array<ReportCategory[]>> {
-        this.logger.print(`Using persisters: ${this.config.reporters.modules}`);
         const reportFolder = resolve(dirname(this.configFile), this.config.folder);
         return await this.executeReport(reportFolder, port);
     }

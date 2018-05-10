@@ -1,5 +1,6 @@
 'use strict';
 import Dreihouse from "../src/Dreihouse";
+import ConsoleLogger from "../src/Logger/ConsoleLogger";
 
 const {expect} = require('chai');
 
@@ -15,7 +16,7 @@ describe('Run report', function () {
     });
 
     it('Create report', async () => {
-        const dreihouse = new Dreihouse('./test/data/config.js');
+        const dreihouse = new Dreihouse('./test/data/config.js', new ConsoleLogger());
         const results = await dreihouse.execute(null);
 
         expect(results).to.have.lengthOf(1);
