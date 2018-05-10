@@ -1,11 +1,11 @@
 import * as joi from 'joi';
 
 import Schema from './ConfigSchema';
-import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
 
 export default class ConfigValidator {
 
-    static validate(config: LighthouseConfigInterface): LighthouseConfigInterface {
+    static validate(config: DreihouseConfig): DreihouseConfig {
         const result = joi.validate(config, Schema);
         if (result.error) {
             throw new Error(result.error.message)

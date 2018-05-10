@@ -1,4 +1,4 @@
-import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
 export default class ConfigValidator {
-    static validate(config: LighthouseConfigInterface): LighthouseConfigInterface;
+    static validate(config: DreihouseConfig): DreihouseConfig;
 }

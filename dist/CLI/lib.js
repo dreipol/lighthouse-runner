@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
-const writeDefaultConfig_js_1 = __importDefault(require("./writeDefaultConfig.js"));
+const writeDefaultConfig_1 = __importDefault(require("./writeDefaultConfig"));
 const Dreihouse_1 = __importDefault(require("../Dreihouse"));
 function report(config, silent, port) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -25,7 +25,7 @@ function report(config, silent, port) {
 exports.report = report;
 function setup(config) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield writeDefaultConfig_js_1.default(config);
+        return yield writeDefaultConfig_1.default(config);
     });
 }
 exports.setup = setup;

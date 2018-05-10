@@ -1,24 +1,24 @@
-import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
 import LighthouseOptions from "../Interfaces/LighthouseOptions";
 import {resolve as resolveUrl} from "url";
-import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
+import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
 import chalk from "chalk";
 import LighthouseRunner from "../LighthouseRunner/LighthouseRunner";
 import ReportCategory from "../Interfaces/ReportCategory";
 import {checkBudget, getScoreString} from "../utils/budget";
-import BudgetInterface from "../Interfaces/BudgetInterface";
+import Budget from "../Interfaces/Config/Budget";
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
 import LoggerInterface from "../Logger/LoggerInterface";
 
 export default class ReportRunner {
-    config: LighthouseConfigInterface;
+    config: DreihouseConfig;
     port: Number | null;
     opts: LighthouseOptions;
     logger: LoggerInterface;
     reporters: ResultReporterInterface[];
 
 
-    constructor(logger: LoggerInterface, config: LighthouseConfigInterface, port: Number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: DreihouseConfig, port: Number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;
@@ -26,7 +26,7 @@ export default class ReportRunner {
         this.reporters = reporters;
     }
 
-    private async printResults(categories: Array<ReportCategory>, budget: BudgetInterface): Promise<void> {
+    private async printResults(categories: Array<ReportCategory>, budget: Budget): Promise<void> {
 
         let allBudgetsReached = true;
         for (let i = 0; i < categories.length; i++) {
@@ -52,14 +52,14 @@ export default class ReportRunner {
         }
     }
 
-    private async runPersisters(site: string, results: LighthouseReportResultInterface): Promise<void> {
+    private async runPersisters(site: string, results: LighthouseReportResult): Promise<void> {
         this.reporters.forEach(async(persister) => {
             await persister.setup();
             await persister.handle(site, results);
         });
     }
 
-    private async runReport(path: string): Promise<LighthouseReportResultInterface> {
+    private async runReport(path: string): Promise<LighthouseReportResult> {
 
         const {url, budget, report} = this.config;
         const site = resolveUrl(url, path);

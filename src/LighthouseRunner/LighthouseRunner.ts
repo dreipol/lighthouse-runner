@@ -4,8 +4,8 @@ import {launch} from 'chrome-launcher';
 
 import LighthouseOptions from "../Interfaces/LighthouseOptions";
 import LaunchedChrome from "../Interfaces/LaunchedChrome";
-import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
-import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
+import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
+import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
 
 export default class LighthouseRunner {
 
@@ -21,11 +21,11 @@ export default class LighthouseRunner {
         return {chrome, port: chrome.port};
     }
 
-    private async launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptions, config: LighthouseConfigInterface, _port: Number | null): Promise<LighthouseReportResultInterface> {
+    private async launchChromeAndRunLighthouse(_url: String, opts: LighthouseOptions, config: DreihouseConfig, _port: Number | null): Promise<LighthouseReportResult> {
         const {chrome, port} = await this.getChromePort(opts, _port);
         opts.port = port;
 
-        const results: LighthouseReportResultInterface = await lighthouse(_url, opts, config)
+        const results: LighthouseReportResult = await lighthouse(_url, opts, config)
         delete results.artifacts;
         if (chrome) {
             await chrome.kill();
@@ -33,7 +33,7 @@ export default class LighthouseRunner {
         return results;
     }
 
-    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: LighthouseConfigInterface, port: Number | null): Promise<LighthouseReportResultInterface> {
+    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfig, port: Number | null): Promise<LighthouseReportResult> {
         let url = resolve(targetUrl, urlPath);
         return await this.launchChromeAndRunLighthouse(url, opts, config, port);
     }

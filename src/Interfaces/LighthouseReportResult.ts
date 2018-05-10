@@ -1,7 +1,6 @@
 import {Results} from "lighthouse/typings/externs";
 import ReportCategory from "./ReportCategory";
 
-export default interface LighthouseReportResultInterface extends Results {
-    files: Array<string>;
+export default interface LighthouseReportResult extends Results {
     reportCategories: Array<ReportCategory>;
 }

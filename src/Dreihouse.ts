@@ -6,7 +6,7 @@ import ConfigValidator from './Validator/ConfigValidator';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
 import ReportRunner from './ReportRunner/ReportRunner';
-import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
+import DreihouseConfig from "./Interfaces/Config/DreihouseConfig";
 import ReportCategory from "./Interfaces/ReportCategory";
 import LighthouseOptions from "./Interfaces/LighthouseOptions";
 import ReporterModuleLoader from "./ReporterModuleLoader/ReporterModuleLoader";
@@ -14,7 +14,7 @@ import ReporterModuleLoader from "./ReporterModuleLoader/ReporterModuleLoader";
 
 export default class Dreihouse {
     configFile: string;
-    config: LighthouseConfigInterface;
+    config: DreihouseConfig;
     logger: LoggerInterface;
 
     constructor(configFile: string, logger: LoggerInterface = new NoopPrinter()) {

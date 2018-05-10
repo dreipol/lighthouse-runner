@@ -25,7 +25,7 @@ class Dreihouse {
         const configFilePath = path_1.resolve(process.cwd(), this.configFile);
         logger.print(`Config file: ${this.configFile}`);
         if (!fs_1.existsSync(this.configFile)) {
-            new Error(`File not found at ${this.configFile}`);
+            throw new Error(`File not found at ${this.configFile}`);
         }
         this.config = ConfigValidator_1.default.validate(require(configFilePath));
     }
@@ -44,14 +44,14 @@ class Dreihouse {
             if (!Array.isArray(paths)) {
                 reportPaths = [paths];
             }
-            const reporters = ReporterModuleLoader_1.default.load(reportFolder, this.config, this.logger, this.config.persisters.modules);
+            const reporters = ReporterModuleLoader_1.default.load(reportFolder, this.config, this.logger, this.config.reporters.modules);
             const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, reporters);
             return yield runner.createReports(reportPaths);
         });
     }
     execute(port) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.logger.print(`Using persisters: ${this.config.persisters.modules}`);
+            this.logger.print(`Using persisters: ${this.config.reporters.modules}`);
             const reportFolder = path_1.resolve(path_1.dirname(this.configFile), this.config.folder);
             return yield this.executeReport(reportFolder, port);
         });

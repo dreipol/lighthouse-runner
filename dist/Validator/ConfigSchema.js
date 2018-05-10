@@ -22,7 +22,7 @@ exports.default = Joi.object().keys({
     disableThrottling: Joi.boolean().required(),
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
-    persisters: Joi.object().keys({
+    reporters: Joi.object().keys({
         modules: Joi.array().items(Joi.string(), Joi.object({
             setup: Joi.func().required(),
             handle: Joi.func().required(),

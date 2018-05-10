@@ -1,4 +1,4 @@
 import ReportCategory from "../Interfaces/ReportCategory";
-import BudgetInterface from "../Interfaces/BudgetInterface";
-export declare function checkBudget(caregory: ReportCategory, budget: BudgetInterface): Boolean | null;
-export declare function getScoreString(category: ReportCategory, budget: BudgetInterface): string;
+import Budget from "../Interfaces/Config/Budget";
+export declare function checkBudget(caregory: ReportCategory, budget: Budget): Boolean | null;
+export declare function getScoreString(category: ReportCategory, budget: Budget): string;

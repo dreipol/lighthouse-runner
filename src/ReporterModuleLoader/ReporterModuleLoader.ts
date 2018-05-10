@@ -2,7 +2,7 @@ import AbstractResultReporter from "../ResultReporter/AbstractResultReporter";
 import JsonResultReporter from '../ResultReporter/JsonResultReporter';
 import DashboardJsonResultReporter from '../ResultReporter/DashboardJsonResultReporter';
 import HTMLResultPersister from "../ResultReporter/HTMLResultPersister";
-import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
+import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
 import LoggerInterface from "../Logger/LoggerInterface";
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
 
@@ -26,7 +26,7 @@ export default class ReporterModuleLoader {
         return MAPPED_REPORTERS[key]
     }
 
-    static load(reportFolder: string | null, config: LighthouseConfigInterface, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
+    static load(reportFolder: string | null, config: DreihouseConfig, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
         const handlers: ResultReporterInterface[] = [];
 
         loaders.forEach((module: string | ResultReporterInterface) => {

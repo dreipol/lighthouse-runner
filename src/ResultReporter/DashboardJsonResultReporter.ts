@@ -1,16 +1,16 @@
 import {existsSync} from 'fs';
 
-import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
+import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
 import AbstractResultReporter from "./AbstractResultReporter";
 import ReportCategory from "../Interfaces/ReportCategory";
-import BudgetInterface from "../Interfaces/BudgetInterface";
+import Budget from "../Interfaces/Config/Budget";
 import ReportResult from "../Interfaces/ReportResult";
 import writeFile from "../utils/writeFile";
 import createFolder from "../utils/createFolder";
 
 export default class DashboardJsonResultReporter extends AbstractResultReporter {
 
-    protected generateReportJson(url: string, categories: Array<ReportCategory>, budget: BudgetInterface, tag: string): ReportResult {
+    protected generateReportJson(url: string, categories: Array<ReportCategory>, budget: Budget, tag: string): ReportResult {
 
         const _categories = categories.map((item) => {
             item = Object.assign({}, item);
@@ -41,7 +41,7 @@ export default class DashboardJsonResultReporter extends AbstractResultReporter 
         return Promise.resolve();
     }
 
-    async handle(url: string, results: LighthouseReportResultInterface): Promise<void> {
+    async handle(url: string, results: LighthouseReportResult): Promise<void> {
         const {saveReport} = this.config;
 
         if (this.reportFolder && saveReport) {
