@@ -25,7 +25,7 @@ After the files have been created, modify the config to your flavour
 
 ## Usage
 
-    $ dreihouse report path/to/config/desktop.js {--port 8521} {--quiet}
+    dreihouse report path/to/config/desktop.js {--port 8521} {--quiet}
 
 ### Arguments
 | option     | optional | description                                                                  |
