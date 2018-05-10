@@ -1,6 +1,7 @@
 const { validate } = require('../dist/validation/configValidation');
 
 const { expect } = require('chai');
+const sinon = require('sinon');
 
 const DEFAULT_CONFIG = {
     url: 'http://localhost:8000',
@@ -69,6 +70,29 @@ describe('Validate Config', function () {
     it('`folder` is required when `saveReport` is true', (done) => {
         let config = Object.assign({}, DEFAULT_CONFIG, {
             saveReport: true
+        });
+
+        delete config.folder;
+
+        validate(config)
+            .then(() => {
+                done(new Error('Invalid config should fail'));
+            })
+            .catch(e => {
+                done();
+            });
+    });
+
+    it('Use objects directly in config for persisters', (done) => {
+        let config = Object.assign({}, DEFAULT_CONFIG, {
+            persisters: {
+                modules: [
+                    {
+                        setup(){},
+                        handle(){}
+                    }
+                ]
+            }
         });
 
         delete config.folder;

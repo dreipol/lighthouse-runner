@@ -1,15 +1,16 @@
 import {resolve} from 'path';
 import {existsSync} from 'fs';
 
-import {coloredFlag, composeMetaObject, remapPersisterNames} from './helper';
-import {validate} from './validation/configValidation';
+import {coloredFlag, composeMetaObject} from './utils/helper';
+import ConfigValidator from './validation/ConfigValidator';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Interfaces/LoggerInterface';
-import {runReports} from './ReportRunner';
+import ReportRunner from './ReportRunner/ReportRunner';
 import RunnerMeta from "./Interfaces/RunnerMeta";
 import LighthouseConfigInterface from "./Interfaces/LighthouseConfigInterface";
 import ReportCategory from "./Interfaces/ReportCategory";
 import LighthouseOptions from "./Interfaces/LighthouseOptions";
+import ReporterModuleLoader from "./ReporterModuleLoader/ReporterModuleLoader";
 
 
 /**
@@ -43,14 +44,17 @@ export function executeReport(meta: RunnerMeta, config: LighthouseConfigInterfac
         reportPaths = [paths];
     }
 
-    return runReports(meta, config, opts, port, reportPaths)
+    const reporters = ReporterModuleLoader.load(meta.reportFolder, config, printer, config.persisters.modules);
+
+    const runner = new ReportRunner(config, port, opts, meta, reporters);
+    return runner.createReports(reportPaths)
 }
 
 /**
  * Execute reporter
  *
  */
-export function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter()): Promise<Array<Array<ReportCategory>>> {
+export async function execute(configFile: string, port: Number | null, printer: LoggerInterface = new NoopPrinter()): Promise<Array<Array<ReportCategory>>> {
     if (!configFile) {
         return Promise.reject(new Error('No config file provided'));
     }
@@ -63,12 +67,9 @@ export function execute(configFile: string, port: Number | null, printer: Logger
 
     let config: LighthouseConfigInterface = require(configFilePath);
     printer.print(`Using persisters: ${config.persisters.modules}`);
-    config = remapPersisterNames(config);
 
     const meta = composeMetaObject(configFile, config, printer);
 
-    return validate(config)
-        .then((validatedConfig: LighthouseConfigInterface) => {
-            return executeReport(meta, validatedConfig, port);
-        });
+    const validatedConfig = await ConfigValidator.validate(config);
+    return await executeReport(meta, validatedConfig, port);
 }

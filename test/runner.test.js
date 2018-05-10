@@ -39,21 +39,4 @@ describe('Run report', function () {
                 expect(category).to.have.property('score');
             });
     });
-
-    it('Create persister files', () => {
-        return execute('./test/data/config.js', null)
-            .then(results => {
-                expect(results).to.have.lengthOf(1);
-                const result = results.shift();
-                const { files } = result;
-
-                expect(result).to.have.property('files');
-                expect(files).to.have.lengthOf(4);
-
-                for (let i = 0; i < files.length; i++) {
-                    expect(existsSync(files[i])).to.be.true;
-                }
-            });
-    });
-
 });

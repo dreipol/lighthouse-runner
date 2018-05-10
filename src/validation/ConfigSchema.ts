@@ -15,7 +15,10 @@ export default Joi.object().keys({
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
     persisters: Joi.object().keys({
-        modules: Joi.array(),
+        modules: Joi.array().items(Joi.string(), Joi.object({
+            setup: Joi.func().required(),
+            handle: Joi.func().required(),
+        })),
     }),
     report: Joi.object().keys({
         settings: Joi.object(),

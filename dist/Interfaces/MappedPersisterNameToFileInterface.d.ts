@@ -1,3 +1,4 @@
+import AbstractResultReporter from "../ResultReporter/AbstractResultReporter";
 export default interface MappedPersisterNameToFileInterface {
-    [index: string]: string | undefined;
+    [index: string]: AbstractResultReporter;
 }
