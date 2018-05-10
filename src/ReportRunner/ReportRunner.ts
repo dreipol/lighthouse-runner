@@ -1,4 +1,3 @@
-import RunnerMeta from "../Interfaces/RunnerMeta";
 import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
 import LighthouseOptions from "../Interfaces/LighthouseOptions";
 import {resolve as resolveUrl} from "url";
@@ -9,25 +8,25 @@ import ReportCategory from "../Interfaces/ReportCategory";
 import {checkBudget, getScoreString} from "../utils/budget";
 import BudgetInterface from "../Interfaces/BudgetInterface";
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
+import LoggerInterface from "../Logger/LoggerInterface";
 
 export default class ReportRunner {
     config: LighthouseConfigInterface;
     port: Number | null;
     opts: LighthouseOptions;
-    meta: RunnerMeta;
-    persisters: ResultReporterInterface[];
+    logger: LoggerInterface;
+    reporters: ResultReporterInterface[];
 
 
-    constructor(config: LighthouseConfigInterface, port: Number | null, opts: LighthouseOptions, meta: RunnerMeta, persisters: ResultReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: LighthouseConfigInterface, port: Number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;
-        this.meta = meta;
-        this.persisters = persisters;
+        this.logger = logger;
+        this.reporters = reporters;
     }
 
     private async printResults(categories: Array<ReportCategory>, budget: BudgetInterface): Promise<void> {
-        const {printer} = this.meta;
 
         let allBudgetsReached = true;
         for (let i = 0; i < categories.length; i++) {
@@ -45,16 +44,16 @@ export default class ReportRunner {
                 allBudgetsReached = false;
             }
 
-            printer.print(budgetText);
+            this.logger.print(budgetText);
         }
 
         if (allBudgetsReached) {
-            printer.print(chalk.bgGreen('Congrats! Budged reached!'));
+            this.logger.print(chalk.bgGreen('Congrats! Budged reached!'));
         }
     }
 
     private async runPersisters(site: string, results: LighthouseReportResultInterface): Promise<void> {
-        this.persisters.forEach(async(persister) => {
+        this.reporters.forEach(async(persister) => {
             await persister.setup();
             await persister.handle(site, results);
         });
@@ -63,10 +62,9 @@ export default class ReportRunner {
     private async runReport(path: string): Promise<LighthouseReportResultInterface> {
 
         const {url, budget, report} = this.config;
-        const {printer} = this.meta;
         const site = resolveUrl(url, path);
 
-        printer.print(chalk.blue(`Run ${site}`));
+        this.logger.print(chalk.blue(`Run ${site}`));
 
         const runner = new LighthouseRunner();
         const results = await runner.runReport(url, path, this.opts, report, this.port);
@@ -79,9 +77,8 @@ export default class ReportRunner {
 
     public async createReports(paths: Array<string>, allResults: Array<Object> = []): Promise<any> {
         const urlPath = paths.shift();
-        const {printer} = this.meta;
 
-        printer.print(''.padStart(10, '-'));
+        this.logger.print(''.padStart(10, '-'));
 
         if (!urlPath) {
             return Promise.resolve();

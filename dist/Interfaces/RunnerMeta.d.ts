@@ -1,4 +1,4 @@
-import PrinterInterface from "./LoggerInterface";
+import PrinterInterface from "../Logger/LoggerInterface";
 export default interface RunnerMeta {
     configFolder: string;
     configFile: string;

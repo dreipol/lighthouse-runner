@@ -5,13 +5,12 @@ import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
 
 export default class ConfigValidator {
 
-    static validate(config: LighthouseConfigInterface): Promise<LighthouseConfigInterface> {
+    static validate(config: LighthouseConfigInterface): LighthouseConfigInterface {
         const result = joi.validate(config, Schema);
         if (result.error) {
-            return Promise.reject(result.error);
+            throw new Error(result.error.message)
         }
-
-        return Promise.resolve(result.value);
+        return result.value;
     }
 
 }

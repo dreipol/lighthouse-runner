@@ -1,7 +1,6 @@
-const { validate } = require('../dist/validation/configValidation');
-
-const { expect } = require('chai');
-const sinon = require('sinon');
+import 'mocha';
+import ConfigValidator from "../src/Validator/ConfigValidator";
+import {expect} from 'chai';
 
 const DEFAULT_CONFIG = {
     url: 'http://localhost:8000',
@@ -14,6 +13,9 @@ const DEFAULT_CONFIG = {
     disableEmulation: true,
     disableThrottling: true,
     saveReport: true,
+    persisters: {
+        modules: []
+    },
     budget: {
         dreipol: 100,
         seo: 90,
@@ -27,29 +29,25 @@ const DEFAULT_CONFIG = {
 
 describe('Validate Config', function () {
     it('Normalize config', () => {
-        let config = Object.assign({}, DEFAULT_CONFIG, {
+        const config = Object.assign({}, DEFAULT_CONFIG, {
             disableEmulation: 'true'
         });
 
-        return validate(config)
-            .then(results => {
-                expect(results.disableEmulation).to.equal(true);
-            });
+        const results = ConfigValidator.validate(config);
+        expect(results.disableEmulation).to.equal(true);
     });
 
     it('Fail on incomplete config', (done) => {
-        let config = Object.assign({}, DEFAULT_CONFIG, {
-        });
+        let config = Object.assign({}, DEFAULT_CONFIG, {});
 
         delete config.url;
 
-        validate(config)
-            .then(() => {
-                done(new Error('Invalid config should fail'));
-            })
-            .catch(e => {
-                done();
-            });
+        try {
+            ConfigValidator.validate(config)
+            done(new Error('Invalid config should fail'));
+        } catch (e) {
+            done();
+        }
     });
 
     it('`folder` is not required when `saveReport` is false', (done) => {
@@ -58,13 +56,12 @@ describe('Validate Config', function () {
             folder: null,
         });
 
-        validate(config)
-            .then(() => {
-                done();
-            })
-            .catch(e => {
-                done(e);
-            });
+        try {
+            ConfigValidator.validate(config);
+            done();
+        } catch (e) {
+            done(e);
+        }
     });
 
     it('`folder` is required when `saveReport` is true', (done) => {
@@ -74,22 +71,23 @@ describe('Validate Config', function () {
 
         delete config.folder;
 
-        validate(config)
-            .then(() => {
-                done(new Error('Invalid config should fail'));
-            })
-            .catch(e => {
-                done();
-            });
+        try {
+            ConfigValidator.validate(config)
+            done(new Error('Invalid config should fail'));
+        } catch (e) {
+            done();
+        }
     });
 
-    it('Use objects directly in config for persisters', (done) => {
+    it('Use objects directly in config for reporters', (done) => {
         let config = Object.assign({}, DEFAULT_CONFIG, {
             persisters: {
                 modules: [
                     {
-                        setup(){},
-                        handle(){}
+                        setup() {
+                        },
+                        handle() {
+                        }
                     }
                 ]
             }
@@ -97,12 +95,11 @@ describe('Validate Config', function () {
 
         delete config.folder;
 
-        validate(config)
-            .then(() => {
-                done(new Error('Invalid config should fail'));
-            })
-            .catch(e => {
-                done();
-            });
+        try {
+            ConfigValidator.validate(config)
+            done(new Error('Invalid config should fail'));
+        } catch (e) {
+            done();
+        }
     });
 });

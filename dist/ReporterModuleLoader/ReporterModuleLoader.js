@@ -14,7 +14,7 @@ const MAPPED_REPORTERS = {
 class ReporterModuleLoader {
     static getMappedReporter(key) {
         if (!MAPPED_REPORTERS[key]) {
-            console.warn(`No module found for ${key}`);
+            console.warn(`No reporterfor ${key} found`);
             return null;
         }
         return MAPPED_REPORTERS[key];
@@ -28,9 +28,9 @@ class ReporterModuleLoader {
                     handlers.push(new Reporter(reportFolder, config, logger));
                 }
             }
-            if (typeof module === 'function') {
+            if (typeof module === 'object') {
                 if (!module.setup || !module.handle) {
-                    console.warn('Module does not implement the ResultReporterInterface');
+                    console.warn('Object does not implement the ResultReporterInterface');
                 }
                 handlers.push(module);
             }

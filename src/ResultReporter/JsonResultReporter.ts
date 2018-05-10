@@ -3,7 +3,7 @@ import {existsSync} from 'fs';
 import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
 import AbstractResultReporter from "./AbstractResultReporter";
 import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
-import LoggerInterface from "../Interfaces/LoggerInterface";
+import LoggerInterface from "../Logger/LoggerInterface";
 import writeFile from "../utils/writeFile";
 import createFolder from "../utils/createFolder";
 

@@ -3,7 +3,7 @@ import JsonResultReporter from '../ResultReporter/JsonResultReporter';
 import DashboardJsonResultReporter from '../ResultReporter/DashboardJsonResultReporter';
 import HTMLResultPersister from "../ResultReporter/HTMLResultPersister";
 import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
-import LoggerInterface from "../Interfaces/LoggerInterface";
+import LoggerInterface from "../Logger/LoggerInterface";
 import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
 
 type Constructor<T> = new (...args: any[]) => T;

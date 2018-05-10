@@ -12,11 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi = __importStar(require("joi"));
 const ConfigSchema_1 = __importDefault(require("./ConfigSchema"));
-function validate(config) {
-    const result = joi.validate(config, ConfigSchema_1.default);
-    if (result.error) {
-        return Promise.reject(result.error);
+class ConfigValidator {
+    static validate(config) {
+        const result = joi.validate(config, ConfigSchema_1.default);
+        if (result.error) {
+            throw new Error(result.error.message);
+        }
+        return result.value;
     }
-    return Promise.resolve(result.value);
 }
-exports.validate = validate;
+exports.default = ConfigValidator;

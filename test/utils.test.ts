@@ -1,10 +1,7 @@
 'use strict';
-const { start, stop } = require('./data/simpleServer');
-const { execute } = require('../dist/index');
-const { getScoreString } = require('../dist/budget');
 
-const { resolve } = require('path');
-const rimraf = require('rimraf');
+const { getScoreString } = require('../dist/utils/budget');
+
 const { expect } = require('chai');
 
 describe('Utils', function () {
@@ -42,13 +39,4 @@ describe('Utils', function () {
         expect(result).to.be.equal('PWA: 100');
     });
 
-    it('Fail on missing file report', (done) => {
-        execute('./test/data/config2.js')
-            .then(results => {
-                done(new Error('Should fail when missing config file'));
-            })
-            .catch(e => {
-                done();
-            });
-    });
 });

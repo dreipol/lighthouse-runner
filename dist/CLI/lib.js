@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,14 +11,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const _1 = require("../");
 const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
 const writeDefaultConfig_js_1 = __importDefault(require("./writeDefaultConfig.js"));
+const Dreihouse_1 = __importDefault(require("../Dreihouse"));
 function report(config, silent, port) {
     return __awaiter(this, void 0, void 0, function* () {
         const printer = silent ? new NoopLogger_1.default() : new ConsoleLogger_1.default();
-        return yield _1.execute(config, port, printer);
+        const dreihouse = new Dreihouse_1.default(config, printer);
+        return yield dreihouse.execute(port);
     });
 }
 exports.report = report;

@@ -16,16 +16,15 @@ const chalk_1 = __importDefault(require("chalk"));
 const LighthouseRunner_1 = __importDefault(require("../LighthouseRunner/LighthouseRunner"));
 const budget_1 = require("../utils/budget");
 class ReportRunner {
-    constructor(config, port, opts, meta, persisters) {
+    constructor(logger, config, port, opts, reporters) {
         this.config = config;
         this.port = port;
         this.opts = opts;
-        this.meta = meta;
-        this.persisters = persisters;
+        this.logger = logger;
+        this.reporters = reporters;
     }
     printResults(categories, budget) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { printer } = this.meta;
             let allBudgetsReached = true;
             for (let i = 0; i < categories.length; i++) {
                 const category = categories[i];
@@ -39,16 +38,16 @@ class ReportRunner {
                     budgetText = chalk_1.default.red(budgetText);
                     allBudgetsReached = false;
                 }
-                printer.print(budgetText);
+                this.logger.print(budgetText);
             }
             if (allBudgetsReached) {
-                printer.print(chalk_1.default.bgGreen('Congrats! Budged reached!'));
+                this.logger.print(chalk_1.default.bgGreen('Congrats! Budged reached!'));
             }
         });
     }
     runPersisters(site, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.persisters.forEach((persister) => __awaiter(this, void 0, void 0, function* () {
+            this.reporters.forEach((persister) => __awaiter(this, void 0, void 0, function* () {
                 yield persister.setup();
                 yield persister.handle(site, results);
             }));
@@ -57,9 +56,8 @@ class ReportRunner {
     runReport(path) {
         return __awaiter(this, void 0, void 0, function* () {
             const { url, budget, report } = this.config;
-            const { printer } = this.meta;
             const site = url_1.resolve(url, path);
-            printer.print(chalk_1.default.blue(`Run ${site}`));
+            this.logger.print(chalk_1.default.blue(`Run ${site}`));
             const runner = new LighthouseRunner_1.default();
             const results = yield runner.runReport(url, path, this.opts, report, this.port);
             const categories = results.reportCategories;
@@ -71,8 +69,7 @@ class ReportRunner {
     createReports(paths, allResults = []) {
         return __awaiter(this, void 0, void 0, function* () {
             const urlPath = paths.shift();
-            const { printer } = this.meta;
-            printer.print(''.padStart(10, '-'));
+            this.logger.print(''.padStart(10, '-'));
             if (!urlPath) {
                 return Promise.resolve();
             }

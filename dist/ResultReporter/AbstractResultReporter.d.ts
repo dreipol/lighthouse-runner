@@ -1,5 +1,5 @@
 import LighthouseConfigInterface from "../Interfaces/LighthouseConfigInterface";
-import LoggerInterface from "../Interfaces/LoggerInterface";
+import LoggerInterface from "../Logger/LoggerInterface";
 import LighthouseReportResultInterface from "../Interfaces/LighthouseReportResultInterface";
 import ResultReporterInterface from "./ResultReporterInterface";
 export default abstract class AbstractResultReporter implements ResultReporterInterface {
