@@ -10,23 +10,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
 const chrome_launcher_1 = require("chrome-launcher");
-const fs_1 = require("fs");
 const request = require('request');
 const util = require('util');
 class ChromeStarter {
     constructor(url, headless = false, port, logger) {
         this.port = port;
-        this.headless = headless;
         this.chrome = null;
         this.url = url;
         this.logger = logger;
         this.browser = null;
         this.page = null;
     }
-    setup(setupScripts) {
+    setup(config) {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.print('Start chrome');
-            this.chrome = yield this.startChrome(this.headless);
+            this.chrome = yield this.startChrome(config.chromeFlags);
             const resp = yield util.promisify(request)(`http://localhost:${this.port}/json/version`);
             const { webSocketDebuggerUrl } = JSON.parse(resp.body);
             this.browser = yield puppeteer_1.connect({ browserWSEndpoint: webSocketDebuggerUrl });
@@ -35,8 +33,6 @@ class ChromeStarter {
             yield this.page.goto(this.url, {
                 waitUntil: 'networkidle0',
             });
-            yield this.runPreAuditScripts(this.page, setupScripts);
-            yield this.page.close();
         });
     }
     disconnect() {
@@ -49,28 +45,31 @@ class ChromeStarter {
             yield this.chrome.kill();
         });
     }
-    runPreAuditScripts(page, setupScripts) {
+    runPreAuditScripts(setupScripts) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!this.page) {
+                throw new Error('Page has not been created. Run setup first');
+            }
             this.logger.print(`Execute ${setupScripts.length} setup script/s`);
             try {
                 for (let i = 0; i < setupScripts.length; i++) {
-                    yield setupScripts[i].execute(this.logger, page);
+                    if (!setupScripts[i].execute) {
+                        throw new Error('Script does not implement the PreAuditScript interface');
+                    }
+                    yield setupScripts[i].execute(this.logger, this.page);
                 }
                 this.logger.print(`Setup scripts complete`);
             }
             catch (e) {
                 throw new Error(e);
             }
-            this.logger.print(`Closing page`);
-            fs_1.writeFileSync('screenshot.png', yield page.screenshot());
-            this.logger.print(`Screenshot created`);
         });
     }
-    startChrome(headless) {
+    startChrome(chromeFlags) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield chrome_launcher_1.launch({
                 port: this.port,
-                chromeFlags: [],
+                chromeFlags,
             });
         });
     }

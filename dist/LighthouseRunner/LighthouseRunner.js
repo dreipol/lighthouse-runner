@@ -27,7 +27,10 @@ class LighthouseRunner {
     launchChromeAndRunLighthouse(url, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
             const starter = new ChromeStarter_1.default(url, true, port, this.logger);
-            yield starter.setup(config.preAuditScripts);
+            yield starter.setup(config);
+            if (config.preAuditScripts) {
+                yield starter.runPreAuditScripts(config.preAuditScripts);
+            }
             let results;
             try {
                 if (port) {

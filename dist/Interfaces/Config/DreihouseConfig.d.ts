@@ -11,7 +11,7 @@ export default interface DreihouseConfig {
     disableEmulation: boolean;
     disableThrottling: boolean;
     budget: Budget;
-    preAuditScripts: PreAuditScript[];
+    preAuditScripts?: PreAuditScript[];
     reporters: ReportersConfig;
     tag: string;
 }

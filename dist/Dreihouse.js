@@ -21,23 +21,33 @@ class Dreihouse {
     constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
         this.configFile = configFile;
         this.logger = logger;
+        this.reporterNames = reporterNames;
+        this.reporters = [];
+        this.reportFolder = '';
+        this.config = null;
         const configFilePath = path_1.resolve(process.cwd(), this.configFile);
         if (!fs_1.existsSync(this.configFile)) {
             throw new Error(`File not found at ${this.configFile}`);
         }
-        this.logger.print(`Validating ${configFilePath}`);
-        this.config = ConfigValidator_1.default.validate(require(configFilePath));
+        this.loadConfig(require(configFilePath));
+    }
+    loadConfig(config) {
+        this.logger.print(`Validating config`);
+        this.config = ConfigValidator_1.default.validate(config);
         this.logger.print(`Config seems valid`);
-        this.reportFolder = path_1.resolve(path_1.dirname(this.configFile), this.config.folder);
-        if (!reporterNames) {
+        this.reportFolder = path_1.resolve(path_1.dirname(this.configFile), config.folder);
+        if (!this.reporterNames) {
             throw new Error('Reporters are required');
         }
-        this.logger.print(`Load modules for reporters ${reporterNames.join(',')}`);
-        this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, reporterNames);
-        this.logger.print(`Reporer modules loaded`);
+        this.logger.print(`Load modules for reporters ${this.reporterNames.join(',')}`);
+        this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
+        this.logger.print(`${this.reporters.length} reporter modules loaded`);
     }
     execute(port = 9222) {
         return __awaiter(this, void 0, void 0, function* () {
+            if (!this.config) {
+                throw new Error('No config loaded');
+            }
             const { paths, chromeFlags, disableEmulation, disableThrottling } = this.config;
             const opts = {
                 chromeFlags,
