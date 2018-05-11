@@ -20,6 +20,68 @@ If you want the full advantage of `dreihouse` you could set it up for your CI.
 
 ## Config
 The configuration is stored in an external module.Check out [@dreipol/lighthouse-config](https://www.npmjs.com/package/@dreipol/lighthouse-config)
+### reporters
+Reporters are a set of scripts that will handle the results of the lighthouse audit. Those can be used to handle 
+data differently like create an HTML file or a JSON file from the results. You can add your own script to upload 
+the result data to your webservice. Therefore you can simply add an object that implements the 
+[`ResultReporterInterface`](src/ResultReporter/ResultReporterInterface.ts) Interface.
+
+**Example**
+
+    ...
+    reporters: {
+        modules: [
+           {
+                key: "MyWebserviceReporter",
+                handle: async (url, results) => {
+                    await request.post('http://my.webservice', results);
+                }
+           }
+
+### preAuditScripts
+In order to handle login forms, or do other modifications of the page before lighthouse audits the page,
+you can add some `preAuditScripts` in the config. Those scripts are executed right before lighthouse starts.
+These scripts have to implement the [`PreAuditScript`](src/PreAuditScript/PreAuditScript.ts) interface.
+
+The will be already on your desired route
+
+Here is an example of such login script
+    
+    module.exports = {
+        execute:async(logger, page) {
+            await page.waitForSelector('#username', { visible: true });
+            await page.waitForSelector('#password', { visible: true });
+            
+            const usernameInput = await page.$('#username');
+            const passwordInput = await page.$('#password');
+            
+            await usernameInput.type(process.env.LOGIN_USERNAME);
+            await passwordInput.type(process.env.LOGIN_PASSWORD);
+            
+            await passwordInput.press('Enter');
+        }
+    }
+    
+    
+Now in your `config` file you can load the login script
+
+
+    ...
+    saveReport: true,
+    budget: {
+        ...
+    },
+    preAuditScripts: [
+        require('your/login/script.js'),
+    ],
+    reporters: {
+        modules: [
+            ...
+
+    
+    
+
+    
 
 # Usage
 ## Commands
