@@ -78,11 +78,6 @@ Now in your `config` file you can load the login script
         modules: [
             ...
 
-    
-    
-
-    
-
 # Usage
 ## Commands
     `dreihouse report ./config/desktop.js`
@@ -91,16 +86,26 @@ Now in your `config` file you can load the login script
 The setup command will setup the default configuration files in the folder specified in the command.
 After setup you have to edit the config to your flavours.
 
-### `report <file>`
+### `report <file> --reporter [REPORTER]`
 To create a report you have to call this command followed by the config file that holds the configuration
 for `dreihouse`. By adding the `--port` flag, you can reuse a already started chrome instance instead of
 creating a new one. This gives you the ability to login on a site before running the reports since the session
 is shared when lighthouse attaches to that port.
 
+**list of available reporters**
+- `cli` Print lighthouse results in CLI
+- `json` Store the whole LH report as JSON
+- `json-dashboard` save just `lighthouse-dashboard` specific data
+- `html` save the LH report for further inspections
+
+
+
 #### Flags
-| name       | optional | default  | description       |
-| ---------- | -------- | -------- | ----------------- |
-| `--port`   | `true`   | 3000     | Debugging port of a running chrome instance|
+| name             | optional | default  | example                       | description                                         |
+| ---------------- | -------- | -------- | ----------------------------- | --------------------------------------------------- |
+| `-r, --reporter` | `false`  |          | cli,html,json,json-dashboard | Add list of repprters to handle the data. Available |
+| `-p, --port`         | `true`   |      |                               | Debugging port of a running chrome instance         |
+| `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
 
 
 ## Circle CI Config
@@ -141,8 +146,8 @@ Example config file:
           - run:
               name: run report
               command: |
-                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.desktop.js
-                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.mobile.js    
+                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.desktop.js -r cli,html
+                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.mobile.js -r cli
           
           - store_artifacts:
               path: ~/repo/reports
