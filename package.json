@@ -1,6 +1,6 @@
 {
   "name": "@dreipol/lighthouse-runner",
-  "version": "0.21.1",
+  "version": "0.22.0",
   "description": "Command Line Runner for lighthouse with integrated budget checks for CI and quality control",
   "types": "./dist/index.d.ts",
   "bin": {
