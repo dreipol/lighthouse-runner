@@ -31,7 +31,7 @@ export default class ReporterModuleLoader {
 
             if (typeof module === 'object') {
                 if (!(<ResultReporterInterface>module).setup || !(<ResultReporterInterface>module).handle) {
-                    console.warn('Object does not implement the ResultReporterInterface');
+                    throw new Error('Object does not implement the ResultReporterInterface');
                 }
                 handlers.push(module);
             }

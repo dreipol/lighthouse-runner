@@ -72,6 +72,7 @@ describe('Run report', () => {
             await dreihouse.execute(null);
             assert.fail(null, null, 'Invalid reporter should thow error');
         } catch (e) {
+            return;
         }
     });
 
@@ -85,11 +86,11 @@ describe('Run report', () => {
         }]);
         await dreihouse.execute(null);
 
+        // @ts-ignore
         expect(setup.called).to.be.true;
         expect(handle.called).to.be.true;
 
     });
-
 
     it('Do not create with invalid reporter objects', async () => {
         try {
@@ -102,6 +103,7 @@ describe('Run report', () => {
             await dreihouse.execute(null);
             assert.fail(null, null, 'Invalid reporter should thow error');
         } catch (e) {
+            return;
         }
 
     });
