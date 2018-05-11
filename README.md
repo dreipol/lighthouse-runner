@@ -26,11 +26,16 @@ data differently like create an HTML file or a JSON file from the results. You c
 the result data to your webservice. Therefore you can simply add an object that implements the 
 [`ResultReporterInterface`](src/ResultReporter/ResultReporterInterface.ts) Interface.
 
+**NOTE**
+look under `Usage` to see what reporters are available
+
 **Example**
 
     ...
     reporters: {
         modules: [
+            'cli',
+            'json',
            {
                 key: "MyWebserviceReporter",
                 handle: async (url, results) => {
@@ -80,7 +85,7 @@ Now in your `config` file you can load the login script
 
 # Usage
 ## Commands
-    `dreihouse report ./config/desktop.js`
+    `dreihouse report ./config/desktop.js -r cli`
     
 ### `setup <dir>`
 The setup command will setup the default configuration files in the folder specified in the command.
@@ -104,7 +109,7 @@ is shared when lighthouse attaches to that port.
 | name             | optional | default  | example                       | description                                         |
 | ---------------- | -------- | -------- | ----------------------------- | --------------------------------------------------- |
 | `-r, --reporter` | `false`  |          | cli,html,json,json-dashboard | Add list of repprters to handle the data. Available |
-| `-p, --port`         | `true`   |      |                               | Debugging port of a running chrome instance         |
+| `-p, --port`         | `true`   |   9222   |                               | Debugging port of a running chrome instance         |
 | `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
 
 
