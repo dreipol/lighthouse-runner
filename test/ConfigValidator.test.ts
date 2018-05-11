@@ -30,6 +30,7 @@ const DEFAULT_CONFIG = {
 describe('Validate Config', () => {
     it('Normalize config', () => {
         const config = {...DEFAULT_CONFIG, ...{disableEmulation: 'true'}};
+        // @ts-ignore
         const results = ConfigValidator.validate(config);
         expect(results.disableEmulation).to.equal(true);
     });
@@ -54,6 +55,7 @@ describe('Validate Config', () => {
         };
 
         try {
+            // @ts-ignore
             ConfigValidator.validate(config);
             done();
         } catch (e) {

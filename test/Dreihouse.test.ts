@@ -1,10 +1,9 @@
 'use strict';
 import sinon from 'sinon';
-
-const {expect, assert} = require('chai');
-
 import Dreihouse from '../src/Dreihouse';
 import {start, stop} from './data/simpleServer';
+
+const {expect, assert} = require('chai');
 
 describe('Run report', () => {
     before(() => {
@@ -88,6 +87,22 @@ describe('Run report', () => {
 
         expect(setup.called).to.be.true;
         expect(handle.called).to.be.true;
+
+    });
+
+
+    it('Do not create with invalid reporter objects', async () => {
+        try {
+            const setup = sinon.spy();
+            // @ts-ignore
+            const dreihouse = new Dreihouse('./test/data/config.js', [{
+                key: 'spy',
+                setup,
+            }]);
+            await dreihouse.execute(null);
+            assert.fail(null, null, 'Invalid reporter should thow error');
+        } catch (e) {
+        }
 
     });
 
