@@ -37,7 +37,7 @@ is shared when lighthouse attaches to that port.
 #### Flags
 | name       | optional | default  | description       |
 | ---------- | -------- | -------- | ----------------- |
-| `--port`   | `true`   | 3000     | Describe the flag |
+| `--port`   | `true`   | 3000     | Debugging port of a running chrome instance|
 
 
 ## Circle CI Config

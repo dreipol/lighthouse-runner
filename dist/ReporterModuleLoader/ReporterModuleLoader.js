@@ -25,7 +25,7 @@ class ReporterModuleLoader {
             }
             if (typeof module === 'object') {
                 if (!module.setup || !module.handle) {
-                    console.warn('Object does not implement the ResultReporterInterface');
+                    throw new Error('Object does not implement the ResultReporterInterface');
                 }
                 handlers.push(module);
             }
