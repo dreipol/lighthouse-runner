@@ -5,17 +5,20 @@ import ConfigValidator from './Validator/ConfigValidator';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
 import ReportRunner from './ReportRunner/ReportRunner';
-import DreihouseConfig from "./Interfaces/Config/DreihouseConfig";
-import ReportCategory from "./Interfaces/ReportCategory";
-import LighthouseOptions from "./Interfaces/LighthouseOptions";
-import ReporterModuleLoader from "./ReporterModuleLoader/ReporterModuleLoader";
+import DreihouseConfig from './Interfaces/Config/DreihouseConfig';
+import LighthouseOptions from './Interfaces/LighthouseOptions';
+import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
+import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
+import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 
 export default class Dreihouse {
-    configFile: string;
-    config: DreihouseConfig;
-    logger: LoggerInterface;
+    protected configFile: string;
+    protected reportFolder: string;
+    protected config: DreihouseConfig;
+    protected logger: LoggerInterface;
+    protected reporters: ResultReporterInterface[];
 
-    constructor(configFile: string, logger: LoggerInterface = new NoopPrinter()) {
+    constructor(configFile: string, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
         this.configFile = configFile;
         this.logger = logger;
 
@@ -24,12 +27,17 @@ export default class Dreihouse {
             throw new Error(`File not found at ${this.configFile}`);
         }
 
+        this.logger.print(`Validating ${configFilePath}`);
         this.config = ConfigValidator.validate(require(configFilePath));
+        this.logger.print(`Config seems valid`);
+        this.reportFolder = resolve(dirname(this.configFile), this.config.folder);
+        this.logger.print(`Load modules for reporters ${reporterNames.join(',')}`);
+        this.reporters = ReporterModuleLoader.load(this.reportFolder, this.config, this.logger, reporterNames);
+        this.logger.print(`Reporer modules loaded`);
     }
 
-    private async executeReport(reportFolder: string, port: Number | null): Promise<Array<Array<ReportCategory>>> {
+    public async execute(port: number | null): Promise<LighthouseReportResult[] | null> {
         const {paths, chromeFlags, disableEmulation, disableThrottling} = this.config;
-
         const opts: LighthouseOptions = {
             chromeFlags,
         };
@@ -38,19 +46,15 @@ export default class Dreihouse {
         opts.disableNetworkThrottling = disableThrottling;
         opts.disableCpuThrottling = disableThrottling;
 
-        let reportPaths: Array<string> = paths;
+        let reportPaths: string[] = paths;
 
         if (!Array.isArray(paths)) {
             reportPaths = [paths];
         }
 
-        const reporters = ReporterModuleLoader.load(reportFolder, this.config, this.logger, this.config.reporters.modules);
-        const runner = new ReportRunner(this.logger, this.config, port, opts, reporters);
-        return await runner.createReports(reportPaths)
-    }
-
-    public async execute(port: Number | null): Promise<Array<ReportCategory[]>> {
-        const reportFolder = resolve(dirname(this.configFile), this.config.folder);
-        return await this.executeReport(reportFolder, port);
+        this.logger.print(`Report runner created`);
+        const runner = new ReportRunner(this.logger, this.config, port, opts, this.reporters);
+        this.logger.print(`Start creating reports for ${this.config.url} paths [${reportPaths.join(',')}]`);
+        return await runner.createReports(reportPaths);
     }
 }

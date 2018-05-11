@@ -1,4 +1,4 @@
-import mkdirp = require("mkdirp");
+import mkdirp = require('mkdirp');
 
 export default function createFolder(path: string): Promise<undefined> {
     return new Promise((res, rej) => {

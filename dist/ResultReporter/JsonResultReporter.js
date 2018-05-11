@@ -16,8 +16,9 @@ const AbstractResultReporter_1 = __importDefault(require("./AbstractResultReport
 const writeFile_1 = __importDefault(require("../utils/writeFile"));
 const createFolder_1 = __importDefault(require("../utils/createFolder"));
 class JsonResultReporter extends AbstractResultReporter_1.default {
-    constructor(reportFolder, config, logger) {
-        super(reportFolder, config, logger);
+    constructor() {
+        super(...arguments);
+        this.key = 'JsonResultReporter';
     }
     setup() {
         return __awaiter(this, void 0, void 0, function* () {

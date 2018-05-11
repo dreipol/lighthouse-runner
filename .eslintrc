@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "sourceType": "module"
+  },
+  "extends": [
+    "@dreipol/eslint-config"
+  ],
+  "plugins": [],
+  "settings": {
+  },
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "globals": true
+  },
+  "rules": {
+  },
+  "overrides": [
+  ]
+}

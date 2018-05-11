@@ -1,6 +1,6 @@
 const http = require('http');
 const port = 8000;
-//@ts-ignore
+
 const requestHandler = (request: any, response: any) => {
     response.end('Hello Node.js Server!');
 };
@@ -15,7 +15,6 @@ export function stop() {
 export function start() {
     return new Promise((res, rej) => {
         server.listen(port, (err: Error) => {
-
             if (err) {
                 console.log('something bad happened', err);
                 return rej(err);

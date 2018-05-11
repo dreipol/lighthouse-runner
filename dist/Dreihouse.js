@@ -13,47 +13,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const fs_1 = require("fs");
-const helper_1 = require("./utils/helper");
 const ConfigValidator_1 = __importDefault(require("./Validator/ConfigValidator"));
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
 class Dreihouse {
-    constructor(configFile, logger = new NoopLogger_1.default()) {
+    constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
         this.configFile = configFile;
         this.logger = logger;
         const configFilePath = path_1.resolve(process.cwd(), this.configFile);
-        logger.print(`Config file: ${this.configFile}`);
         if (!fs_1.existsSync(this.configFile)) {
             throw new Error(`File not found at ${this.configFile}`);
         }
+        this.logger.print(`Validating ${configFilePath}`);
         this.config = ConfigValidator_1.default.validate(require(configFilePath));
+        this.logger.print(`Config seems valid`);
+        this.reportFolder = path_1.resolve(path_1.dirname(this.configFile), this.config.folder);
+        this.logger.print(`Load modules for reporters ${reporterNames.join(',')}`);
+        this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, reporterNames);
+        this.logger.print(`Reporer modules loaded`);
     }
-    executeReport(reportFolder, port) {
+    execute(port) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { url, paths, chromeFlags, saveReport, disableEmulation, disableThrottling } = this.config;
+            const { paths, chromeFlags, disableEmulation, disableThrottling } = this.config;
             const opts = {
                 chromeFlags,
             };
             opts.disableDeviceEmulation = disableEmulation;
             opts.disableNetworkThrottling = disableThrottling;
             opts.disableCpuThrottling = disableThrottling;
-            this.logger.print(`Run Report: ${url}`);
-            this.logger.print(`Config:`, `[${chromeFlags.join(';')}]`, helper_1.coloredFlag('disableEmulation', disableEmulation), helper_1.coloredFlag('disableThrottling', disableThrottling), helper_1.coloredFlag('saveReport', saveReport));
             let reportPaths = paths;
             if (!Array.isArray(paths)) {
                 reportPaths = [paths];
             }
-            const reporters = ReporterModuleLoader_1.default.load(reportFolder, this.config, this.logger, this.config.reporters.modules);
-            const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, reporters);
+            this.logger.print(`Report runner created`);
+            const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, this.reporters);
+            this.logger.print(`Start creating reports for ${this.config.url} paths [${reportPaths.join(',')}]`);
             return yield runner.createReports(reportPaths);
-        });
-    }
-    execute(port) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.logger.print(`Using persisters: ${this.config.reporters.modules}`);
-            const reportFolder = path_1.resolve(path_1.dirname(this.configFile), this.config.folder);
-            return yield this.executeReport(reportFolder, port);
         });
     }
 }

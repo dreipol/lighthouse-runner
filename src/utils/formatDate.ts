@@ -1,5 +1,5 @@
 export default function formatDate(date: Date): string {
-    let year = date.getUTCFullYear().toString();
+    const year = date.getUTCFullYear().toString();
     let month = date.getUTCMonth().toString();
     let day = date.getUTCDay().toString();
     let h = date.getUTCHours().toString();

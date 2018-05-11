@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -28,11 +36,11 @@ function getTemplateFiles(templateFolder) {
     });
 }
 function copyFiles(files, target) {
-    let promises = [];
-    for (let i = 0; i < files.length; i++) {
-        promises.push(copyFile(files[i], target));
-    }
-    return Promise.all(promises);
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let i = 0; i < files.length; i++) {
+            yield copyFile(files[i], target);
+        }
+    });
 }
 function copyFile(file, target) {
     target = path_1.join(target, path_1.basename(file));
@@ -46,22 +54,20 @@ function copyFile(file, target) {
     });
 }
 function writeDefaultConfig(configFolder) {
-    const baseDir = process.cwd();
-    configFolder = path_1.resolve(baseDir, configFolder);
-    return getConfigModulePath(baseDir)
-        .then(templatePath => {
-        return getTemplateFiles(templatePath);
-    })
-        .then(files => {
-        fancy_log_1.info(`Creating config in ${configFolder}`);
-        return copyFiles(files, configFolder);
-    })
-        .then((files) => {
-        fancy_log_1.info(`Copied ${files.length} config files`);
-        fancy_log_1.info(chalk_1.default.green(`Setup completed`));
-    })
-        .catch(e => {
-        fancy_log_1.info(chalk_1.default.red(`Error: ${e.message}`));
+    return __awaiter(this, void 0, void 0, function* () {
+        const baseDir = process.cwd();
+        configFolder = path_1.resolve(baseDir, configFolder);
+        try {
+            const templatePath = yield getConfigModulePath(baseDir);
+            const files = yield getTemplateFiles(templatePath);
+            fancy_log_1.info(`Creating config in ${configFolder}`);
+            yield copyFiles(files, configFolder);
+            fancy_log_1.info(`Copied ${files.length} config files`);
+            fancy_log_1.info(chalk_1.default.green(`Setup completed`));
+        }
+        catch (e) {
+            fancy_log_1.info(chalk_1.default.red(`Error: ${e.message}`));
+        }
     });
 }
 exports.default = writeDefaultConfig;

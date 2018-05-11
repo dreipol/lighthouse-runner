@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function formatDate(date) {
-    let year = date.getUTCFullYear().toString();
+    const year = date.getUTCFullYear().toString();
     let month = date.getUTCMonth().toString();
     let day = date.getUTCDay().toString();
     let h = date.getUTCHours().toString();

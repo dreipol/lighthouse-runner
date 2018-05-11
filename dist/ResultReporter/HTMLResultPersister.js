@@ -14,9 +14,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 const AbstractResultReporter_1 = __importDefault(require("./AbstractResultReporter"));
-const writeFile_1 = __importDefault(require("../utils/writeFile"));
 const createFolder_1 = __importDefault(require("../utils/createFolder"));
+const writeFile_1 = __importDefault(require("../utils/writeFile"));
 class HTMLResultPersister extends AbstractResultReporter_1.default {
+    constructor() {
+        super(...arguments);
+        this.key = 'HTMLResultPersister';
+    }
     setup() {
         return __awaiter(this, void 0, void 0, function* () {
             const { saveReport, folder } = this.config;
@@ -24,7 +28,7 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
                 return;
             }
             if (!fs_1.existsSync(this.reportFolder)) {
-                return createFolder_1.default(this.reportFolder);
+                return yield createFolder_1.default(this.reportFolder);
             }
             return Promise.resolve();
         });

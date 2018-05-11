@@ -16,31 +16,9 @@ const AbstractResultReporter_1 = __importDefault(require("./AbstractResultReport
 const writeFile_1 = __importDefault(require("../utils/writeFile"));
 const createFolder_1 = __importDefault(require("../utils/createFolder"));
 class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
-    generateReportJson(url, categories, budget, tag) {
-        const _categories = categories.map((item) => {
-            item = Object.assign({}, item);
-            delete item.audits;
-            return item;
-        });
-        return {
-            categories: _categories,
-            budget,
-            url,
-            tag,
-            key: `${tag}:${url}`
-        };
-    }
-    setup() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport, folder } = this.config;
-            if (!saveReport || !folder || !this.reportFolder) {
-                return Promise.resolve();
-            }
-            if (!fs_1.existsSync(this.reportFolder)) {
-                return createFolder_1.default(this.reportFolder);
-            }
-            return Promise.resolve();
-        });
+    constructor() {
+        super(...arguments);
+        this.key = 'DashboardJsonResultReporter';
     }
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -52,6 +30,32 @@ class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
             }
             return;
         });
+    }
+    setup() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { saveReport, folder } = this.config;
+            if (!saveReport || !folder || !this.reportFolder) {
+                return Promise.resolve();
+            }
+            if (!fs_1.existsSync(this.reportFolder)) {
+                return createFolder_1.default(this.reportFolder);
+            }
+            return;
+        });
+    }
+    generateReportJson(url, categories, budget, tag) {
+        const cleanCategories = categories.map((item) => {
+            item = Object.assign({}, item);
+            delete item.audits;
+            return item;
+        });
+        return {
+            categories: cleanCategories,
+            budget,
+            url,
+            tag,
+            key: `${tag}:${url}`,
+        };
     }
 }
 exports.default = DashboardJsonResultReporter;

@@ -1,7 +1,7 @@
 export default interface LighthouseOptions {
-    chromeFlags?: Array<string>;
-    port?: Number;
-    disableDeviceEmulation?: Boolean;
-    disableNetworkThrottling?: Boolean;
-    disableCpuThrottling?: Boolean;
+    chromeFlags?: string[];
+    port?: number;
+    disableDeviceEmulation?: boolean;
+    disableNetworkThrottling?: boolean;
+    disableCpuThrottling?: boolean;
 }

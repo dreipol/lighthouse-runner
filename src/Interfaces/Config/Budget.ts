@@ -1,9 +1,9 @@
 export default interface Budget {
-    [index: string]: Number | boolean | undefined;
+    [index: string]: string | number | boolean | undefined;
 
-    dreipol?: Number | boolean;
-    performance?: Number | boolean;
-    pwa?: Number | boolean;
-    accessibility?: Number | boolean;
-    'best-practices'?: Number | boolean;
+    dreipol?: string | number | boolean;
+    performance?: string | number | boolean;
+    pwa?: string | number | boolean;
+    accessibility?: string | number | boolean;
+    'best-practices'?: string | number | boolean;
 }

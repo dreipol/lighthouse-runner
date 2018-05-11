@@ -1,7 +1,7 @@
-import ReportCategory from "./ReportCategory";
-import Budget from "./Config/Budget";
+import ReportCategory from './ReportCategory';
+import Budget from './Config/Budget';
 
-export default interface ReportResult{
+export default interface ReportResult {
     categories: ReportCategory[];
     budget: Budget;
     url: string;

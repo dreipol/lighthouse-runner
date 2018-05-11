@@ -1,14 +1,15 @@
 import {existsSync} from 'fs';
 
 const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
-import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
-import AbstractResultReporter from "./AbstractResultReporter";
-import writeFile from "../utils/writeFile";
-import createFolder from "../utils/createFolder";
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import AbstractResultReporter from './AbstractResultReporter';
+import createFolder from '../utils/createFolder';
+import writeFile from '../utils/writeFile';
 
 export default class HTMLResultPersister extends AbstractResultReporter {
+    public key = 'HTMLResultPersister';
 
-    async setup(): Promise<void> {
+    public async setup(): Promise<void> {
         const {saveReport, folder} = this.config;
 
         if (!saveReport || !folder || !this.reportFolder) {
@@ -16,13 +17,13 @@ export default class HTMLResultPersister extends AbstractResultReporter {
         }
 
         if (!existsSync(this.reportFolder)) {
-            return createFolder(this.reportFolder)
+            return await createFolder(this.reportFolder);
         }
 
         return Promise.resolve();
     }
 
-    async handle(url: string, results: LighthouseReportResult): Promise<void> {
+    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
         const {saveReport} = this.config;
 
         if (this.reportFolder && saveReport) {

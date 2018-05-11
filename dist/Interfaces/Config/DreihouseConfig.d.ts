@@ -1,14 +1,14 @@
-import Budget from "./Budget";
-import ReportersConfig from "./ReportersConfig";
+import Budget from './Budget';
+import ReportersConfig from './ReportersConfig';
 export default interface DreihouseConfig {
     url: string;
-    paths: Array<string>;
+    paths: string[];
     folder: string;
     report: any;
-    chromeFlags: Array<string>;
-    saveReport: Boolean;
-    disableEmulation: Boolean;
-    disableThrottling: Boolean;
+    chromeFlags: string[];
+    saveReport: boolean;
+    disableEmulation: boolean;
+    disableThrottling: boolean;
     budget: Budget;
     reporters: ReportersConfig;
     tag: string;

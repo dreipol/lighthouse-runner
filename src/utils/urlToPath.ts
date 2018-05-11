@@ -1,4 +1,4 @@
-import {parse} from "url";
+import {parse} from 'url';
 
 export default function urlToPath(url: string): string {
     const reportUrl = parse(url);

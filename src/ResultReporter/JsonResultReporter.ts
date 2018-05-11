@@ -1,19 +1,14 @@
 import {existsSync} from 'fs';
 
-import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
-import AbstractResultReporter from "./AbstractResultReporter";
-import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
-import LoggerInterface from "../Logger/LoggerInterface";
-import writeFile from "../utils/writeFile";
-import createFolder from "../utils/createFolder";
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import AbstractResultReporter from './AbstractResultReporter';
+import writeFile from '../utils/writeFile';
+import createFolder from '../utils/createFolder';
 
 export default class JsonResultReporter extends AbstractResultReporter {
+    public key = 'JsonResultReporter';
 
-    constructor(reportFolder: string, config: DreihouseConfig, logger: LoggerInterface) {
-        super(reportFolder, config, logger);
-    }
-
-    async setup(): Promise<void> {
+    public async setup(): Promise<void> {
         const {saveReport, folder} = this.config;
 
         if (!saveReport || !folder || !this.reportFolder) {
@@ -21,12 +16,13 @@ export default class JsonResultReporter extends AbstractResultReporter {
         }
 
         if (!existsSync(this.reportFolder)) {
-            return createFolder(this.reportFolder)
+            return createFolder(this.reportFolder);
         }
+
         return;
     }
 
-    async handle(url: string, results: LighthouseReportResult): Promise<void> {
+    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
         const {saveReport} = this.config;
 
         if (this.reportFolder && saveReport) {

@@ -1,15 +1,21 @@
-import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
-import AbstractResultReporter from "./AbstractResultReporter";
-import ReportCategory from "../Interfaces/ReportCategory";
-import chalk from "chalk";
-import Budget from "../Interfaces/Config/Budget";
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import AbstractResultReporter from './AbstractResultReporter';
+import ReportCategory from '../Interfaces/ReportCategory';
+import chalk from 'chalk';
+import Budget from '../Interfaces/Config/Budget';
 
 export default class CLIReporter extends AbstractResultReporter {
+    public key = 'CLIReporter';
 
-    async setup(): Promise<void> {
+    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
+        const categories = results.reportCategories;
+        const {budget} = this.config;
+        this.logger.print(`Report: ${url}`);
+        this.logger.print(''.padStart(10, '-'));
+        await this.printResults(categories, budget);
     }
 
-    private checkBudget(caregory: ReportCategory, budget: Budget): Boolean | null {
+    private checkBudget(caregory: ReportCategory, budget: Budget): boolean | null {
         const {id, score} = caregory;
         const threshhold = budget[id];
 
@@ -35,7 +41,7 @@ export default class CLIReporter extends AbstractResultReporter {
         return `${name}: ${score}/${threshhold}`;
     }
 
-    private async printResults(categories: Array<ReportCategory>, budget: Budget): Promise<void> {
+    private async printResults(categories: ReportCategory[], budget: Budget): Promise<void> {
         let allBudgetsReached = true;
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
@@ -60,11 +66,4 @@ export default class CLIReporter extends AbstractResultReporter {
         }
     }
 
-    async handle(url: string, results: LighthouseReportResult): Promise<void> {
-        const categories = results.reportCategories;
-        const {budget} = this.config;
-        this.logger.print(`Report: ${url}`);
-        this.logger.print(''.padStart(10, '-'));
-        await this.printResults(categories, budget)
-    }
 }

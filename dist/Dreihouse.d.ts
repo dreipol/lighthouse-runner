@@ -1,11 +1,13 @@
 import LoggerInterface from './Logger/LoggerInterface';
-import DreihouseConfig from "./Interfaces/Config/DreihouseConfig";
-import ReportCategory from "./Interfaces/ReportCategory";
+import DreihouseConfig from './Interfaces/Config/DreihouseConfig';
+import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
+import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 export default class Dreihouse {
-    configFile: string;
-    config: DreihouseConfig;
-    logger: LoggerInterface;
-    constructor(configFile: string, logger?: LoggerInterface);
-    private executeReport(reportFolder, port);
-    execute(port: Number | null): Promise<Array<ReportCategory[]>>;
+    protected configFile: string;
+    protected reportFolder: string;
+    protected config: DreihouseConfig;
+    protected logger: LoggerInterface;
+    protected reporters: ResultReporterInterface[];
+    constructor(configFile: string, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface);
+    execute(port: number | null): Promise<LighthouseReportResult[] | null>;
 }

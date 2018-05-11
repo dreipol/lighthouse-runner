@@ -1,15 +1,14 @@
-import AbstractResultReporter from "../ResultReporter/AbstractResultReporter";
+import AbstractResultReporter from '../ResultReporter/AbstractResultReporter';
 import JsonResultReporter from '../ResultReporter/JsonResultReporter';
 import DashboardJsonResultReporter from '../ResultReporter/DashboardJsonResultReporter';
-import HTMLResultPersister from "../ResultReporter/HTMLResultPersister";
-import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
-import LoggerInterface from "../Logger/LoggerInterface";
-import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
-import CLIReporter from "../ResultReporter/CLIReporter";
+import HTMLResultPersister from '../ResultReporter/HTMLResultPersister';
+import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
+import LoggerInterface from '../Logger/LoggerInterface';
+import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
+import CLIReporter from '../ResultReporter/CLIReporter';
 
 type Constructor<T> = new (...args: any[]) => T;
 
-// @ts-ignore
 const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractResultReporter> } = {
     'json': JsonResultReporter,
     'json-dashboard': DashboardJsonResultReporter,
@@ -19,22 +18,13 @@ const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractResultReporter> }
 
 export default class ReporterModuleLoader {
 
-    static getMappedReporter(key: string) {
-        if (!MAPPED_REPORTERS[key]) {
-            console.warn(`No reporter for ${key} found`);
-            return null;
-        }
-
-        return MAPPED_REPORTERS[key]
-    }
-
-    static load(reportFolder: string | null, config: DreihouseConfig, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
+    public static load(reportFolder: string | null, config: DreihouseConfig, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
         const handlers: ResultReporterInterface[] = [];
 
         loaders.forEach((module: string | ResultReporterInterface) => {
             if (typeof module === 'string') {
                 const Reporter = ReporterModuleLoader.getMappedReporter(module);
-                if(Reporter) {
+                if (Reporter) {
                     handlers.push(new Reporter(reportFolder, config, logger));
                 }
             }
@@ -47,5 +37,13 @@ export default class ReporterModuleLoader {
             }
         });
         return handlers;
+    }
+
+    protected static getMappedReporter(key: string) {
+        if (!MAPPED_REPORTERS[key]) {
+            throw new Error(`No reporter for ${key} found`);
+        }
+
+        return MAPPED_REPORTERS[key];
     }
 }

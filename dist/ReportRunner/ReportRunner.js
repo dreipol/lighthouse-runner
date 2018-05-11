@@ -12,9 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
-const chalk_1 = __importDefault(require("chalk"));
 const LighthouseRunner_1 = __importDefault(require("../LighthouseRunner/LighthouseRunner"));
-const budget_1 = require("../utils/budget");
 class ReportRunner {
     constructor(logger, config, port, opts, reporters) {
         this.config = config;
@@ -23,55 +21,11 @@ class ReportRunner {
         this.logger = logger;
         this.reporters = reporters;
     }
-    printResults(categories, budget) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let allBudgetsReached = true;
-            for (let i = 0; i < categories.length; i++) {
-                const category = categories[i];
-                category.score = Math.round(category.score);
-                const isReached = budget_1.checkBudget(category, budget);
-                let budgetText = budget_1.getScoreString(category, budget);
-                if (isReached === true) {
-                    budgetText = chalk_1.default.green(budgetText);
-                }
-                if (isReached === false) {
-                    budgetText = chalk_1.default.red(budgetText);
-                    allBudgetsReached = false;
-                }
-                this.logger.print(budgetText);
-            }
-            if (allBudgetsReached) {
-                this.logger.print(chalk_1.default.bgGreen('Congrats! Budged reached!'));
-            }
-        });
-    }
-    runPersisters(site, results) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.reporters.forEach((persister) => __awaiter(this, void 0, void 0, function* () {
-                yield persister.setup();
-                yield persister.handle(site, results);
-            }));
-        });
-    }
-    runReport(path) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { url, budget, report } = this.config;
-            const site = url_1.resolve(url, path);
-            this.logger.print(chalk_1.default.blue(`Run ${site}`));
-            const runner = new LighthouseRunner_1.default();
-            const results = yield runner.runReport(url, path, this.opts, report, this.port);
-            const categories = results.reportCategories;
-            this.printResults(categories, budget);
-            yield this.runPersisters(site, results);
-            return results;
-        });
-    }
     createReports(paths, allResults = []) {
         return __awaiter(this, void 0, void 0, function* () {
             const urlPath = paths.shift();
-            this.logger.print(''.padStart(10, '-'));
             if (!urlPath) {
-                return Promise.resolve();
+                return allResults;
             }
             const results = yield this.runReport(urlPath);
             allResults.push(results);
@@ -79,6 +33,32 @@ class ReportRunner {
                 return this.createReports(paths, allResults);
             }
             return allResults;
+        });
+    }
+    runReporters(site, results) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.logger.print(`Run ${this.reporters.length} reporters`);
+            this.reporters.forEach((reporter) => __awaiter(this, void 0, void 0, function* () {
+                if (reporter.setup) {
+                    this.logger.print(`${reporter.key} setup`);
+                    yield reporter.setup();
+                }
+                this.logger.print(`${reporter.key} process`);
+                yield reporter.handle(site, results);
+            }));
+            this.logger.print(`Running reporters complete`);
+        });
+    }
+    runReport(path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { url, report } = this.config;
+            const site = url_1.resolve(url, path);
+            const runner = new LighthouseRunner_1.default();
+            this.logger.print(`Create report for ${path}`);
+            const results = yield runner.runReport(url, path, this.opts, report, this.port);
+            this.logger.print(`Report for ${path} completed`);
+            yield this.runReporters(site, results);
+            return results;
         });
     }
 }

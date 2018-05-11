@@ -12,34 +12,28 @@ const url_1 = require("url");
 const lighthouse = require('lighthouse');
 const chrome_launcher_1 = require("chrome-launcher");
 class LighthouseRunner {
-    getChromePort(opts, port) {
+    runReport(targetUrl, urlPath, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (port) {
-                return {
-                    port: port,
-                    chrome: null,
-                };
-            }
-            const chrome = yield chrome_launcher_1.launch({ chromeFlags: opts.chromeFlags });
-            return { chrome, port: chrome.port };
+            const url = url_1.resolve(targetUrl, urlPath);
+            return yield this.launchChromeAndRunLighthouse(url, opts, config, port);
         });
     }
-    launchChromeAndRunLighthouse(_url, opts, config, _port) {
+    launchChromeAndRunLighthouse(url, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { chrome, port } = yield this.getChromePort(opts, _port);
-            opts.port = port;
-            const results = yield lighthouse(_url, opts, config);
+            let chrome = null;
+            if (!port) {
+                chrome = yield chrome_launcher_1.launch({ chromeFlags: opts.chromeFlags });
+                port = chrome.port;
+            }
+            if (port) {
+                opts.port = port;
+            }
+            const results = yield lighthouse(url, opts, config);
             delete results.artifacts;
             if (chrome) {
                 yield chrome.kill();
             }
             return results;
-        });
-    }
-    runReport(targetUrl, urlPath, opts, config, port) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let url = url_1.resolve(targetUrl, urlPath);
-            return yield this.launchChromeAndRunLighthouse(url, opts, config, port);
         });
     }
 }

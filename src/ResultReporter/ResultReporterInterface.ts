@@ -1,6 +1,9 @@
-import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 
 export default interface ResultReporterInterface {
-    setup(): Promise<void>;
+    key: string;
+
+    setup?(): Promise<void>;
+
     handle(url: string, results: LighthouseReportResult): Promise<void>;
 }

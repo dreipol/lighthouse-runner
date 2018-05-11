@@ -6,19 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const JsonResultReporter_1 = __importDefault(require("../ResultReporter/JsonResultReporter"));
 const DashboardJsonResultReporter_1 = __importDefault(require("../ResultReporter/DashboardJsonResultReporter"));
 const HTMLResultPersister_1 = __importDefault(require("../ResultReporter/HTMLResultPersister"));
+const CLIReporter_1 = __importDefault(require("../ResultReporter/CLIReporter"));
 const MAPPED_REPORTERS = {
     'json': JsonResultReporter_1.default,
     'json-dashboard': DashboardJsonResultReporter_1.default,
     'html': HTMLResultPersister_1.default,
+    'cli': CLIReporter_1.default,
 };
 class ReporterModuleLoader {
-    static getMappedReporter(key) {
-        if (!MAPPED_REPORTERS[key]) {
-            console.warn(`No reporterfor ${key} found`);
-            return null;
-        }
-        return MAPPED_REPORTERS[key];
-    }
     static load(reportFolder, config, logger, loaders) {
         const handlers = [];
         loaders.forEach((module) => {
@@ -36,6 +31,12 @@ class ReporterModuleLoader {
             }
         });
         return handlers;
+    }
+    static getMappedReporter(key) {
+        if (!MAPPED_REPORTERS[key]) {
+            throw new Error(`No reporter for ${key} found`);
+        }
+        return MAPPED_REPORTERS[key];
     }
 }
 exports.default = ReporterModuleLoader;

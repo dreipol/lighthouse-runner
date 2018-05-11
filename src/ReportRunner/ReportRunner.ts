@@ -1,19 +1,19 @@
-import DreihouseConfig from "../Interfaces/Config/DreihouseConfig";
-import LighthouseOptions from "../Interfaces/LighthouseOptions";
-import {resolve as resolveUrl} from "url";
-import LighthouseReportResult from "../Interfaces/LighthouseReportResult";
-import LighthouseRunner from "../LighthouseRunner/LighthouseRunner";
-import ResultReporterInterface from "../ResultReporter/ResultReporterInterface";
-import LoggerInterface from "../Logger/LoggerInterface";
+import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
+import LighthouseOptions from '../Interfaces/LighthouseOptions';
+import {resolve as resolveUrl} from 'url';
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import LighthouseRunner from '../LighthouseRunner/LighthouseRunner';
+import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
+import LoggerInterface from '../Logger/LoggerInterface';
 
 export default class ReportRunner {
-    config: DreihouseConfig;
-    port: Number | null;
-    opts: LighthouseOptions;
-    logger: LoggerInterface;
-    reporters: ResultReporterInterface[];
+    protected config: DreihouseConfig;
+    protected port: number | null;
+    protected opts: LighthouseOptions;
+    protected logger: LoggerInterface;
+    protected reporters: ResultReporterInterface[];
 
-    constructor(logger: LoggerInterface, config: DreihouseConfig, port: Number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: DreihouseConfig, port: number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;
@@ -21,27 +21,11 @@ export default class ReportRunner {
         this.reporters = reporters;
     }
 
-    private async runPersisters(site: string, results: LighthouseReportResult): Promise<void> {
-        this.reporters.forEach(async(persister) => {
-            await persister.setup();
-            await persister.handle(site, results);
-        });
-    }
-
-    private async runReport(path: string): Promise<LighthouseReportResult> {
-        const {url, report} = this.config;
-        const site = resolveUrl(url, path);
-        const runner = new LighthouseRunner();
-        const results = await runner.runReport(url, path, this.opts, report, this.port);
-        await this.runPersisters(site, results);
-        return results;
-    }
-
-    public async createReports(paths: Array<string>, allResults: Array<Object> = []): Promise<any> {
+    public async createReports(paths: string[], allResults: LighthouseReportResult[] = []): Promise<LighthouseReportResult[]> {
         const urlPath = paths.shift();
 
         if (!urlPath) {
-            return Promise.resolve();
+            return allResults;
         }
 
         const results = await this.runReport(urlPath);
@@ -52,5 +36,30 @@ export default class ReportRunner {
         }
 
         return allResults;
+    }
+
+    private async runReporters(site: string, results: LighthouseReportResult): Promise<void> {
+        this.logger.print(`Run ${this.reporters.length} reporters`);
+        this.reporters.forEach(async (reporter) => {
+            if (reporter.setup) {
+                this.logger.print(`${reporter.key} setup`);
+                await reporter.setup();
+            }
+            this.logger.print(`${reporter.key} process`);
+            await reporter.handle(site, results);
+        });
+        this.logger.print(`Running reporters complete`);
+    }
+
+    private async runReport(path: string): Promise<LighthouseReportResult> {
+        const {url, report} = this.config;
+        const site = resolveUrl(url, path);
+
+        const runner = new LighthouseRunner();
+        this.logger.print(`Create report for ${path}`);
+        const results = await runner.runReport(url, path, this.opts, report, this.port);
+        this.logger.print(`Report for ${path} completed`);
+        await this.runReporters(site, results);
+        return results;
     }
 }

@@ -1,5 +1,5 @@
-import { Results } from "lighthouse/typings/externs";
-import ReportCategory from "./ReportCategory";
+import { Results } from 'lighthouse/typings/externs';
+import ReportCategory from './ReportCategory';
 export default interface LighthouseReportResult extends Results {
-    reportCategories: Array<ReportCategory>;
+    reportCategories: ReportCategory[];
 }

@@ -1,8 +1,8 @@
-import { resolve, join, basename } from 'path';
-import { existsSync, createReadStream, createWriteStream } from 'fs';
+import {resolve, join, basename} from 'path';
+import {existsSync, createReadStream, createWriteStream} from 'fs';
 import glob from 'glob';
 import chalk from 'chalk';
-import { info as log } from 'fancy-log';
+import {info as log} from 'fancy-log';
 
 /**
  * Get template folder from installed module
@@ -20,9 +20,9 @@ function getConfigModulePath(baseDir: string): Promise<string> {
 /**
  * Get all template files from module
  */
-function getTemplateFiles(templateFolder: string): Promise<Array<string>> {
+function getTemplateFiles(templateFolder: string): Promise<string[]> {
     return new Promise((res, rej) => {
-        glob(join(templateFolder, '**/*.js'), (err: Error | null, files: Array<string>) => {
+        glob(join(templateFolder, '**/*.js'), (err: Error | null, files: string[]) => {
             if (err) {
                 return rej(err);
             }
@@ -34,12 +34,10 @@ function getTemplateFiles(templateFolder: string): Promise<Array<string>> {
 /**
  * Copy all template files
  */
-function copyFiles(files: Array<string>, target: string): Promise<Array<any>> {
-    let promises = [];
+async function copyFiles(files: string[], target: string): Promise<void> {
     for (let i = 0; i < files.length; i++) {
-        promises.push(copyFile(files[i], target));
+        await copyFile(files[i], target);
     }
-    return Promise.all(promises);
 }
 
 /**
@@ -58,27 +56,17 @@ function copyFile(file: string, target: string): Promise<void> {
     });
 }
 
-/**
- * Setting up default configuration
- *
- */
-export default function writeDefaultConfig(configFolder: string): Promise<void> {
+export default async function writeDefaultConfig(configFolder: string): Promise<void> {
     const baseDir = process.cwd();
     configFolder = resolve(baseDir, configFolder);
-
-    return getConfigModulePath(baseDir)
-        .then(templatePath => {
-            return getTemplateFiles(templatePath);
-        })
-        .then(files => {
-            log(`Creating config in ${configFolder}`);
-            return copyFiles(files, configFolder);
-        })
-        .then((files) => {
-            log(`Copied ${files.length} config files`);
-            log(chalk.green(`Setup completed`));
-        })
-        .catch(e => {
-            log(chalk.red(`Error: ${e.message}`));
-        })
+    try {
+        const templatePath = await getConfigModulePath(baseDir);
+        const files = await getTemplateFiles(templatePath);
+        log(`Creating config in ${configFolder}`);
+        await copyFiles(files, configFolder);
+        log(`Copied ${files.length} config files`);
+        log(chalk.green(`Setup completed`));
+    } catch (e) {
+        log(chalk.red(`Error: ${e.message}`));
+    }
 }
