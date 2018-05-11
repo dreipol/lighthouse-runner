@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import {Command} from 'commander';
-
-const program = require('commander');
-
-const {version} = require('../../package.json');
 import NoopLogger from '../Logger/NoopLogger';
 import Dreihouse from '../Dreihouse';
 import ConsoleLogger from '../Logger/ConsoleLogger';
 import writeDefaultConfig from './writeDefaultConfig';
+
+const program = require('commander');
+
+const {version} = require('../../package.json');
 
 program
     .version(version);
@@ -23,7 +23,7 @@ program
     .command('report <file>')
     .description('Run report with configuration')
     .option('-v, --verbose', 'Output type')
-    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result')
+    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val: string) => val.split(','))
     .option('-p, --port <port>', 'Use given port for debugging')
     .action(async (file: string, command: Command) => {
         const {verbose, port, reporter} = command;

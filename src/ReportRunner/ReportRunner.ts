@@ -8,12 +8,12 @@ import LoggerInterface from '../Logger/LoggerInterface';
 
 export default class ReportRunner {
     protected config: DreihouseConfig;
-    protected port: number | null;
+    protected port: number;
     protected opts: LighthouseOptions;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
 
-    constructor(logger: LoggerInterface, config: DreihouseConfig, port: number | null, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: DreihouseConfig, port: number, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;
@@ -52,12 +52,12 @@ export default class ReportRunner {
     }
 
     private async runReport(path: string): Promise<LighthouseReportResult> {
-        const {url, report} = this.config;
+        const {url} = this.config;
         const site = resolveUrl(url, path);
 
-        const runner = new LighthouseRunner();
+        const runner = new LighthouseRunner(this.logger);
         this.logger.print(`Create report for ${path}`);
-        const results = await runner.runReport(url, path, this.opts, report, this.port);
+        const results = await runner.runReport(url, path, this.opts, this.config, this.port);
         this.logger.print(`Report for ${path} completed`);
         await this.runReporters(site, results);
         return results;

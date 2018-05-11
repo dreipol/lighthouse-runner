@@ -14,6 +14,7 @@ export default Joi.object().keys({
     disableThrottling: Joi.boolean().required(),
     saveReport: Joi.boolean().required(),
     budget: Joi.object().required(),
+    preAuditScripts: Joi.array(),
     reporters: Joi.object().keys({
         modules: Joi.array().items(
             Joi.string(),

@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const program = require('commander');
-const { version } = require('../../package.json');
 const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 const Dreihouse_1 = __importDefault(require("../Dreihouse"));
 const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
 const writeDefaultConfig_1 = __importDefault(require("./writeDefaultConfig"));
+const program = require('commander');
+const { version } = require('../../package.json');
 program
     .version(version);
 program
@@ -30,7 +30,7 @@ program
     .command('report <file>')
     .description('Run report with configuration')
     .option('-v, --verbose', 'Output type')
-    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result')
+    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val) => val.split(','))
     .option('-p, --port <port>', 'Use given port for debugging')
     .action((file, command) => __awaiter(this, void 0, void 0, function* () {
     const { verbose, port, reporter } = command;

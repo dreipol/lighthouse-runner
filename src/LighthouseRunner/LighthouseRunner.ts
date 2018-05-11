@@ -1,35 +1,50 @@
 import {resolve} from 'url';
-
-const lighthouse = require('lighthouse');
-import {launch} from 'chrome-launcher';
-
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import ChromeStarter from '../ChromeStarter/ChromeStarter';
+import LoggerInterface from '../Logger/LoggerInterface';
+
+const lighthouse = require('lighthouse');
 
 export default class LighthouseRunner {
+    private logger: LoggerInterface;
 
-    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfig, port: number | null): Promise<LighthouseReportResult> {
+    constructor(logger: LoggerInterface) {
+        this.logger = logger;
+    }
+
+    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfig, port: number): Promise<LighthouseReportResult> {
         const url = resolve(targetUrl, urlPath);
         return await this.launchChromeAndRunLighthouse(url, opts, config, port);
     }
 
-    private async launchChromeAndRunLighthouse(url: string, opts: LighthouseOptions, config: DreihouseConfig, port: number | null): Promise<LighthouseReportResult> {
-        let chrome = null;
-        if (!port) {
-            chrome = await launch({chromeFlags: opts.chromeFlags});
-            port = chrome.port;
+    private async launchChromeAndRunLighthouse(url: string, opts: LighthouseOptions, config: DreihouseConfig, port: number): Promise<LighthouseReportResult> {
+        const starter = new ChromeStarter(url, true, port, this.logger);
+        await starter.setup(config);
+
+        if (config.preAuditScripts) {
+            await starter.runPreAuditScripts(config.preAuditScripts);
         }
 
-        if (port) {
-            opts.port = port;
+        let results: LighthouseReportResult;
+
+        try {
+            if (port) {
+                opts.port = port;
+            }
+
+            opts.disableStorageReset = true;
+            this.logger.print('Start lighthouse audit');
+            results = await lighthouse(url, opts, config.report);
+            await starter.disconnect();
+
+        } catch (e) {
+            await starter.disconnect();
+            throw e;
         }
 
-        const results: LighthouseReportResult = await lighthouse(url, opts, config);
         delete results.artifacts;
-        if (chrome) {
-            await chrome.kill();
-        }
         return results;
     }
 }

@@ -16,6 +16,7 @@ const DEFAULT_CONFIG = {
     reporters: {
         modules: [],
     },
+    preAuditScripts: [],
     budget: {
         dreipol: 100,
         seo: 90,

@@ -29,11 +29,14 @@ class Dreihouse {
         this.config = ConfigValidator_1.default.validate(require(configFilePath));
         this.logger.print(`Config seems valid`);
         this.reportFolder = path_1.resolve(path_1.dirname(this.configFile), this.config.folder);
+        if (!reporterNames) {
+            throw new Error('Reporters are required');
+        }
         this.logger.print(`Load modules for reporters ${reporterNames.join(',')}`);
         this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, reporterNames);
         this.logger.print(`Reporer modules loaded`);
     }
-    execute(port) {
+    execute(port = 9222) {
         return __awaiter(this, void 0, void 0, function* () {
             const { paths, chromeFlags, disableEmulation, disableThrottling } = this.config;
             const opts = {

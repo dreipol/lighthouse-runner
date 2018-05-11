@@ -1,5 +1,6 @@
 import Budget from './Budget';
 import ReportersConfig from './ReportersConfig';
+import PreAuditScript from '../../PreAuditScript/PreAuditScript';
 
 export default interface DreihouseConfig {
     url: string;
@@ -11,6 +12,7 @@ export default interface DreihouseConfig {
     disableEmulation: boolean;
     disableThrottling: boolean;
     budget: Budget;
+    preAuditScripts?: PreAuditScript[];
     reporters: ReportersConfig;
     tag: string;
 }

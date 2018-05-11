@@ -20,7 +20,7 @@ export function start() {
                 return rej(err);
             }
 
-            return res();
+            return res(`<h1>Hello WOrld</h1>`);
         });
     });
 }

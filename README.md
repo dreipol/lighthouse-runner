@@ -23,8 +23,8 @@ The configuration is stored in an external module.Check out [@dreipol/lighthouse
 
 # Usage
 ## Commands
-List all available commands
-
+    `dreihouse report ./config/desktop.js`
+    
 ### `setup <dir>`
 The setup command will setup the default configuration files in the folder specified in the command.
 After setup you have to edit the config to your flavours.

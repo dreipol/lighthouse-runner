@@ -3,7 +3,7 @@ module.exports = {
     paths: [
         '/',
     ],
-    folder: "./reports",
+    folder: './reports',
     tag: 'test',
     chromeFlags: ['--headless'],
     disableEmulation: true,
@@ -20,9 +20,9 @@ module.exports = {
     reporters: {
         modules: [
             'html',
-            "json",
-            "json-dashboard",
-        ]
+            'json',
+            'json-dashboard',
+        ],
     },
     report: {
         settings: {},
@@ -351,7 +351,7 @@ module.exports = {
                     { id: 'image-aspect-ratio', weight: 1 },
                 ],
             },
-            'seo': {
+            seo: {
                 name: 'SEO',
                 description: 'These checks ensure that your page is optimized for search engine results ranking. ' +
                 'There are additional factors Lighthouse does not check that may affect your search ranking. ' +
@@ -370,7 +370,7 @@ module.exports = {
                     { id: 'mobile-friendly', weight: 0, group: 'manual-seo-checks' },
                     { id: 'structured-data', weight: 0, group: 'manual-seo-checks' },
                 ],
-            }
+            },
         },
     },
 };
