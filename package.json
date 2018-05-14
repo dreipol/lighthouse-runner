@@ -24,7 +24,7 @@
   ],
   "homepage": "https://github.com/dreipol/lighthouse-runner#readme",
   "dependencies": {
-    "chalk": "^2.3.2",
+    "chalk": "^2.4.1",
     "chrome-launcher": "^0.10.2",
     "commander": "^2.15.1",
     "fancy-log": "^1.3.2",

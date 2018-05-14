@@ -3,5 +3,5 @@ export default interface ReportCategory {
     id: string;
     name: string;
     description: string;
-    audits: Object[];
+    audits: object[];
 }
