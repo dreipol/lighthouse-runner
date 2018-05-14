@@ -27,9 +27,15 @@ program
     .option('-p, --port <port>', 'Use given port for debugging')
     .action(async (file: string, command: Command) => {
         const {verbose, port, reporter} = command;
-        const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
-        const dreihouse = new Dreihouse(file, reporter, printer);
-        return await dreihouse.execute(port);
+        try {
+            const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
+            const dreihouse = new Dreihouse(file, reporter, printer);
+            return await dreihouse.execute(port);
+        } catch (e) {
+            console.error(e);
+            process.exit(e.co);
+        }
+        return;
     });
 
 program.parse(process.argv);

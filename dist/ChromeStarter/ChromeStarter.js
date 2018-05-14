@@ -32,6 +32,7 @@ class ChromeStarter {
             this.logger.print(`Wait for networkidle0`);
             yield this.page.goto(this.url, {
                 waitUntil: 'networkidle0',
+                timeout: 3000000,
             });
         });
     }

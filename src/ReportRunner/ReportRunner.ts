@@ -40,14 +40,18 @@ export default class ReportRunner {
 
     private async runReporters(site: string, results: LighthouseReportResult): Promise<void> {
         this.logger.print(`Run ${this.reporters.length} reporters`);
-        this.reporters.forEach(async (reporter) => {
+
+        for (let i = 0; i < this.reporters.length; i++) {
+            const reporter = this.reporters[i];
             if (reporter.setup) {
                 this.logger.print(`${reporter.key} setup`);
                 await reporter.setup();
             }
             this.logger.print(`${reporter.key} process`);
             await reporter.handle(site, results);
-        });
+        }
+
+        this.logger.print(''.padStart(10, '-'));
         this.logger.print(`Running reporters complete`);
     }
 

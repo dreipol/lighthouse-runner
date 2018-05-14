@@ -38,14 +38,16 @@ class ReportRunner {
     runReporters(site, results) {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.print(`Run ${this.reporters.length} reporters`);
-            this.reporters.forEach((reporter) => __awaiter(this, void 0, void 0, function* () {
+            for (let i = 0; i < this.reporters.length; i++) {
+                const reporter = this.reporters[i];
                 if (reporter.setup) {
                     this.logger.print(`${reporter.key} setup`);
                     yield reporter.setup();
                 }
                 this.logger.print(`${reporter.key} process`);
                 yield reporter.handle(site, results);
-            }));
+            }
+            this.logger.print(''.padStart(10, '-'));
             this.logger.print(`Running reporters complete`);
         });
     }

@@ -8,7 +8,6 @@ const request = require('request');
 const util = require('util');
 
 export default class ChromeStarter {
-    // @ts-ignore
     private port: number;
     private chrome: LaunchedChrome | null;
     private browser: Browser | null;
@@ -39,9 +38,9 @@ export default class ChromeStarter {
         this.logger.print(`Wait for networkidle0`);
         await this.page.goto(this.url, {
             waitUntil: 'networkidle0',
+            timeout: 3000000,
         });
     }
-
 
     public async disconnect(): Promise<void> {
         if (!this.chrome || !this.browser || !this.page) {
