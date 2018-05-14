@@ -30,7 +30,7 @@ export default class ReporterModuleLoader {
             }
 
             if (typeof module === 'object') {
-                if (!(<ResultReporterInterface>module).setup || !(<ResultReporterInterface>module).handle) {
+                if (!(<ResultReporterInterface> module).setup || !(<ResultReporterInterface> module).handle) {
                     throw new Error('Object does not implement the ResultReporterInterface');
                 }
                 handlers.push(module);

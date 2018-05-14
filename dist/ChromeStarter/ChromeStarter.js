@@ -32,18 +32,25 @@ class ChromeStarter {
             this.logger.print(`Wait for networkidle0`);
             yield this.page.goto(this.url, {
                 waitUntil: 'networkidle0',
-                timeout: 3000000,
+                timeout: 1000 * 60,
             });
         });
     }
     disconnect() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.chrome || !this.browser || !this.page) {
-                console.error('Chrome not launched');
-                throw new Error('Chrome not launched');
+            this.logger.print(`Closing session`);
+            if (this.page) {
+                yield this.page.close();
+                this.logger.print(`Page closed`);
             }
-            yield this.browser.close();
-            yield this.chrome.kill();
+            if (this.browser) {
+                yield this.browser.close();
+                this.logger.print(`Browser closed`);
+            }
+            if (this.chrome) {
+                yield this.chrome.kill();
+                this.logger.print(`Chrome killed`);
+            }
         });
     }
     runPreAuditScripts(setupScripts) {
@@ -52,18 +59,13 @@ class ChromeStarter {
                 throw new Error('Page has not been created. Run setup first');
             }
             this.logger.print(`Execute ${setupScripts.length} setup script/s`);
-            try {
-                for (let i = 0; i < setupScripts.length; i++) {
-                    if (!setupScripts[i].execute) {
-                        throw new Error('Script does not implement the PreAuditScript interface');
-                    }
-                    yield setupScripts[i].execute(this.logger, this.page);
+            for (let i = 0; i < setupScripts.length; i++) {
+                if (!setupScripts[i].execute) {
+                    throw new Error('Script does not implement the PreAuditScript interface');
                 }
-                this.logger.print(`Setup scripts complete`);
+                yield setupScripts[i].execute(this.logger, this.page);
             }
-            catch (e) {
-                throw new Error(e);
-            }
+            this.logger.print(`Setup scripts complete`);
         });
     }
     startChrome(chromeFlags) {

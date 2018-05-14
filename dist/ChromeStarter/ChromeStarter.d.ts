@@ -1,4 +1,4 @@
-import PreAuditScript from '../PreAuditScript/PreAuditScript';
+import PreAuditScriptInterface from '../PreAuditScript/PreAuditScriptInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
 import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
 export default class ChromeStarter {
@@ -11,6 +11,6 @@ export default class ChromeStarter {
     constructor(url: string, headless: boolean | undefined, port: number, logger: LoggerInterface);
     setup(config: DreihouseConfig): Promise<void>;
     disconnect(): Promise<void>;
-    runPreAuditScripts(setupScripts: PreAuditScript[]): Promise<void>;
+    runPreAuditScripts(setupScripts: PreAuditScriptInterface[]): Promise<void>;
     private startChrome(chromeFlags);
 }

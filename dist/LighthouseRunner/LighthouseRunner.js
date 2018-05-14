@@ -27,12 +27,12 @@ class LighthouseRunner {
     launchChromeAndRunLighthouse(url, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
             const starter = new ChromeStarter_1.default(url, true, port, this.logger);
-            yield starter.setup(config);
-            if (config.preAuditScripts) {
-                yield starter.runPreAuditScripts(config.preAuditScripts);
-            }
             let results;
             try {
+                yield starter.setup(config);
+                if (config.preAuditScripts) {
+                    yield starter.runPreAuditScripts(config.preAuditScripts);
+                }
                 if (port) {
                     opts.port = port;
                 }
@@ -40,12 +40,12 @@ class LighthouseRunner {
                 this.logger.print('Start lighthouse audit');
                 results = yield lighthouse(url, opts, config.report);
                 yield starter.disconnect();
+                delete results.artifacts;
             }
             catch (e) {
                 yield starter.disconnect();
                 throw e;
             }
-            delete results.artifacts;
             return results;
         });
     }

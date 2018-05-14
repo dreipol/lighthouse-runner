@@ -27,12 +27,14 @@ program
     .option('-p, --port <port>', 'Use given port for debugging')
     .action(async (file: string, command: Command) => {
         const {verbose, port, reporter} = command;
+        const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
         try {
-            const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
+            printer.print(`Dreihouse v${version}`);
             const dreihouse = new Dreihouse(file, reporter, printer);
-            return await dreihouse.execute(port);
+            await dreihouse.execute(port);
+            printer.print('Dreihouse completed');
         } catch (e) {
-            console.error(e);
+            printer.error(e.message);
             process.exit(e.co);
         }
         return;

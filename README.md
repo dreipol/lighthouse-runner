@@ -46,7 +46,7 @@ look under `Usage` to see what reporters are available
 ### preAuditScripts
 In order to handle login forms, or do other modifications of the page before lighthouse audits the page,
 you can add some `preAuditScripts` in the config. Those scripts are executed right before lighthouse starts.
-These scripts have to implement the [`PreAuditScript`](src/PreAuditScript/PreAuditScript.ts) interface.
+These scripts have to implement the [`PreAuditScript`](src/PreAuditScript/PreAuditScriptInterface.ts) interface.
 
 The will be already on your desired route
 

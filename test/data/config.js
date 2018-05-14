@@ -17,13 +17,6 @@ module.exports = {
         accessibility: 70,
         'best-practices': 70,
     },
-    reporters: {
-        modules: [
-            'html',
-            'json',
-            'json-dashboard',
-        ],
-    },
     report: {
         settings: {},
         passes: [

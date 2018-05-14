@@ -13,9 +13,6 @@ const DEFAULT_CONFIG = {
     disableEmulation: true,
     disableThrottling: true,
     saveReport: true,
-    reporters: {
-        modules: [],
-    },
     preAuditScripts: [],
     budget: {
         dreipol: 100,
