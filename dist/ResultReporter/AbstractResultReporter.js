@@ -22,3 +22,4 @@ class AbstractResultReporter {
     }
 }
 exports.default = AbstractResultReporter;
+//# sourceMappingURL=AbstractResultReporter.js.map

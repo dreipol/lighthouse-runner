@@ -12,3 +12,4 @@ function createFolder(path) {
     });
 }
 exports.default = createFolder;
+//# sourceMappingURL=createFolder.js.map

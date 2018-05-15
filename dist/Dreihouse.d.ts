@@ -1,7 +1,7 @@
 import LoggerInterface from './Logger/LoggerInterface';
-import DreihouseConfig from './Interfaces/Config/DreihouseConfig';
 import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
+import { DreihouseConfig } from '@dreipol/lighthouse-config';
 export default class Dreihouse {
     protected configFile: string;
     protected reportFolder: string;

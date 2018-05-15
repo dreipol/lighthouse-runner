@@ -59,3 +59,4 @@ class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
     }
 }
 exports.default = DashboardJsonResultReporter;
+//# sourceMappingURL=DashboardJsonResultReporter.js.map

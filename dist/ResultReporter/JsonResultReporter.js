@@ -45,3 +45,4 @@ class JsonResultReporter extends AbstractResultReporter_1.default {
     }
 }
 exports.default = JsonResultReporter;
+//# sourceMappingURL=JsonResultReporter.js.map

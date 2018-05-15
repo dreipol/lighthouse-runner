@@ -8,8 +8,7 @@ import LighthouseOptions from './Interfaces/LighthouseOptions';
 import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
 import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
-import ConfigValidator from '@dreipol/lighthouse-config/dist/ConfigValidator';
-import {DreihouseConfig} from '@dreipol/lighthouse-config';
+import {ConfigValidator, DreihouseConfig} from '@dreipol/lighthouse-config';
 
 export default class Dreihouse {
     protected configFile: string;
@@ -46,6 +45,11 @@ export default class Dreihouse {
             throw new Error('Reporters are required');
         }
         this.logger.print(`Load modules for reporters ${this.reporterNames.join(',')}`);
+
+        if (!this.config) {
+            throw new Error('No config loaded');
+        }
+
         this.reporters = ReporterModuleLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.logger.print(`${this.reporters.length} reporter modules loaded`);
     }

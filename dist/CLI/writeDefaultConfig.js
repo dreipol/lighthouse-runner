@@ -71,3 +71,4 @@ function writeDefaultConfig(configFolder) {
     });
 }
 exports.default = writeDefaultConfig;
+//# sourceMappingURL=writeDefaultConfig.js.map

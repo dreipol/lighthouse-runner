@@ -12,3 +12,4 @@ function urlToPath(url) {
     return pathname;
 }
 exports.default = urlToPath;
+//# sourceMappingURL=urlToPath.js.map

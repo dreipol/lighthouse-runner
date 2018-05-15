@@ -46,3 +46,4 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
     }
 }
 exports.default = HTMLResultPersister;
+//# sourceMappingURL=HTMLResultPersister.js.map

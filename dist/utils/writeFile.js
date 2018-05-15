@@ -23,3 +23,4 @@ function writeFile(url, folder, content, type, prefix = '', suffix = '') {
     return filename;
 }
 exports.default = writeFile;
+//# sourceMappingURL=writeFile.js.map

@@ -72,3 +72,4 @@ class CLIReporter extends AbstractResultReporter_1.default {
     }
 }
 exports.default = CLIReporter;
+//# sourceMappingURL=CLIReporter.js.map

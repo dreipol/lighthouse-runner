@@ -1,8 +1,8 @@
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
+import { DreihouseConfig } from '@dreipol/lighthouse-config';
 export default class ReportRunner {
     protected config: DreihouseConfig;
     protected port: number;

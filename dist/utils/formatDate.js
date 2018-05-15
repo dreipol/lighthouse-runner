@@ -15,3 +15,4 @@ function formatDate(date) {
     return `${year}${month}${day}-${h}${m}${s}`;
 }
 exports.default = formatDate;
+//# sourceMappingURL=formatDate.js.map

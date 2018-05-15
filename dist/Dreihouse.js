@@ -16,7 +16,7 @@ const fs_1 = require("fs");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
-const ConfigValidator_1 = __importDefault(require("@dreipol/lighthouse-config/dist/ConfigValidator"));
+const lighthouse_config_1 = require("@dreipol/lighthouse-config");
 class Dreihouse {
     constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
         this.configFile = configFile;
@@ -33,13 +33,16 @@ class Dreihouse {
     }
     loadConfig(config) {
         this.logger.print(`Validating config`);
-        this.config = ConfigValidator_1.default.validate(config);
+        this.config = lighthouse_config_1.ConfigValidator.validate(config);
         this.logger.print(`Config seems valid`);
         this.reportFolder = path_1.resolve(path_1.dirname(this.configFile), config.folder);
         if (!this.reporterNames) {
             throw new Error('Reporters are required');
         }
         this.logger.print(`Load modules for reporters ${this.reporterNames.join(',')}`);
+        if (!this.config) {
+            throw new Error('No config loaded');
+        }
         this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.logger.print(`${this.reporters.length} reporter modules loaded`);
     }
@@ -67,3 +70,4 @@ class Dreihouse {
     }
 }
 exports.default = Dreihouse;
+//# sourceMappingURL=Dreihouse.js.map

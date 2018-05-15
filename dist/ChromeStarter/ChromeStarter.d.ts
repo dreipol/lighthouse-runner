@@ -1,6 +1,5 @@
-import PreAuditScriptInterface from '../Interfaces/PreAuditScriptInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
+import { DreihouseConfig, PreAuditScriptInterface } from '@dreipol/lighthouse-config';
 export default class ChromeStarter {
     private port;
     private chrome;

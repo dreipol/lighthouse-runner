@@ -48,3 +48,4 @@ program
     return;
 }));
 program.parse(process.argv);
+//# sourceMappingURL=index.js.map

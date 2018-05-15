@@ -1,8 +1,7 @@
-'use strict';
 import sinon from 'sinon';
 import Dreihouse from '../src/Dreihouse';
 import {start, stop} from './data/simpleServer';
-import DreihouseConfig from '../src/Interfaces/Config/DreihouseConfig';
+import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 const DEFAULT_CONFIG = require('./data/config');
 

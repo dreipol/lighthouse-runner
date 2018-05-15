@@ -10,3 +10,4 @@ class ConsoleLogger {
     }
 }
 exports.default = ConsoleLogger;
+//# sourceMappingURL=ConsoleLogger.js.map
