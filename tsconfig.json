@@ -18,7 +18,14 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "listFiles": true,
+    "paths": {
+      "@dreipol/*": [
+        "node_modules/@dreipol/*"
+      ]
+    }
   },
   "exclude": [
     "node_modules",

@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import Dreihouse from '../src/Dreihouse';
 import {start, stop} from './data/simpleServer';
-import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 const DEFAULT_CONFIG = require('./data/config');
 
@@ -89,7 +88,7 @@ describe('Dreihouse', () => {
     describe('preAuditScripts', () => {
 
         it('no scripts', async () => {
-            const config: DreihouseConfig = {...DEFAULT_CONFIG};
+            const config: any = {...DEFAULT_CONFIG};
             config.preAuditScripts = [];
             const dreihouse = new Dreihouse(CONFIG_FILENAME, []);
             await dreihouse.loadConfig(config);
@@ -98,7 +97,7 @@ describe('Dreihouse', () => {
 
         it('custom script', async () => {
             const execute = sinon.spy();
-            const config: DreihouseConfig = {...DEFAULT_CONFIG};
+            const config: any = {...DEFAULT_CONFIG};
             config.preAuditScripts = [
                 {
                     execute,
