@@ -1,5 +1,5 @@
 import ReportCategory from './ReportCategory';
-import Budget from './Config/Budget';
+import {Budget} from '@dreipol/lighthouse-config';
 
 export default interface ReportResult {
     categories: ReportCategory[];

@@ -1,10 +1,10 @@
 import {resolve} from 'url';
 
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
-import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import ChromeStarter from '../ChromeStarter/ChromeStarter';
 import LoggerInterface from '../Logger/LoggerInterface';
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 const lighthouse = require('lighthouse');
 

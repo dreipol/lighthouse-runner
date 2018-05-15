@@ -46,7 +46,7 @@ look under `Usage` to see what reporters are available
 ### preAuditScripts
 In order to handle login forms, or do other modifications of the page before lighthouse audits the page,
 you can add some `preAuditScripts` in the config. Those scripts are executed right before lighthouse starts.
-These scripts have to implement the [`PreAuditScript`](src/PreAuditScript/PreAuditScriptInterface.ts) interface.
+These scripts have to implement the [`PreAuditScript`](src/Interfaces/PreAuditScriptInterface.ts) interface.
 
 The will be already on your desired route
 
@@ -82,16 +82,29 @@ Now in your `config` file you can load the login script
     reporters: {
         modules: [
             ...
+            
+Checkout [./example](./example) for an easy to use example.
+In this example we have 4 config files. Two for the `local` environment and two for the `prod` environment.
+The file `lh.base.js` exports a function, that will alter some config that is equal through all four files. (So we do not
+have to write duplicated code :) ). Then the environment configs are split into a `desktop`and a `mobile` version.
+If you look into those files, you'll see that the `mobile` version extends the `desktop` config. Thos only modifications
+are that the viewport is resized and throttling is enabled on mobile devices.
+
+The `desktop` config extend from the basic configuration that comes with the [`@dreipol/lighthouse-config`](https://www.npmjs.com/package/@dreipol/lighthouse-config) module. Check
+out the [basic local dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/local/desktop.js)
 
 # Usage
 ## Commands
-    `dreihouse report ./config/desktop.js -r cli`
+
     
 ### `setup <dir>`
 The setup command will setup the default configuration files in the folder specified in the command.
 After setup you have to edit the config to your flavours.
 
 ### `report <file> --reporter [REPORTER]`
+
+        dreihouse report ./config/desktop.js -r cli
+
 To create a report you have to call this command followed by the config file that holds the configuration
 for `dreihouse`. By adding the `--port` flag, you can reuse a already started chrome instance instead of
 creating a new one. This gives you the ability to login on a site before running the reports since the session

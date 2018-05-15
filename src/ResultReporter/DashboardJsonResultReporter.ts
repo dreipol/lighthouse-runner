@@ -3,10 +3,10 @@ import {existsSync} from 'fs';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import AbstractResultReporter from './AbstractResultReporter';
 import ReportCategory from '../Interfaces/ReportCategory';
-import Budget from '../Interfaces/Config/Budget';
 import ReportResult from '../Interfaces/ReportResult';
 import writeFile from '../utils/writeFile';
 import createFolder from '../utils/createFolder';
+import {Budget} from '@dreipol/lighthouse-config';
 
 export default class DashboardJsonResultReporter extends AbstractResultReporter {
     public key = 'DashboardJsonResultReporter';

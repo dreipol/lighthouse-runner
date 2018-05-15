@@ -2,7 +2,7 @@ import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import AbstractResultReporter from './AbstractResultReporter';
 import ReportCategory from '../Interfaces/ReportCategory';
 import chalk from 'chalk';
-import Budget from '../Interfaces/Config/Budget';
+import {Budget} from '@dreipol/lighthouse-config';
 
 export default class CLIReporter extends AbstractResultReporter {
     public key = 'CLIReporter';

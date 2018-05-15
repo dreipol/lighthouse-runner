@@ -2,10 +2,10 @@ import AbstractResultReporter from '../ResultReporter/AbstractResultReporter';
 import JsonResultReporter from '../ResultReporter/JsonResultReporter';
 import DashboardJsonResultReporter from '../ResultReporter/DashboardJsonResultReporter';
 import HTMLResultPersister from '../ResultReporter/HTMLResultPersister';
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
 import LoggerInterface from '../Logger/LoggerInterface';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
 import CLIReporter from '../ResultReporter/CLIReporter';
+import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 type Constructor<T> = new (...args: any[]) => T;
 

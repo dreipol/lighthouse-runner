@@ -1,8 +1,7 @@
 import {Browser, connect, Page} from 'puppeteer';
-import PreAuditScriptInterface from '../PreAuditScript/PreAuditScriptInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
 import {launch, LaunchedChrome} from 'chrome-launcher';
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
+import {DreihouseConfig, PreAuditScriptInterface} from '@dreipol/lighthouse-config';
 
 const request = require('request');
 const util = require('util');

@@ -1,5 +1,5 @@
 import Budget from './Budget';
-import PreAuditScriptInterface from '../../PreAuditScript/PreAuditScriptInterface';
+import PreAuditScriptInterface from '../PreAuditScriptInterface';
 export default interface DreihouseConfig {
     url: string;
     paths: string[];

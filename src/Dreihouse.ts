@@ -1,15 +1,15 @@
 import {dirname, resolve} from 'path';
 import {existsSync} from 'fs';
 
-import ConfigValidator from './Validator/ConfigValidator';
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
 import ReportRunner from './ReportRunner/ReportRunner';
-import DreihouseConfig from './Interfaces/Config/DreihouseConfig';
 import LighthouseOptions from './Interfaces/LighthouseOptions';
 import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
 import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
+import ConfigValidator from '@dreipol/lighthouse-config/dist/ConfigValidator';
+import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 export default class Dreihouse {
     protected configFile: string;

@@ -1,4 +1,4 @@
-import PreAuditScriptInterface from '../PreAuditScript/PreAuditScriptInterface';
+import PreAuditScriptInterface from '../Interfaces/PreAuditScriptInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
 import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
 export default class ChromeStarter {

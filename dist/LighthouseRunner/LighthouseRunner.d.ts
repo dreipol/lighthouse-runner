@@ -1,7 +1,7 @@
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
-import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import LoggerInterface from '../Logger/LoggerInterface';
+import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 export default class LighthouseRunner {
     private logger;
     constructor(logger: LoggerInterface);

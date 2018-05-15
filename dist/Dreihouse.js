@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const fs_1 = require("fs");
-const ConfigValidator_1 = __importDefault(require("./Validator/ConfigValidator"));
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
+const ConfigValidator_1 = __importDefault(require("@dreipol/lighthouse-config/dist/ConfigValidator"));
 class Dreihouse {
     constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
         this.configFile = configFile;

@@ -1,10 +1,11 @@
-import DreihouseConfig from '../Interfaces/Config/DreihouseConfig';
-import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import {resolve as resolveUrl} from 'url';
+
+import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import LighthouseRunner from '../LighthouseRunner/LighthouseRunner';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
 import LoggerInterface from '../Logger/LoggerInterface';
+import {DreihouseConfig} from '@dreipol/lighthouse-config';
 
 export default class ReportRunner {
     protected config: DreihouseConfig;
