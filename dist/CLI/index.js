@@ -27,18 +27,18 @@ program
     yield writeDefaultConfig_1.default(folder);
 }));
 program
-    .command('report <file>')
+    .command('report <root-url>')
     .description('Run report with configuration')
     .option('-v, --verbose', 'Output type')
-    .option('-u, --root-url <url>', 'Define the root url of the page')
+    .option('-f, --config-file <file>', 'Define the root url of the page')
     .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val) => val.split(','))
     .option('-p, --port <port>', 'Use given port for debugging')
-    .action((file, command) => __awaiter(this, void 0, void 0, function* () {
-    const { verbose, port, reporter, rootUrl } = command;
+    .action((rootUrl, command) => __awaiter(this, void 0, void 0, function* () {
+    const { verbose, port, reporter, configFile } = command;
     const printer = !verbose ? new ConsoleLogger_1.default() : new NoopLogger_1.default();
     try {
         printer.print(`Dreihouse v${version}`);
-        const dreihouse = new Dreihouse_1.default(file, reporter, printer);
+        const dreihouse = new Dreihouse_1.default(configFile, reporter, printer);
         yield dreihouse.execute(rootUrl, port);
         printer.print('Dreihouse completed');
     }

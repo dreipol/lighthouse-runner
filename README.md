@@ -20,6 +20,7 @@ If you want the full advantage of `dreihouse` you could set it up for your CI.
 
 ## Config
 The configuration is stored in an external module.Check out [@dreipol/lighthouse-config](https://www.npmjs.com/package/@dreipol/lighthouse-config)
+
 ### reporters
 Reporters are a set of scripts that will handle the results of the lighthouse audit. Those can be used to handle 
 data differently like create an HTML file or a JSON file from the results. You can add your own script to upload 
@@ -84,26 +85,25 @@ Now in your `config` file you can load the login script
             ...
             
 Checkout [./example](./example) for an easy to use example.
-In this example we have 4 config files. Two for the `local` environment and two for the `prod` environment.
-The file `lh.base.js` exports a function, that will alter some config that is equal through all four files. (So we do not
-have to write duplicated code :) ). Then the environment configs are split into a `desktop`and a `mobile` version.
-If you look into those files, you'll see that the `mobile` version extends the `desktop` config. Thos only modifications
-are that the viewport is resized and throttling is enabled on mobile devices.
+In this example we have two config files. One for the `mobile` environment and one for the `desktop` environment.
+The file `lh.base.js` exports a function, that will alter some config that is equal through all four files.
+If you look into those files, you'll see that the `mobile` version extends the `desktop` config. 
+The only modifications are that the viewport is resized and throttling is enabled on mobile devices.
 
-The `desktop` config extend from the basic configuration that comes with the [`@dreipol/lighthouse-config`](https://www.npmjs.com/package/@dreipol/lighthouse-config) module. Check
-out the [basic local dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/local/desktop.js)
+The `desktop` config extend from the basic configuration that comes with the
+[`@dreipol/lighthouse-config`](https://www.npmjs.com/package/@dreipol/lighthouse-config) module. Checkout the 
+[basic dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/base/desktop.js)
 
 # Usage
 ## Commands
-
     
 ### `setup <dir>`
 The setup command will setup the default configuration files in the folder specified in the command.
 After setup you have to edit the config to your flavours.
 
-### `report <file> --reporter [REPORTER]`
+### `report <URL> --config-file ./config/desktop.js --reporter [REPORTER]`
 
-        dreihouse report ./config/desktop.js -r cli
+        dreihouse report https://example.ch -f ./config/desktop.js -r cli
 
 To create a report you have to call this command followed by the config file that holds the configuration
 for `dreihouse`. By adding the `--port` flag, you can reuse a already started chrome instance instead of
@@ -121,6 +121,7 @@ is shared when lighthouse attaches to that port.
 #### Flags
 | name             | optional | default  | example                       | description                                         |
 | ---------------- | -------- | -------- | ----------------------------- | --------------------------------------------------- |
+| `-f, --config-file`         | `false`   |      | `./config/lh.desktop.js` | Define the config file|
 | `-r, --reporter` | `false`  |          | cli,html,json,json-dashboard | Add list of repprters to handle the data. Available |
 | `-p, --port`         | `true`   |   9222   |                               | Debugging port of a running chrome instance         |
 | `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
@@ -164,8 +165,8 @@ Example config file:
           - run:
               name: run report
               command: |
-                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.desktop.js -r cli,html
-                ./node_modules/.bin/dreihouse report ./lighthouse/lh.prod.mobile.js -r cli
+                npx dreihouse report https://example.com -f ./lighthouse/lh.desktop.js -r cli,html
+                npx dreihouse report https://example.com -f ./lighthouse/lh.mobile.js -r cli
           
           - store_artifacts:
               path: ~/repo/reports

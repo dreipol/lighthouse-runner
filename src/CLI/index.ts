@@ -20,18 +20,18 @@ program
     });
 
 program
-    .command('report <file>')
+    .command('report <root-url>')
     .description('Run report with configuration')
     .option('-v, --verbose', 'Output type')
-    .option('-u, --root-url <url>', 'Define the root url of the page')
+    .option('-f, --config-file <file>', 'Define the root url of the page')
     .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val: string) => val.split(','))
     .option('-p, --port <port>', 'Use given port for debugging')
-    .action(async (file: string, command: Command) => {
-        const {verbose, port, reporter, rootUrl} = command;
+    .action(async (rootUrl: string, command: Command) => {
+        const {verbose, port, reporter, configFile} = command;
         const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
         try {
             printer.print(`Dreihouse v${version}`);
-            const dreihouse = new Dreihouse(file, reporter, printer);
+            const dreihouse = new Dreihouse(configFile, reporter, printer);
             await dreihouse.execute(rootUrl, port);
             printer.print('Dreihouse completed');
         } catch (e) {
