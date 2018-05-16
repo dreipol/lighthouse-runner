@@ -19,16 +19,23 @@ const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/R
 const lighthouse_config_1 = require("@dreipol/lighthouse-config");
 class Dreihouse {
     constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
-        this.configFile = configFile;
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
         this.reportFolder = '';
         this.config = null;
-        const configFilePath = path_1.resolve(process.cwd(), this.configFile);
-        if (!fs_1.existsSync(this.configFile)) {
-            throw new Error(`File not found at ${this.configFile}`);
+        let configFilePath = null;
+        if (configFile) {
+            configFilePath = path_1.resolve(process.cwd(), configFile);
+            if (!fs_1.existsSync(configFile)) {
+                throw new Error(`File not found at ${configFile}`);
+            }
         }
+        else {
+            configFile = '../config/base.js';
+            configFilePath = configFile;
+        }
+        this.configFile = configFile;
         this.loadConfig(require(configFilePath));
     }
     loadConfig(config) {

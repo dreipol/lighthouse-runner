@@ -18,19 +18,25 @@ export default class Dreihouse {
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
 
-    constructor(configFile: string, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
-        this.configFile = configFile;
+    constructor(configFile: string | undefined, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
         this.reportFolder = '';
         this.config = null;
 
-        const configFilePath = resolve(process.cwd(), this.configFile);
-        if (!existsSync(this.configFile)) {
-            throw new Error(`File not found at ${this.configFile}`);
+        let configFilePath: string | null = null;
+        if (configFile) {
+            configFilePath = resolve(process.cwd(), configFile);
+            if (!existsSync(configFile)) {
+                throw new Error(`File not found at ${configFile}`);
+            }
+        } else {
+            configFile = '../config/base.js';
+            configFilePath = configFile;
         }
 
+        this.configFile = configFile;
         this.loadConfig(require(configFilePath));
     }
 

@@ -9,7 +9,7 @@ export default class Dreihouse {
     protected config: DreihouseConfig | null;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
-    constructor(configFile: string, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface);
+    constructor(configFile: string | undefined, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface);
     loadConfig(config: DreihouseConfig): void;
     execute(url: string, port?: number): Promise<LighthouseReportResult[] | null>;
 }

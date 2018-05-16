@@ -101,14 +101,16 @@ The `desktop` config extend from the basic configuration that comes with the
 The setup command will setup the default configuration files in the folder specified in the command.
 After setup you have to edit the config to your flavours.
 
-### `report <URL> --config-file ./config/desktop.js --reporter [REPORTER]`
+### `report <URL> [--config-file ./config/desktop.js] --reporter [REPORTER]`
 
         dreihouse report https://example.ch -f ./config/desktop.js -r cli
+        
+
 
 To create a report you have to call this command followed by the config file that holds the configuration
-for `dreihouse`. By adding the `--port` flag, you can reuse a already started chrome instance instead of
-creating a new one. This gives you the ability to login on a site before running the reports since the session
-is shared when lighthouse attaches to that port.
+for `dreihouse`. Alternately you can run an audit with a default config by leaving your the config file option.
+
+        dreihouse report https://example.ch -r cli
 
 **list of available reporters**
 - `cli` Print lighthouse results in CLI
@@ -121,8 +123,8 @@ is shared when lighthouse attaches to that port.
 #### Flags
 | name             | optional | default  | example                       | description                                         |
 | ---------------- | -------- | -------- | ----------------------------- | --------------------------------------------------- |
-| `-f, --config-file`         | `false`   |      | `./config/lh.desktop.js` | Define the config file|
 | `-r, --reporter` | `false`  |          | cli,html,json,json-dashboard | Add list of repprters to handle the data. Available |
+| `-f, --config-file`| `true`   |[./config/base.js](./config/base.js)      | `./config/lh.desktop.js` | Define the config file|
 | `-p, --port`         | `true`   |   9222   |                               | Debugging port of a running chrome instance         |
 | `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
 

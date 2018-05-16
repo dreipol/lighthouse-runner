@@ -43,7 +43,7 @@ program
         printer.print('Dreihouse completed');
     }
     catch (e) {
-        printer.error(e.message);
+        console.error(e.message);
         process.exit(e.co);
     }
     return;
