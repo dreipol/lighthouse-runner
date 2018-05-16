@@ -39,6 +39,7 @@ class LighthouseRunner {
                 opts.disableStorageReset = true;
                 this.logger.print('Start lighthouse audit');
                 results = yield lighthouse(url, opts, config.report);
+                this.logger.print('Lighthouse audit complete');
                 yield starter.disconnect();
                 delete results.artifacts;
             }

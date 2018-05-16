@@ -28,7 +28,7 @@ program
     .option('-p, --port <port>', 'Use given port for debugging')
     .action(async (rootUrl: string, command: Command) => {
         const {verbose, port, reporter, configFile} = command;
-        const printer = !verbose ? new ConsoleLogger() : new NoopLogger();
+        const printer = verbose ? new ConsoleLogger() : new NoopLogger();
         try {
             printer.print(`Dreihouse v${version}`);
             const dreihouse = new Dreihouse(configFile, reporter, printer);

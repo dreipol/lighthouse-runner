@@ -39,6 +39,7 @@ export default class LighthouseRunner {
             opts.disableStorageReset = true;
             this.logger.print('Start lighthouse audit');
             results = await lighthouse(url, opts, config.report);
+            this.logger.print('Lighthouse audit complete');
             await starter.disconnect();
             delete results.artifacts;
 

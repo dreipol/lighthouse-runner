@@ -35,7 +35,7 @@ program
     .option('-p, --port <port>', 'Use given port for debugging')
     .action((rootUrl, command) => __awaiter(this, void 0, void 0, function* () {
     const { verbose, port, reporter, configFile } = command;
-    const printer = !verbose ? new ConsoleLogger_1.default() : new NoopLogger_1.default();
+    const printer = verbose ? new ConsoleLogger_1.default() : new NoopLogger_1.default();
     try {
         printer.print(`Dreihouse v${version}`);
         const dreihouse = new Dreihouse_1.default(configFile, reporter, printer);

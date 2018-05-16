@@ -27,18 +27,24 @@ export default class ChromeStarter {
     public async setup(config: DreihouseConfig): Promise<void> {
         this.logger.print('Start chrome');
         this.chrome = await this.startChrome(config.chromeFlags);
+        this.logger.print('Chrome started');
 
         const resp = await util.promisify(request)(`http://localhost:${this.port}/json/version`);
         const {webSocketDebuggerUrl} = JSON.parse(resp.body);
 
+        this.logger.print(`Connecting to chrome on port ${this.port}`);
         this.browser = await connect({browserWSEndpoint: webSocketDebuggerUrl});
+        this.logger.print(`Connected to chrome instance`);
+
         this.page = await this.browser.newPage();
 
+        this.logger.print(`Navigate to ${this.url}`);
         this.logger.print(`Wait for networkidle0`);
         await this.page.goto(this.url, {
             waitUntil: 'networkidle0',
             timeout: 1000 * 60,
         });
+        this.logger.print(`Wait for networkidle0 complete`);
     }
 
     public async disconnect(): Promise<void> {

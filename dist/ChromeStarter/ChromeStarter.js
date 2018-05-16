@@ -25,15 +25,20 @@ class ChromeStarter {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.print('Start chrome');
             this.chrome = yield this.startChrome(config.chromeFlags);
+            this.logger.print('Chrome started');
             const resp = yield util.promisify(request)(`http://localhost:${this.port}/json/version`);
             const { webSocketDebuggerUrl } = JSON.parse(resp.body);
+            this.logger.print(`Connecting to chrome on port ${this.port}`);
             this.browser = yield puppeteer_1.connect({ browserWSEndpoint: webSocketDebuggerUrl });
+            this.logger.print(`Connected to chrome instance`);
             this.page = yield this.browser.newPage();
+            this.logger.print(`Navigate to ${this.url}`);
             this.logger.print(`Wait for networkidle0`);
             yield this.page.goto(this.url, {
                 waitUntil: 'networkidle0',
                 timeout: 1000 * 60,
             });
+            this.logger.print(`Wait for networkidle0 complete`);
         });
     }
     disconnect() {
