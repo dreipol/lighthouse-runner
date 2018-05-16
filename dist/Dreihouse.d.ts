@@ -11,5 +11,5 @@ export default class Dreihouse {
     protected reporters: ResultReporterInterface[];
     constructor(configFile: string, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface);
     loadConfig(config: DreihouseConfig): void;
-    execute(port?: number): Promise<LighthouseReportResult[] | null>;
+    execute(url: string, port?: number): Promise<LighthouseReportResult[] | null>;
 }

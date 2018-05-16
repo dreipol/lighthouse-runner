@@ -54,7 +54,7 @@ export default class Dreihouse {
         this.logger.print(`${this.reporters.length} reporter modules loaded`);
     }
 
-    public async execute(port: number = 9222): Promise<LighthouseReportResult[] | null> {
+    public async execute(url: string, port: number = 9222): Promise<LighthouseReportResult[] | null> {
         if (!this.config) {
             throw new Error('No config loaded');
         }
@@ -77,7 +77,7 @@ export default class Dreihouse {
         this.logger.print(`Report runner created`);
         const runner = new ReportRunner(this.logger, this.config, port, opts, this.reporters);
 
-        this.logger.print(`Start creating reports for ${this.config.url} paths [${reportPaths.join(',')}]`);
-        return await runner.createReports(reportPaths);
+        this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
+        return await runner.createReports(url, reportPaths);
     }
 }

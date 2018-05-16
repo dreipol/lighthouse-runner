@@ -1,4 +1,4 @@
-let mobileConfig = require('./lh.prod.desktop');
+let mobileConfig = require('./lh.desktop');
 
 // Set viewport size
 mobileConfig.chromeFlags = ['--window-size=320,568'];

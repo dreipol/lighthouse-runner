@@ -22,18 +22,18 @@ export default class ReportRunner {
         this.reporters = reporters;
     }
 
-    public async createReports(paths: string[], allResults: LighthouseReportResult[] = []): Promise<LighthouseReportResult[]> {
+    public async createReports(rootUrl: string, paths: string[], allResults: LighthouseReportResult[] = []): Promise<LighthouseReportResult[]> {
         const urlPath = paths.shift();
 
         if (!urlPath) {
             return allResults;
         }
 
-        const results = await this.runReport(urlPath);
+        const results = await this.runReport(rootUrl, urlPath);
         allResults.push(results);
 
         if (paths.length > 0) {
-            return this.createReports(paths, allResults);
+            return this.createReports(rootUrl, paths, allResults);
         }
 
         return allResults;
@@ -56,13 +56,12 @@ export default class ReportRunner {
         this.logger.print(`Running reporters complete`);
     }
 
-    private async runReport(path: string): Promise<LighthouseReportResult> {
-        const {url} = this.config;
-        const site = resolveUrl(url, path);
+    private async runReport(rootUrl: string, path: string): Promise<LighthouseReportResult> {
+        const site = resolveUrl(rootUrl, path);
 
         const runner = new LighthouseRunner(this.logger);
         this.logger.print(`Create report for ${path}`);
-        const results = await runner.runReport(url, path, this.opts, this.config, this.port);
+        const results = await runner.runReport(rootUrl, path, this.opts, this.config, this.port);
         this.logger.print(`Report for ${path} completed`);
         await this.runReporters(site, results);
         return results;

@@ -7,6 +7,7 @@ const DEFAULT_CONFIG = require('./data/config');
 const CONFIG_FILENAME = './test/data/config.js';
 
 const {expect, assert} = require('chai');
+const ROOT_URL = 'http://localhost:8000';
 
 describe('Dreihouse', () => {
     before(() => {
@@ -20,7 +21,7 @@ describe('Dreihouse', () => {
     describe('Reporters', () => {
         it('without ', async () => {
             const dreihouse = new Dreihouse(CONFIG_FILENAME, []);
-            const results = await dreihouse.execute(9222);
+            const results = await dreihouse.execute(ROOT_URL, 9222);
             if (!results) {
                 throw new Error('No results');
             }
@@ -53,7 +54,7 @@ describe('Dreihouse', () => {
                 setup,
                 handle,
             }]);
-            await dreihouse.execute();
+            await dreihouse.execute(ROOT_URL);
 
             expect(setup.called).to.be.true;
             expect(handle.called).to.be.true;
@@ -77,7 +78,7 @@ describe('Dreihouse', () => {
         it('invalid reporter name', async () => {
             try {
                 const dreihouse = new Dreihouse(CONFIG_FILENAME, ['foo']);
-                await dreihouse.execute();
+                await dreihouse.execute(ROOT_URL);
                 assert.fail(null, null, 'Invalid reporter should thow error');
             } catch (e) {
                 return;
@@ -92,7 +93,7 @@ describe('Dreihouse', () => {
             config.preAuditScripts = [];
             const dreihouse = new Dreihouse(CONFIG_FILENAME, []);
             await dreihouse.loadConfig(config);
-            await dreihouse.execute();
+            await dreihouse.execute(ROOT_URL);
         });
 
         it('custom script', async () => {
@@ -106,7 +107,7 @@ describe('Dreihouse', () => {
 
             const dreihouse = new Dreihouse(CONFIG_FILENAME, []);
             await dreihouse.loadConfig(config);
-            await dreihouse.execute();
+            await dreihouse.execute(ROOT_URL);
 
             expect(execute.called).to.be.true;
         });
@@ -116,7 +117,7 @@ describe('Dreihouse', () => {
 
         it('Create report', async () => {
             const dreihouse = new Dreihouse(CONFIG_FILENAME, ['cli']);
-            const results = await dreihouse.execute();
+            const results = await dreihouse.execute(ROOT_URL);
             if (!results) {
                 throw new Error('No results');
             }
@@ -143,7 +144,7 @@ describe('Dreihouse', () => {
         it('Fail on missing file report', async () => {
             try {
                 const dreihouse = new Dreihouse('./test/data/config2.ts', []);
-                await dreihouse.execute();
+                await dreihouse.execute(ROOT_URL);
                 assert.fail(null, null, 'Should fail when missing config file');
             } catch (e) {
                 return;

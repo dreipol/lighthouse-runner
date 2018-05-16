@@ -46,7 +46,7 @@ class Dreihouse {
         this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.logger.print(`${this.reporters.length} reporter modules loaded`);
     }
-    execute(port = 9222) {
+    execute(url, port = 9222) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.config) {
                 throw new Error('No config loaded');
@@ -64,8 +64,8 @@ class Dreihouse {
             }
             this.logger.print(`Report runner created`);
             const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, this.reporters);
-            this.logger.print(`Start creating reports for ${this.config.url} paths [${reportPaths.join(',')}]`);
-            return yield runner.createReports(reportPaths);
+            this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
+            return yield runner.createReports(url, reportPaths);
         });
     }
 }
