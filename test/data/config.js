@@ -7,7 +7,6 @@ module.exports = {
     chromeFlags: ['--headless'],
     disableEmulation: true,
     disableThrottling: true,
-    saveReport: true,
     budget: {
         dreipol: 100,
         seo: 90,

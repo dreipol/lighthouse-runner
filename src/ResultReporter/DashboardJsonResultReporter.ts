@@ -12,9 +12,8 @@ export default class DashboardJsonResultReporter extends AbstractResultReporter 
     public key = 'DashboardJsonResultReporter';
 
     public async handle(url: string, results: LighthouseReportResult): Promise<void> {
-        const {saveReport} = this.config;
 
-        if (this.reportFolder && saveReport) {
+        if (this.reportFolder) {
             const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
             writeFile(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
             this.logger.print('JSON Dashboard File created');
@@ -23,9 +22,9 @@ export default class DashboardJsonResultReporter extends AbstractResultReporter 
     }
 
     public async setup(): Promise<void> {
-        const {saveReport, folder} = this.config;
+        const {folder} = this.config;
 
-        if (!saveReport || !folder || !this.reportFolder) {
+        if (!folder || !this.reportFolder) {
             return Promise.resolve();
         }
 

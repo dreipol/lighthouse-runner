@@ -22,8 +22,8 @@ class JsonResultReporter extends AbstractResultReporter_1.default {
     }
     setup() {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport, folder } = this.config;
-            if (!saveReport || !folder || !this.reportFolder) {
+            const { folder } = this.config;
+            if (!folder || !this.reportFolder) {
                 return;
             }
             if (!fs_1.existsSync(this.reportFolder)) {
@@ -34,8 +34,7 @@ class JsonResultReporter extends AbstractResultReporter_1.default {
     }
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport } = this.config;
-            if (this.reportFolder && saveReport) {
+            if (this.reportFolder) {
                 writeFile_1.default(url, this.reportFolder, JSON.stringify(results), 'json', this.config.tag);
                 this.logger.print('JSON File created');
                 this.logger.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');

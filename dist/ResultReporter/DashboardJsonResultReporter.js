@@ -22,8 +22,7 @@ class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
     }
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport } = this.config;
-            if (this.reportFolder && saveReport) {
+            if (this.reportFolder) {
                 const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
                 writeFile_1.default(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
                 this.logger.print('JSON Dashboard File created');
@@ -33,8 +32,8 @@ class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
     }
     setup() {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport, folder } = this.config;
-            if (!saveReport || !folder || !this.reportFolder) {
+            const { folder } = this.config;
+            if (!folder || !this.reportFolder) {
                 return Promise.resolve();
             }
             if (!fs_1.existsSync(this.reportFolder)) {

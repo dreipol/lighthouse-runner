@@ -10,9 +10,9 @@ export default class HTMLResultPersister extends AbstractResultReporter {
     public key = 'HTMLResultPersister';
 
     public async setup(): Promise<void> {
-        const {saveReport, folder} = this.config;
+        const {folder} = this.config;
 
-        if (!saveReport || !folder || !this.reportFolder) {
+        if (!folder || !this.reportFolder) {
             return;
         }
 
@@ -24,9 +24,7 @@ export default class HTMLResultPersister extends AbstractResultReporter {
     }
 
     public async handle(url: string, results: LighthouseReportResult): Promise<void> {
-        const {saveReport} = this.config;
-
-        if (this.reportFolder && saveReport) {
+        if (this.reportFolder) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
             writeFile(url, this.reportFolder, html, 'html', this.config.tag);

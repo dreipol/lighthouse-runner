@@ -23,8 +23,8 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
     }
     setup() {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport, folder } = this.config;
-            if (!saveReport || !folder || !this.reportFolder) {
+            const { folder } = this.config;
+            if (!folder || !this.reportFolder) {
                 return;
             }
             if (!fs_1.existsSync(this.reportFolder)) {
@@ -35,8 +35,7 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
     }
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { saveReport } = this.config;
-            if (this.reportFolder && saveReport) {
+            if (this.reportFolder) {
                 const generator = new ReportGenerator();
                 const html = generator.generateReportHtml(results);
                 writeFile_1.default(url, this.reportFolder, html, 'html', this.config.tag);

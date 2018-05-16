@@ -6,7 +6,6 @@ import LoggerInterface from '../Logger/LoggerInterface';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
 import CLIReporter from '../ResultReporter/CLIReporter';
 import {DreihouseConfig} from '@dreipol/lighthouse-config';
-import ConsoleLogger from "../Logger/ConsoleLogger";
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -26,7 +25,7 @@ export default class ReporterModuleLoader {
             if (typeof module === 'string') {
                 const Reporter = ReporterModuleLoader.getMappedReporter(module);
                 if (Reporter) {
-                    handlers.push(new Reporter(reportFolder, config, new ConsoleLogger()));
+                    handlers.push(new Reporter(reportFolder, config, logger));
                 }
             }
 

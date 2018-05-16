@@ -7,7 +7,6 @@ const JsonResultReporter_1 = __importDefault(require("../ResultReporter/JsonResu
 const DashboardJsonResultReporter_1 = __importDefault(require("../ResultReporter/DashboardJsonResultReporter"));
 const HTMLResultPersister_1 = __importDefault(require("../ResultReporter/HTMLResultPersister"));
 const CLIReporter_1 = __importDefault(require("../ResultReporter/CLIReporter"));
-const ConsoleLogger_1 = __importDefault(require("../Logger/ConsoleLogger"));
 const MAPPED_REPORTERS = {
     'json': JsonResultReporter_1.default,
     'json-dashboard': DashboardJsonResultReporter_1.default,
@@ -21,7 +20,7 @@ class ReporterModuleLoader {
             if (typeof module === 'string') {
                 const Reporter = ReporterModuleLoader.getMappedReporter(module);
                 if (Reporter) {
-                    handlers.push(new Reporter(reportFolder, config, new ConsoleLogger_1.default()));
+                    handlers.push(new Reporter(reportFolder, config, logger));
                 }
             }
             if (typeof module === 'object') {
