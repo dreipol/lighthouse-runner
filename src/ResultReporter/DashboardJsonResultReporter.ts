@@ -15,8 +15,8 @@ export default class DashboardJsonResultReporter extends AbstractResultReporter 
 
         if (this.reportFolder) {
             const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
-            writeFile(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
-            this.logger.print('JSON Dashboard File created');
+            const filename = writeFile(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
+            this.logger.print(`Json Dashboard created ${filename}`);
         }
         return;
     }

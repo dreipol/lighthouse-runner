@@ -1,10 +1,10 @@
 import {existsSync} from 'fs';
-
-const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import AbstractResultReporter from './AbstractResultReporter';
 import createFolder from '../utils/createFolder';
 import writeFile from '../utils/writeFile';
+
+const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 
 export default class HTMLResultPersister extends AbstractResultReporter {
     public key = 'HTMLResultPersister';
@@ -27,8 +27,8 @@ export default class HTMLResultPersister extends AbstractResultReporter {
         if (this.reportFolder) {
             const generator = new ReportGenerator();
             const html = generator.generateReportHtml(results);
-            writeFile(url, this.reportFolder, html, 'html', this.config.tag);
-            this.logger.print('HTML File created');
+            const filename = writeFile(url, this.reportFolder, html, 'html', this.config.tag);
+            this.logger.print(`HTML report created ${filename}`);
         }
     }
 }
