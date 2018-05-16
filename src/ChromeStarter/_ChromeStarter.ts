@@ -1,8 +1,7 @@
 import {Browser, connect, Page} from 'puppeteer';
 import LoggerInterface from '../Logger/LoggerInterface';
+import {launch, LaunchedChrome} from 'chrome-launcher';
 import {DreihouseConfig, PreAuditScriptInterface} from '@dreipol/lighthouse-config';
-import * as chromeLauncher from 'chrome-launcher';
-import {LaunchedChrome} from 'chrome-launcher';
 
 const request = require('request');
 const util = require('util');
@@ -83,6 +82,9 @@ export default class ChromeStarter {
     }
 
     private async startChrome(chromeFlags: string[]): Promise<LaunchedChrome> {
-        return await chromeLauncher.launch({port: this.port, chromeFlags});
+        return await launch({
+            port: this.port,
+            chromeFlags,
+        });
     }
 }

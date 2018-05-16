@@ -7,16 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
-const chromeLauncher = __importStar(require("chrome-launcher"));
+const chrome_launcher_1 = require("chrome-launcher");
 const request = require('request');
 const util = require('util');
 class ChromeStarter {
@@ -82,9 +75,12 @@ class ChromeStarter {
     }
     startChrome(chromeFlags) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield chromeLauncher.launch({ port: this.port, chromeFlags });
+            return yield chrome_launcher_1.launch({
+                port: this.port,
+                chromeFlags,
+            });
         });
     }
 }
 exports.default = ChromeStarter;
-//# sourceMappingURL=ChromeStarter.js.map
+//# sourceMappingURL=_ChromeStarter.js.map
