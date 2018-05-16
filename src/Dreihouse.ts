@@ -1,5 +1,6 @@
 import {dirname, resolve} from 'path';
 import {existsSync} from 'fs';
+import ora from 'ora';
 
 import NoopPrinter from './Logger/NoopLogger';
 import LoggerInterface from './Logger/LoggerInterface';
@@ -12,18 +13,21 @@ import {ConfigValidator, DreihouseConfig} from '@dreipol/lighthouse-config';
 
 export default class Dreihouse {
     protected configFile: string;
+    protected suppressOutput: boolean;
     protected reportFolder: string;
     protected reporterNames: Array<string | ResultReporterInterface>;
     protected config: DreihouseConfig | null;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
+    protected spinner: any | null;
 
-    constructor(configFile: string | undefined, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
+    constructor(configFile: string | undefined, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter(), suppressOutput: boolean = false) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
         this.reportFolder = '';
         this.config = null;
+        this.suppressOutput = suppressOutput;
 
         let configFilePath: string | null = null;
         if (configFile) {
@@ -36,11 +40,17 @@ export default class Dreihouse {
             configFilePath = configFile;
         }
 
+        if (!this.suppressOutput) {
+            this.spinner = ora(`Generating report`);
+        }
         this.configFile = configFile;
         this.loadConfig(require(configFilePath));
     }
 
     public loadConfig(config: DreihouseConfig): void {
+        if (this.spinner) {
+            this.spinner.start();
+        }
         this.logger.print(`Validating config`);
         this.config = ConfigValidator.validate(config);
         this.logger.print(`Config seems valid`);
@@ -84,6 +94,11 @@ export default class Dreihouse {
         const runner = new ReportRunner(this.logger, this.config, port, opts, this.reporters);
 
         this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
-        return await runner.createReports(url, reportPaths);
+        const reports =  await runner.createReports(url, reportPaths);
+
+        if (this.spinner) {
+            this.spinner.stop();
+        }
+        return reports;
     }
 }

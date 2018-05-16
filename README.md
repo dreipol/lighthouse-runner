@@ -127,6 +127,7 @@ for `dreihouse`. Alternately you can run an audit with a default config by leavi
 | `-f, --config-file`| `true`   |[./config/base.js](./config/base.js)      | `./config/lh.desktop.js` | Define the config file|
 | `-p, --port`         | `true`   |   9222   |                               | Debugging port of a running chrome instance         |
 | `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
+| `-s, --silent`         | `true`   | false     |                               | Suppress spinner on CLI|
 
 
 ## Circle CI Config

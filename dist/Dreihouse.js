@@ -13,17 +13,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const fs_1 = require("fs");
+const ora_1 = __importDefault(require("ora"));
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
 const lighthouse_config_1 = require("@dreipol/lighthouse-config");
 class Dreihouse {
-    constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
+    constructor(configFile, reporterNames, logger = new NoopLogger_1.default(), suppressOutput = false) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
         this.reportFolder = '';
         this.config = null;
+        this.suppressOutput = suppressOutput;
         let configFilePath = null;
         if (configFile) {
             configFilePath = path_1.resolve(process.cwd(), configFile);
@@ -35,10 +37,16 @@ class Dreihouse {
             configFile = '../config/base.js';
             configFilePath = configFile;
         }
+        if (!this.suppressOutput) {
+            this.spinner = ora_1.default(`Generating report`);
+        }
         this.configFile = configFile;
         this.loadConfig(require(configFilePath));
     }
     loadConfig(config) {
+        if (this.spinner) {
+            this.spinner.start();
+        }
         this.logger.print(`Validating config`);
         this.config = lighthouse_config_1.ConfigValidator.validate(config);
         this.logger.print(`Config seems valid`);
@@ -72,7 +80,11 @@ class Dreihouse {
             this.logger.print(`Report runner created`);
             const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, this.reporters);
             this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
-            return yield runner.createReports(url, reportPaths);
+            const reports = yield runner.createReports(url, reportPaths);
+            if (this.spinner) {
+                this.spinner.stop();
+            }
+            return reports;
         });
     }
 }
