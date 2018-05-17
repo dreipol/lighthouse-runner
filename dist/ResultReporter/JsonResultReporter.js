@@ -35,9 +35,8 @@ class JsonResultReporter extends AbstractResultReporter_1.default {
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.reportFolder) {
-                writeFile_1.default(url, this.reportFolder, JSON.stringify(results), 'json', this.config.tag);
-                this.logger.print('JSON File created');
-                this.logger.print('Use https://googlechrome.github.io/lighthouse/viewer/ to inspect your report');
+                const filename = writeFile_1.default(url, this.reportFolder, JSON.stringify(results), 'json', this.config.tag);
+                this.logger.print(`Json report created ${filename}`);
             }
             return;
         });

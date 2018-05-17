@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
-const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 const AbstractResultReporter_1 = __importDefault(require("./AbstractResultReporter"));
 const createFolder_1 = __importDefault(require("../utils/createFolder"));
 const writeFile_1 = __importDefault(require("../utils/writeFile"));
+const ReportGenerator = require('lighthouse/lighthouse-core/report/v2/report-generator');
 class HTMLResultPersister extends AbstractResultReporter_1.default {
     constructor() {
         super(...arguments);
@@ -38,8 +38,8 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
             if (this.reportFolder) {
                 const generator = new ReportGenerator();
                 const html = generator.generateReportHtml(results);
-                writeFile_1.default(url, this.reportFolder, html, 'html', this.config.tag);
-                this.logger.print('HTML File created');
+                const filename = writeFile_1.default(url, this.reportFolder, html, 'html', this.config.tag);
+                this.logger.print(`HTML report created ${filename}`);
             }
         });
     }

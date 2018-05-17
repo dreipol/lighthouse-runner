@@ -24,8 +24,8 @@ class DashboardJsonResultReporter extends AbstractResultReporter_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.reportFolder) {
                 const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
-                writeFile_1.default(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
-                this.logger.print('JSON Dashboard File created');
+                const filename = writeFile_1.default(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
+                this.logger.print(`Json Dashboard created ${filename}`);
             }
             return;
         });
