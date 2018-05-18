@@ -1,7 +1,6 @@
 import {resolve} from 'url';
 
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
-import ChromeStarter from '../ChromeStarter/ChromeStarter';
 import LoggerInterface from '../Logger/LoggerInterface';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import {DreihouseConfig} from '@dreipol/lighthouse-config';
@@ -21,17 +20,9 @@ export default class LighthouseRunner {
     }
 
     private async launchChromeAndRunLighthouse(url: string, opts: LighthouseOptions, config: DreihouseConfig, port: number): Promise<LighthouseReportResult> {
-        const starter = new ChromeStarter(url, true, port, this.logger);
         let results: LighthouseReportResult;
 
         try {
-
-            await starter.setup(config);
-
-            if (config.preAuditScripts) {
-                await starter.runPreAuditScripts(config.preAuditScripts);
-            }
-
             if (port) {
                 opts.port = port;
             }
@@ -40,11 +31,10 @@ export default class LighthouseRunner {
             this.logger.print('Start lighthouse audit');
             results = await lighthouse(url, opts, config.report);
             this.logger.print('Lighthouse audit complete');
-            await starter.disconnect();
+            // await starter.disconnect();
             delete results.artifacts;
 
         } catch (e) {
-            await starter.disconnect();
             throw e;
         }
 

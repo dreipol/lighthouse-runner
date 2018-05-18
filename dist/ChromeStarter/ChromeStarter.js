@@ -14,24 +14,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const puppeteer_1 = require("puppeteer");
 const chromeLauncher = __importStar(require("chrome-launcher"));
+const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 const request = require('request');
 const util = require('util');
 class ChromeStarter {
-    constructor(url, headless = false, port, logger) {
+    constructor(initialUrl, headless = false, port, logger = new NoopLogger_1.default()) {
         this.port = port;
         this.chrome = null;
-        this.url = url;
+        this.url = initialUrl;
         this.logger = logger;
         this.browser = null;
         this.page = null;
     }
-    setup(config) {
+    setup(chromeFlags) {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.print('Start chrome');
-            this.chrome = yield this.startChrome(config.chromeFlags);
+            this.chrome = yield this.startChrome(chromeFlags);
             this.logger.print('Chrome started');
             const resp = yield util.promisify(request)(`http://localhost:${this.port}/json/version`);
             const { webSocketDebuggerUrl } = JSON.parse(resp.body);

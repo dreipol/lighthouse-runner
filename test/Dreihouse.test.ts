@@ -10,6 +10,16 @@ const CONFIG_FILENAME = './test/data/config.js';
 const {expect, assert} = require('chai');
 const ROOT_URL = 'http://localhost:8000';
 
+const NOOP_REPORTER = {
+    key: 'noop',
+    setup: async () => {
+        return;
+    },
+    handle: async () => {
+        return;
+    },
+};
+
 describe('Dreihouse', () => {
     before(() => {
         return start();
@@ -19,13 +29,24 @@ describe('Dreihouse', () => {
         return stop();
     });
 
+    describe('config', () => {
+        it('load config file', async () => {
+            new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
+        });
+
+        it('load default config', async () => {
+            new Dreihouse(null, [], new NoopLogger(), true);
+        });
+
+        it('load config object', async () => {
+            new Dreihouse(DEFAULT_CONFIG, [], new NoopLogger(), true);
+        });
+    });
+
     describe('preAuditScripts', () => {
 
         it('no scripts', async () => {
-            const config: any = {...DEFAULT_CONFIG};
-            config.preAuditScripts = [];
             const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
-            await dreihouse.loadConfig(config);
             await dreihouse.execute(ROOT_URL);
         });
 
@@ -38,8 +59,7 @@ describe('Dreihouse', () => {
                 },
             ];
 
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
-            await dreihouse.loadConfig(config);
+            const dreihouse = new Dreihouse(config, [], new NoopLogger(), true);
             await dreihouse.execute(ROOT_URL);
 
             expect(execute.called).to.be.true;
@@ -49,7 +69,7 @@ describe('Dreihouse', () => {
     describe('basic', () => {
 
         it('create report', async () => {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['cli'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, [NOOP_REPORTER], new NoopLogger(), true);
             const results = await dreihouse.execute(ROOT_URL);
             if (!results) {
                 throw new Error('No results');

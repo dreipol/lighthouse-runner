@@ -7,12 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
-const ChromeStarter_1 = __importDefault(require("../ChromeStarter/ChromeStarter"));
 const lighthouse = require('lighthouse');
 class LighthouseRunner {
     constructor(logger) {
@@ -26,13 +22,8 @@ class LighthouseRunner {
     }
     launchChromeAndRunLighthouse(url, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
-            const starter = new ChromeStarter_1.default(url, true, port, this.logger);
             let results;
             try {
-                yield starter.setup(config);
-                if (config.preAuditScripts) {
-                    yield starter.runPreAuditScripts(config.preAuditScripts);
-                }
                 if (port) {
                     opts.port = port;
                 }
@@ -40,11 +31,9 @@ class LighthouseRunner {
                 this.logger.print('Start lighthouse audit');
                 results = yield lighthouse(url, opts, config.report);
                 this.logger.print('Lighthouse audit complete');
-                yield starter.disconnect();
                 delete results.artifacts;
             }
             catch (e) {
-                yield starter.disconnect();
                 throw e;
             }
             return results;

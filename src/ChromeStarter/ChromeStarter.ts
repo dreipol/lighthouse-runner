@@ -1,8 +1,9 @@
 import {Browser, connect, Page} from 'puppeteer';
 import LoggerInterface from '../Logger/LoggerInterface';
-import {DreihouseConfig, PreAuditScriptInterface} from '@dreipol/lighthouse-config';
+import {PreAuditScriptInterface} from '@dreipol/lighthouse-config';
 import * as chromeLauncher from 'chrome-launcher';
 import {LaunchedChrome} from 'chrome-launcher';
+import NoopLogger from '../Logger/NoopLogger';
 
 const request = require('request');
 const util = require('util');
@@ -15,19 +16,19 @@ export default class ChromeStarter {
     private url: string;
     private logger: LoggerInterface;
 
-    constructor(url: string, headless: boolean = false, port: number, logger: LoggerInterface) {
+    constructor(initialUrl: string, headless: boolean = false, port: number, logger: LoggerInterface = new NoopLogger()) {
         this.port = port;
         this.chrome = null;
-        this.url = url;
+        this.url = initialUrl;
         this.logger = logger;
 
         this.browser = null;
         this.page = null;
     }
 
-    public async setup(config: DreihouseConfig): Promise<void> {
+    public async setup(chromeFlags: string[]): Promise<void> {
         this.logger.print('Start chrome');
-        this.chrome = await this.startChrome(config.chromeFlags);
+        this.chrome = await this.startChrome(chromeFlags);
         this.logger.print('Chrome started');
 
         const resp = await util.promisify(request)(`http://localhost:${this.port}/json/version`);

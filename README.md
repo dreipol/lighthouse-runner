@@ -34,6 +34,34 @@ The `desktop` config extend from the basic configuration that comes with the
 [basic dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/base/desktop.js)
 
 # Usage
+## Programmatic use
+In order to modify `dreihouse` to your needs, you can orchestrate `dreihouse` programmatically.
+
+In this example script we run the audit every 15s and use the `cli` to report the results but only start the chrome once
+and reuse the connection.
+
+    import Dreihouse from "@dreipol/lighthouse-runner/dist/Dreihouse";
+    
+    const dreihouse = new Dreihouse(CONFIG, ['cli']);
+    
+    async function run() {
+        await dreihouse.startChrome(INITIAL_URL);
+        await execute();
+    }
+    
+    async function execute() {
+        await dreihouse.audit(URL);
+        setTimeout(async () => {
+            await execute();
+        }, 15000);
+    }
+    
+    
+    run();
+
+
+    
+
 ## Commands
     
 ### `setup <dir>`
@@ -68,6 +96,10 @@ for `dreihouse`. Alternately you can run an audit with a default config by leavi
 | `-v, --verbose`         | `true`   | false     |                               | Verbose console output   |
 | `-s, --silent`         | `true`   | false     |                               | Suppress spinner on CLI|
 
+
+## API
+
+    class Dreihouse (configFile: DreihouseConfig | string | null, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter(), suppressOutput: boolean = false)
 
 ## Circle CI Config
 
