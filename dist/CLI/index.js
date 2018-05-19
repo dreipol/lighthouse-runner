@@ -31,8 +31,8 @@ program
     .description('Run report with configuration')
     .option('-v, --verbose', 'Verbose output')
     .option('-s, --silent', 'Suppress output')
-    .option('-f, --config-file <file>', 'Define the root url of the page')
-    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val) => val.split(','))
+    .option('-f, --config-file <file>', 'Define the root url of the page', null)
+    .option('-r, --reporter <items>', 'Add list of reporters to use for handling the result', (val) => val.split(','), ['cli'])
     .option('-p, --port <port>', 'Use given port for debugging')
     .action((rootUrl, command) => __awaiter(this, void 0, void 0, function* () {
     const { verbose, port, reporter, configFile, silent } = command;
