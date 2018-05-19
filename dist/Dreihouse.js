@@ -13,25 +13,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const fs_1 = require("fs");
-const ora_1 = __importDefault(require("ora"));
 const lighthouse_config_1 = require("@dreipol/lighthouse-config");
 const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
 const ChromeStarter_1 = __importDefault(require("./ChromeStarter/ChromeStarter"));
 class Dreihouse {
-    constructor(configFile, reporterNames, logger = new NoopLogger_1.default(), suppressOutput = false) {
+    constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
         this.reportFolder = '';
         this.config = null;
         this.chromeStarter = null;
-        this.suppressOutput = suppressOutput;
         this.configFolder = process.cwd();
-        if (!this.suppressOutput) {
-            this.spinner = ora_1.default(`Generating report`);
-        }
         if (typeof configFile === 'object' && configFile !== null) {
             this.loadConfig(configFile, process.cwd());
             return;
@@ -53,9 +48,6 @@ class Dreihouse {
         this.loadConfig(require(path_1.resolve(resolveFolder, configFile)), resolveFolder);
     }
     loadConfig(config, resolveFolder) {
-        if (this.spinner) {
-            this.spinner.start();
-        }
         this.logger.print(`Validating config`);
         this.config = lighthouse_config_1.ConfigValidator.validate(config);
         this.logger.print(`Config seems valid`);
@@ -90,6 +82,7 @@ class Dreihouse {
             if (!this.config) {
                 throw new Error('No config available');
             }
+            this.logger.print(`Starting chrome`);
             if (!this.chromeStarter) {
                 this.chromeStarter = new ChromeStarter_1.default(url, true, 9222, this.logger);
             }
@@ -97,6 +90,7 @@ class Dreihouse {
             if (this.config.preAuditScripts) {
                 yield this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
             }
+            this.logger.print(`Starting chrome completed`);
         });
     }
     stopChrome() {
@@ -104,15 +98,13 @@ class Dreihouse {
             if (!this.chromeStarter) {
                 throw new Error('Chrome not started');
             }
+            this.logger.print(`Stopping chrome`);
             yield this.chromeStarter.disconnect();
         });
     }
     audit(url, port = 9222) {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.print('Start audit');
-            if (this.spinner) {
-                this.spinner.start();
-            }
             if (!this.config) {
                 throw new Error('No config loaded');
             }
@@ -129,11 +121,7 @@ class Dreihouse {
             this.logger.print(`Report runner created`);
             const runner = new ReportRunner_1.default(this.logger, this.config, port, opts, this.reporters);
             this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
-            const reports = yield runner.createReports(url, reportPaths);
-            if (this.spinner) {
-                this.spinner.stop();
-            }
-            return reports;
+            return yield runner.createReports(url, reportPaths);
         });
     }
 }

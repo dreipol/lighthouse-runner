@@ -5,15 +5,13 @@ import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
 export default class Dreihouse {
     protected configFolder: string;
-    protected suppressOutput: boolean;
     protected reportFolder: string;
     protected reporterNames: Array<string | ResultReporterInterface>;
     protected config: DreihouseConfig | null;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
-    protected spinner: any | null;
     protected chromeStarter: ChromeStarter | null;
-    constructor(configFile: DreihouseConfig | string | null, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface, suppressOutput?: boolean);
+    constructor(configFile: DreihouseConfig | string | null, reporterNames: Array<string | ResultReporterInterface>, logger?: LoggerInterface);
     loadConfigFile(configFile: string): void;
     loadConfig(config: DreihouseConfig, resolveFolder: string): void;
     setChromeStarter(value: ChromeStarter): void;
