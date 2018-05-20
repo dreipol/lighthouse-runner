@@ -4,9 +4,6 @@
   "description": "Command Line Runner for lighthouse with integrated budget checks for CI and quality control",
   "main": "./dist/Dreihouse.js",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "dreihouse": "./dist/CLI/index.js"
-  },
   "scripts": {
     "compile": "rm -rf dist/* && node_modules/.bin/tsc",
     "test": "./node_modules/.bin/mocha -r ./node_modules/ts-node/register test/*.test.ts --recursive -t 60000"

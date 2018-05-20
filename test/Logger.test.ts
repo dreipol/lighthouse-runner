@@ -24,7 +24,7 @@ describe('Logger', () => {
             error,
         };
 
-        const dreihouse = new Dreihouse(CONFIG_FILENAME, [], Logger, true);
+        const dreihouse = new Dreihouse(CONFIG_FILENAME, [], Logger);
         await dreihouse.execute(ROOT_URL);
 
         expect(print.called).to.be.true;

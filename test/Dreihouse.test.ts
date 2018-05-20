@@ -31,22 +31,22 @@ describe('Dreihouse', () => {
 
     describe('config', () => {
         it('load config file', async () => {
-            new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
+            new Dreihouse(CONFIG_FILENAME, [], new NoopLogger());
         });
 
         it('load default config', async () => {
-            new Dreihouse(null, [], new NoopLogger(), true);
+            new Dreihouse(null, [], new NoopLogger());
         });
 
         it('load config object', async () => {
-            new Dreihouse(DEFAULT_CONFIG, [], new NoopLogger(), true);
+            new Dreihouse(DEFAULT_CONFIG, [], new NoopLogger());
         });
     });
 
     describe('preAuditScripts', () => {
 
         it('no scripts', async () => {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
         });
 
@@ -59,7 +59,7 @@ describe('Dreihouse', () => {
                 },
             ];
 
-            const dreihouse = new Dreihouse(config, [], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(config, [], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
 
             expect(execute.called).to.be.true;
@@ -69,7 +69,7 @@ describe('Dreihouse', () => {
     describe('basic', () => {
 
         it('create report', async () => {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, [NOOP_REPORTER], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, [NOOP_REPORTER], new NoopLogger());
             const results = await dreihouse.execute(ROOT_URL);
             if (!results) {
                 throw new Error('No results');
@@ -96,7 +96,7 @@ describe('Dreihouse', () => {
 
         it('fail on missing config file', async () => {
             try {
-                const dreihouse = new Dreihouse('./test/data/config2.ts', [], new NoopLogger(), true);
+                const dreihouse = new Dreihouse('./test/data/config2.ts', [], new NoopLogger());
                 await dreihouse.execute(ROOT_URL);
                 assert.fail(null, null, 'Should fail when missing config file');
             } catch (e) {

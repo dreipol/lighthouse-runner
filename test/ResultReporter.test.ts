@@ -18,7 +18,7 @@ describe('Reporters', () => {
     });
 
     it('without ', async () => {
-        const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger(), true);
+        const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger());
         const results = await dreihouse.execute(ROOT_URL, 9222);
         if (!results) {
             throw new Error('No results');
@@ -51,7 +51,7 @@ describe('Reporters', () => {
             key: 'spy',
             setup,
             handle,
-        }], new NoopLogger(), true);
+        }], new NoopLogger());
         await dreihouse.execute(ROOT_URL);
 
         expect(setup.called).to.be.true;
@@ -75,7 +75,7 @@ describe('Reporters', () => {
 
     it('invalid reporter name', async () => {
         try {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['foo'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['foo'], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
             assert.fail(null, null, 'Invalid reporter should thow error');
         } catch (e) {
@@ -85,7 +85,7 @@ describe('Reporters', () => {
 
     it('cli', async () => {
         try {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['cli'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['cli'], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
         } catch (e) {
             assert.fail(null, null, e);
@@ -94,7 +94,7 @@ describe('Reporters', () => {
 
     it('html', async () => {
         try {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['html'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['html'], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
         } catch (e) {
             assert.fail(null, null, e);
@@ -103,7 +103,7 @@ describe('Reporters', () => {
 
     it('json', async () => {
         try {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['json'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['json'], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
         } catch (e) {
             assert.fail(null, null, e);
@@ -112,7 +112,7 @@ describe('Reporters', () => {
 
     it('json-dashboard', async () => {
         try {
-            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['json-dashboard'], new NoopLogger(), true);
+            const dreihouse = new Dreihouse(CONFIG_FILENAME, ['json-dashboard'], new NoopLogger());
             await dreihouse.execute(ROOT_URL);
         } catch (e) {
             assert.fail(null, null, e);
