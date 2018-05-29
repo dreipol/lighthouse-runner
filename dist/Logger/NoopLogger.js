@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class NoopLogger {
-    print(...args) {
+    debug(...args) {
     }
     error(...args) {
+    }
+    info(...args) {
+    }
+    setLevel(level) {
     }
 }
 exports.default = NoopLogger;

@@ -1,9 +1,8 @@
 import {resolve} from 'url';
 
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
-import LoggerInterface from '../Logger/LoggerInterface';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
-import {DreihouseConfig} from '@dreipol/lighthouse-config';
+import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
 
 const lighthouse = require('lighthouse');
 
@@ -28,12 +27,10 @@ export default class LighthouseRunner {
             }
 
             opts.disableStorageReset = true;
-            this.logger.print('Start lighthouse audit');
+            this.logger.debug('Start lighthouse audit');
             results = await lighthouse(url, opts, config.report);
-            this.logger.print('Lighthouse audit complete');
-            // await starter.disconnect();
+            this.logger.debug('Lighthouse audit complete');
             delete results.artifacts;
-
         } catch (e) {
             throw e;
         }

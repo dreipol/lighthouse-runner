@@ -17,17 +17,22 @@ describe('Logger', () => {
     });
 
     it('custom script', async () => {
-        const print = sinon.spy();
+        const debug = sinon.spy();
+        const info = sinon.spy();
         const error = sinon.spy();
+        const setLevel = sinon.spy();
         const Logger = {
-            print,
+            info,
+            debug,
             error,
+            setLevel,
         };
 
         const dreihouse = new Dreihouse(CONFIG_FILENAME, [], Logger);
         await dreihouse.execute(ROOT_URL);
 
-        expect(print.called).to.be.true;
+        expect(debug.called).to.be.true;
+        expect(info.called).to.be.true;
         expect(error.called).to.be.false;
     });
 

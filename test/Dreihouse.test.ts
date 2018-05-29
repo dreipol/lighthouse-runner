@@ -103,5 +103,15 @@ describe('Dreihouse', () => {
                 return;
             }
         });
+
+        it('resolve relative folder path from config', async () => {
+            try {
+                const dreihouse = new Dreihouse('./test/data/config.ts', [], new NoopLogger());
+                console.log(dreihouse.getConfig());
+                // expect(dreihouse.reportFolder).to.be()
+            } catch (e) {
+                return;
+            }
+        });
     });
 });

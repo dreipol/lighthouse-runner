@@ -1,15 +1,15 @@
-import {dirname, isAbsolute, resolve} from 'path';
-import {existsSync} from 'fs';
-import {ConfigValidator, DreihouseConfig} from '@dreipol/lighthouse-config';
+import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
 
 import NoopPrinter from './Logger/NoopLogger';
-import LoggerInterface from './Logger/LoggerInterface';
 import ReportRunner from './ReportRunner/ReportRunner';
 import LighthouseOptions from './Interfaces/LighthouseOptions';
-import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
 import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
+import ConfigLoader from './ConfigLoader/ConfigLoader';
+import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
+
+const {version} = require('../package.json');
 
 export default class Dreihouse {
     protected configFolder: string;
@@ -24,61 +24,23 @@ export default class Dreihouse {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
-        this.reportFolder = '';
         this.config = null;
         this.chromeStarter = null;
         this.configFolder = process.cwd();
 
-        if (typeof configFile === 'object' && configFile !== null) {
-            this.loadConfig((<DreihouseConfig> configFile), process.cwd());
-            return;
-        }
+        this.logger.info(`Dreihouse v${version}`);
+        const configLoader = new ConfigLoader();
 
-        if (configFile === null) {
-            this.loadConfig(require('../config/base.js'), process.cwd());
-            return;
-        }
-
-        this.loadConfigFile(configFile);
-    }
-
-    public loadConfigFile(configFile: string): void {
-        let resolveFolder = process.cwd();
-
-        if (isAbsolute(configFile)) {
-            resolveFolder = dirname(configFile);
-        }
-
-        if (!existsSync(configFile)) {
-            throw new Error(`File not found at ${configFile}`);
-        }
-
-        this.loadConfig(require(resolve(resolveFolder, configFile)), resolveFolder);
-    }
-
-    public loadConfig(config: DreihouseConfig, resolveFolder: string): void {
-        this.logger.print(`Validating config`);
-        this.config = ConfigValidator.validate(config);
-        this.logger.print(`Config seems valid`);
-
-        this.reportFolder = resolve(resolveFolder, config.folder);
-
-        if (!this.reporterNames) {
-            throw new Error('Reporters are required');
-        }
-        this.logger.print(`Load modules for reporters ${this.reporterNames.join(',')}`);
-
-        if (!this.config) {
-            throw new Error('No config loaded');
-        }
+        this.config = configLoader.load(this, configFile);
+        this.reportFolder = this.config.folder;
 
         this.reporters = ReporterModuleLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
-        this.logger.print(`${this.reporters.length} reporter modules loaded`);
+        this.setChromeStarter(new ChromeStarter(true, 9222, this.logger));
     }
 
-    public setChromeStarter(value: ChromeStarter) {
+    public setChromeStarter(value: ChromeStarter): void {
         this.chromeStarter = value;
-        this.logger.print('Overwrite default chromestarter');
+        this.logger.debug('Set chromestarter');
     }
 
     public async execute(url: string, port: number = 9222): Promise<LighthouseReportResult[] | null> {
@@ -87,7 +49,16 @@ export default class Dreihouse {
         }
 
         await this.startChrome(url);
-        const auditResults = await this.audit(url, port);
+        let auditResults = null;
+
+        try {
+            auditResults = await this.audit(url, port);
+        } catch (e) {
+            this.logger.error(e.message);
+            await this.stopChrome();
+            throw e;
+        }
+
         await this.stopChrome();
         return auditResults;
     }
@@ -97,17 +68,18 @@ export default class Dreihouse {
             throw new Error('No config available');
         }
 
-        this.logger.print(`Starting chrome`);
         if (!this.chromeStarter) {
-            this.chromeStarter = new ChromeStarter(url, true, 9222, this.logger);
+            throw new Error('No chrome starter defined');
         }
 
-        await this.chromeStarter.setup(this.config.chromeFlags);
+        this.logger.debug(`Starting chrome`);
+
+        await this.chromeStarter.setup(url, this.config.chromeFlags);
 
         if (this.config.preAuditScripts) {
             await this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
         }
-        this.logger.print(`Starting chrome completed`);
+        this.logger.debug(`Starting chrome completed`);
     }
 
     public async stopChrome() {
@@ -115,13 +87,12 @@ export default class Dreihouse {
             throw new Error('Chrome not started');
         }
 
-        this.logger.print(`Stopping chrome`);
+        this.logger.debug(`Stopping chrome`);
 
         await this.chromeStarter.disconnect();
     }
 
     public async audit(url: string, port: number = 9222): Promise<LighthouseReportResult[] | null> {
-        this.logger.print('Start audit');
 
         if (!this.config) {
             throw new Error('No config loaded');
@@ -141,12 +112,13 @@ export default class Dreihouse {
         }
 
         const reportPaths: string[] = [...auditPaths];
-
-        this.logger.print(`Report runner created`);
         const runner = new ReportRunner(this.logger, this.config, port, opts, this.reporters);
 
-        this.logger.print(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
+        this.logger.info(`Start creating reports for ${url} paths [${reportPaths.join(',')}]`);
         return await runner.createReports(url, reportPaths);
     }
 
+    public getConfig(): DreihouseConfig | null {
+        return this.config;
+    }
 }

@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/dreipol/lighthouse-runner.git"
   },
-  "author": "",
+  "author": "Faebeee",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dreipol/lighthouse-runner/issues"
@@ -27,10 +27,11 @@
   "homepage": "https://github.com/dreipol/lighthouse-runner#readme",
   "dependencies": {
     "@dreipol/lighthouse-audits": "^1.0.0",
-    "@dreipol/lighthouse-config": "^1.1.0",
+    "@dreipol/lighthouse-config": "^2.0.1",
     "chalk": "^2.4.1",
     "chrome-launcher": "^0.10.2",
     "commander": "^2.15.1",
+    "console.table": "^0.10.0",
     "fancy-log": "^1.3.2",
     "joi": "^13.1.2",
     "lighthouse": "^2.9.4",

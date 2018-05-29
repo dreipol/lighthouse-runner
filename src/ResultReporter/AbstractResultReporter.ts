@@ -1,7 +1,6 @@
-import LoggerInterface from '../Logger/LoggerInterface';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import ResultReporterInterface from './ResultReporterInterface';
-import {DreihouseConfig} from '@dreipol/lighthouse-config';
+import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
 
 export default abstract class AbstractResultReporter implements ResultReporterInterface {
     public key = 'AbstractResultReporter';

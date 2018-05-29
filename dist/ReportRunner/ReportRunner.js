@@ -37,27 +37,26 @@ class ReportRunner {
     }
     runReporters(site, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.logger.print(`Run ${this.reporters.length} reporters`);
+            this.logger.info(`Run ${this.reporters.length} reporters`);
             for (let i = 0; i < this.reporters.length; i++) {
                 const reporter = this.reporters[i];
                 if (reporter.setup) {
-                    this.logger.print(`${reporter.key} setup`);
+                    this.logger.debug(`${reporter.key} setup`);
                     yield reporter.setup();
                 }
-                this.logger.print(`${reporter.key} process`);
+                this.logger.debug(`${reporter.key} process`);
                 yield reporter.handle(site, results);
             }
-            this.logger.print(''.padStart(10, '-'));
-            this.logger.print(`Running reporters complete`);
+            this.logger.debug(`Running reporters complete`);
         });
     }
     runReport(rootUrl, path) {
         return __awaiter(this, void 0, void 0, function* () {
             const site = url_1.resolve(rootUrl, path);
             const runner = new LighthouseRunner_1.default(this.logger);
-            this.logger.print(`Create report for ${path}`);
+            this.logger.info(`Create report for ${path}`);
             const results = yield runner.runReport(rootUrl, path, this.opts, this.config, this.port);
-            this.logger.print(`Report for ${path} completed`);
+            this.logger.debug(`Report for ${path} completed`);
             yield this.runReporters(site, results);
             return results;
         });

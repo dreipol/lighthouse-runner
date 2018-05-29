@@ -4,14 +4,15 @@ import ReportCategory from '../Interfaces/ReportCategory';
 import chalk from 'chalk';
 import {Budget} from '@dreipol/lighthouse-config';
 
+require('console.table');
+
 export default class CLIReporter extends AbstractResultReporter {
     public key = 'CLIReporter';
 
     public async handle(url: string, results: LighthouseReportResult): Promise<void> {
         const categories = results.reportCategories;
         const {budget} = this.config;
-        this.logger.print(`Report: ${url}`);
-        this.logger.print(''.padStart(10, '-'));
+        this.logger.debug(`Report: ${url}`);
         await this.printResults(categories, budget);
     }
 
@@ -30,40 +31,34 @@ export default class CLIReporter extends AbstractResultReporter {
         }
     }
 
-    private getScoreString(category: ReportCategory, budget: Budget): string {
-        const {id, name, score} = category;
-        const threshhold = budget[id];
-
-        if (threshhold === undefined || threshhold === null || threshhold === false) {
-            return `${name}: ${score}`;
-        }
-
-        return `${name}: ${score}/${threshhold}`;
-    }
-
     private async printResults(categories: ReportCategory[], budget: Budget): Promise<void> {
         let allBudgetsReached = true;
+        const results = [];
+
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             category.score = Math.round(category.score);
 
             const isReached = this.checkBudget(category, budget);
-            let budgetText = this.getScoreString(category, budget);
 
-            if (isReached === true) {
-                budgetText = chalk.green(budgetText);
-            }
+            let budgetText = chalk.green(category.score.toString());
+
             if (isReached === false) {
-                budgetText = chalk.red(budgetText);
+                budgetText = chalk.red(category.score.toString());
                 allBudgetsReached = false;
             }
 
-            this.logger.print(budgetText);
+            results.push({
+                Category: category.name,
+                Score: budgetText,
+                Budget: budget[category.id] ? budget[category.id] : '',
+            });
         }
+
+        console.table(results);
 
         if (allBudgetsReached) {
-            this.logger.print(chalk.bgGreen('Congrats! Budged reached!'));
+            console.log(chalk.black.bgGreen('Congrats! Budged reached!'));
         }
     }
-
 }

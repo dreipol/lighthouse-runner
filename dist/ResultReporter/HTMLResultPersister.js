@@ -39,7 +39,7 @@ class HTMLResultPersister extends AbstractResultReporter_1.default {
                 const generator = new ReportGenerator();
                 const html = generator.generateReportHtml(results);
                 const filename = writeFile_1.default(url, this.reportFolder, html, 'html', this.config.tag);
-                this.logger.print(`HTML report created ${filename}`);
+                this.logger.debug(`HTML report created ${filename}`);
             }
         });
     }

@@ -36,7 +36,7 @@ class JsonResultReporter extends AbstractResultReporter_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.reportFolder) {
                 const filename = writeFile_1.default(url, this.reportFolder, JSON.stringify(results), 'json', this.config.tag);
-                this.logger.print(`Json report created ${filename}`);
+                this.logger.debug(`Json report created ${filename}`);
             }
             return;
         });

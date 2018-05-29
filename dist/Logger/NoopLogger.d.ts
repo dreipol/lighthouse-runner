@@ -1,5 +1,7 @@
-import LoggerInterface from './LoggerInterface';
+import { LoggerInterface } from '@dreipol/lighthouse-config';
 export default class NoopLogger implements LoggerInterface {
-    print(...args: string[]): void;
+    debug(...args: string[]): void;
     error(...args: string[]): void;
+    info(...args: string[]): void;
+    setLevel(level: number): void;
 }

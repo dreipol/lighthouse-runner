@@ -12,6 +12,7 @@ function writeFile(url, folder, content, type, prefix = '', suffix = '') {
     const reportUrl = url_1.parse(url);
     const pathname = urlToPath_1.default(url);
     const filenamePrefix = formatDate_1.default(new Date());
+    console.log(filenamePrefix);
     if (suffix) {
         suffix = `.${suffix}`;
     }

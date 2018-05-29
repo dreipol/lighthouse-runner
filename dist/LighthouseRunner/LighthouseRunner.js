@@ -28,9 +28,9 @@ class LighthouseRunner {
                     opts.port = port;
                 }
                 opts.disableStorageReset = true;
-                this.logger.print('Start lighthouse audit');
+                this.logger.debug('Start lighthouse audit');
                 results = yield lighthouse(url, opts, config.report);
-                this.logger.print('Lighthouse audit complete');
+                this.logger.debug('Lighthouse audit complete');
                 delete results.artifacts;
             }
             catch (e) {

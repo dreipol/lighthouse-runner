@@ -4,8 +4,7 @@ import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import LighthouseRunner from '../LighthouseRunner/LighthouseRunner';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
-import LoggerInterface from '../Logger/LoggerInterface';
-import {DreihouseConfig} from '@dreipol/lighthouse-config';
+import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
 
 export default class ReportRunner {
     protected config: DreihouseConfig;
@@ -40,29 +39,28 @@ export default class ReportRunner {
     }
 
     private async runReporters(site: string, results: LighthouseReportResult): Promise<void> {
-        this.logger.print(`Run ${this.reporters.length} reporters`);
+        this.logger.info(`Run ${this.reporters.length} reporters`);
 
         for (let i = 0; i < this.reporters.length; i++) {
             const reporter = this.reporters[i];
             if (reporter.setup) {
-                this.logger.print(`${reporter.key} setup`);
+                this.logger.debug(`${reporter.key} setup`);
                 await reporter.setup();
             }
-            this.logger.print(`${reporter.key} process`);
+            this.logger.debug(`${reporter.key} process`);
             await reporter.handle(site, results);
         }
 
-        this.logger.print(''.padStart(10, '-'));
-        this.logger.print(`Running reporters complete`);
+        this.logger.debug(`Running reporters complete`);
     }
 
     private async runReport(rootUrl: string, path: string): Promise<LighthouseReportResult> {
         const site = resolveUrl(rootUrl, path);
 
         const runner = new LighthouseRunner(this.logger);
-        this.logger.print(`Create report for ${path}`);
+        this.logger.info(`Create report for ${path}`);
         const results = await runner.runReport(rootUrl, path, this.opts, this.config, this.port);
-        this.logger.print(`Report for ${path} completed`);
+        this.logger.debug(`Report for ${path} completed`);
         await this.runReporters(site, results);
         return results;
     }
