@@ -1,0 +1,18 @@
+{
+  "root": true,
+  "extends": "@dreipol/eslint-config",
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "globals": true
+  },
+  "rules": {
+    "camelcase": [
+      "error",
+      {
+        "properties": "never"
+      }
+    ]
+  }
+}
