@@ -4,7 +4,7 @@ import DashboardJsonResultReporter from './DashboardJsonResultReporter';
 import HTMLResultPersister from './HTMLResultPersister';
 import ResultReporterInterface from './ResultReporterInterface';
 import CLIReporter from './CLIReporter';
-import {DreihouseConfigInterface, LoggerInterface} from '../../../lighthouse-config/dist/index';
+import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 import ConsoleLogger from '../Logger/ConsoleLogger';
 
 type Constructor<T> = new (...args: any[]) => T;
