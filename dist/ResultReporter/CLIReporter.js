@@ -33,12 +33,7 @@ class CLIReporter extends AbstractResultReporter_1.default {
         if (threshhold === undefined || threshhold === null) {
             return null;
         }
-        if (score >= threshhold) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return score >= threshhold;
     }
     printResults(categories, budget) {
         return __awaiter(this, void 0, void 0, function* () {

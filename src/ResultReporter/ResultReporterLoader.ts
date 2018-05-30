@@ -1,10 +1,10 @@
-import AbstractResultReporter from '../ResultReporter/AbstractResultReporter';
-import JsonResultReporter from '../ResultReporter/JsonResultReporter';
-import DashboardJsonResultReporter from '../ResultReporter/DashboardJsonResultReporter';
-import HTMLResultPersister from '../ResultReporter/HTMLResultPersister';
-import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
-import CLIReporter from '../ResultReporter/CLIReporter';
-import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
+import AbstractResultReporter from './AbstractResultReporter';
+import JsonResultReporter from './JsonResultReporter';
+import DashboardJsonResultReporter from './DashboardJsonResultReporter';
+import HTMLResultPersister from './HTMLResultPersister';
+import ResultReporterInterface from './ResultReporterInterface';
+import CLIReporter from './CLIReporter';
+import {DreihouseConfigInterface, LoggerInterface} from '../../../lighthouse-config/dist/index';
 import ConsoleLogger from '../Logger/ConsoleLogger';
 
 type Constructor<T> = new (...args: any[]) => T;
@@ -16,14 +16,14 @@ const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractResultReporter> }
     'cli': CLIReporter,
 };
 
-export default class ReporterModuleLoader {
+export default class ResultReporterLoader {
 
-    public static load(reportFolder: string | null, config: DreihouseConfig, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
+    public static load(reportFolder: string | null, config: DreihouseConfigInterface, logger: LoggerInterface, loaders: Array<string | ResultReporterInterface>): ResultReporterInterface[] {
         const handlers: ResultReporterInterface[] = [];
 
         loaders.forEach((module: string | ResultReporterInterface) => {
             if (typeof module === 'string') {
-                const Reporter = ReporterModuleLoader.getMappedReporter(module);
+                const Reporter = ResultReporterLoader.getMappedReporter(module);
                 if (Reporter) {
                     handlers.push(new Reporter(reportFolder, config, new ConsoleLogger()));
                 }

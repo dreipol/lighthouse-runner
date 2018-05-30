@@ -24,11 +24,7 @@ export default class CLIReporter extends AbstractResultReporter {
             return null;
         }
 
-        if (score >= threshhold) {
-            return true;
-        } else {
-            return false;
-        }
+        return score >= threshhold;
     }
 
     private async printResults(categories: ReportCategory[], budget: Budget): Promise<void> {

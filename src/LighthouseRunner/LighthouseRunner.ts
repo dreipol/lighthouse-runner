@@ -2,7 +2,7 @@ import {resolve} from 'url';
 
 import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
-import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
+import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 
 const lighthouse = require('lighthouse');
 
@@ -13,12 +13,12 @@ export default class LighthouseRunner {
         this.logger = logger;
     }
 
-    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfig, port: number): Promise<LighthouseReportResult> {
+    public async runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfigInterface, port: number): Promise<LighthouseReportResult> {
         const url = resolve(targetUrl, urlPath);
         return await this.launchChromeAndRunLighthouse(url, opts, config, port);
     }
 
-    private async launchChromeAndRunLighthouse(url: string, opts: LighthouseOptions, config: DreihouseConfig, port: number): Promise<LighthouseReportResult> {
+    private async launchChromeAndRunLighthouse(url: string, opts: LighthouseOptions, config: DreihouseConfigInterface, port: number): Promise<LighthouseReportResult> {
         let results: LighthouseReportResult;
 
         try {

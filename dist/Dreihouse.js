@@ -15,7 +15,7 @@ const NoopLogger_1 = __importDefault(require("./Logger/NoopLogger"));
 const ReportRunner_1 = __importDefault(require("./ReportRunner/ReportRunner"));
 const ChromeStarter_1 = __importDefault(require("./ChromeStarter/ChromeStarter"));
 const ConfigLoader_1 = __importDefault(require("./ConfigLoader/ConfigLoader"));
-const ReporterModuleLoader_1 = __importDefault(require("./ReporterModuleLoader/ReporterModuleLoader"));
+const ResultReporterLoader_1 = __importDefault(require("./ResultReporter/ResultReporterLoader"));
 const { version } = require('../package.json');
 class Dreihouse {
     constructor(configFile, reporterNames, logger = new NoopLogger_1.default()) {
@@ -29,7 +29,7 @@ class Dreihouse {
         const configLoader = new ConfigLoader_1.default();
         this.config = configLoader.load(this, configFile);
         this.reportFolder = this.config.folder;
-        this.reporters = ReporterModuleLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
+        this.reporters = ResultReporterLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.setChromeStarter(new ChromeStarter_1.default(true, 9222, this.logger));
     }
     setChromeStarter(value) {

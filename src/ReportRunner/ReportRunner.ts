@@ -4,16 +4,16 @@ import LighthouseOptions from '../Interfaces/LighthouseOptions';
 import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
 import LighthouseRunner from '../LighthouseRunner/LighthouseRunner';
 import ResultReporterInterface from '../ResultReporter/ResultReporterInterface';
-import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
+import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 
 export default class ReportRunner {
-    protected config: DreihouseConfig;
+    protected config: DreihouseConfigInterface;
     protected port: number;
     protected opts: LighthouseOptions;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
 
-    constructor(logger: LoggerInterface, config: DreihouseConfig, port: number, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: LighthouseOptions, reporters: ResultReporterInterface[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;

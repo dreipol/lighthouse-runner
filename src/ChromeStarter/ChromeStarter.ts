@@ -8,11 +8,11 @@ const request = require('request');
 const util = require('util');
 
 export default class ChromeStarter {
-    private port: number;
-    private chrome: LaunchedChrome | null;
-    private browser: Browser | null;
-    private page: Page | null;
-    private logger: LoggerInterface;
+    protected port: number;
+    protected chrome: LaunchedChrome | null;
+    protected browser: Browser | null;
+    protected page: Page | null;
+    protected logger: LoggerInterface;
 
     constructor(headless: boolean = false, port: number, logger: LoggerInterface = new NoopLogger()) {
         this.port = port;
@@ -81,7 +81,7 @@ export default class ChromeStarter {
         this.logger.debug(`Setup scripts complete`);
     }
 
-    private async startChrome(chromeFlags: string[]): Promise<LaunchedChrome> {
+    protected async startChrome(chromeFlags: string[]): Promise<LaunchedChrome> {
         this.logger.debug(`Chrome Flags: ${chromeFlags.join('|')}`);
         return await chromeLauncher.launch({port: this.port, chromeFlags});
     }

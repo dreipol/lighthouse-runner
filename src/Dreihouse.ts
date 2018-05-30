@@ -1,4 +1,4 @@
-import {DreihouseConfig, LoggerInterface} from '@dreipol/lighthouse-config';
+import {LoggerInterface, DreihouseConfigInterface} from '@dreipol/lighthouse-config';
 
 import NoopPrinter from './Logger/NoopLogger';
 import ReportRunner from './ReportRunner/ReportRunner';
@@ -7,7 +7,7 @@ import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
 import ConfigLoader from './ConfigLoader/ConfigLoader';
-import ReporterModuleLoader from './ReporterModuleLoader/ReporterModuleLoader';
+import ResultReporterLoader from './ResultReporter/ResultReporterLoader';
 
 const {version} = require('../package.json');
 
@@ -15,12 +15,12 @@ export default class Dreihouse {
     protected configFolder: string;
     protected reportFolder: string;
     protected reporterNames: Array<string | ResultReporterInterface>;
-    protected config: DreihouseConfig | null;
+    protected config: DreihouseConfigInterface | null;
     protected logger: LoggerInterface;
     protected reporters: ResultReporterInterface[];
     protected chromeStarter: ChromeStarter | null;
 
-    constructor(configFile: DreihouseConfig | string | null, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
+    constructor(configFile: DreihouseConfigInterface | string | null, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
@@ -34,7 +34,7 @@ export default class Dreihouse {
         this.config = configLoader.load(this, configFile);
         this.reportFolder = this.config.folder;
 
-        this.reporters = ReporterModuleLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
+        this.reporters = ResultReporterLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.setChromeStarter(new ChromeStarter(true, 9222, this.logger));
     }
 
@@ -118,7 +118,7 @@ export default class Dreihouse {
         return await runner.createReports(url, reportPaths);
     }
 
-    public getConfig(): DreihouseConfig | null {
+    public getConfig(): DreihouseConfigInterface | null {
         return this.config;
     }
 }
