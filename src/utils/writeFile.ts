@@ -9,7 +9,6 @@ export default function writeFile(url: string, folder: string, content: string, 
     const reportUrl = parse(url);
     const pathname = urlToPath(url);
     const filenamePrefix = formatDate(new Date());
-    console.log(filenamePrefix);
     if (suffix) {
         suffix = `.${suffix}`;
     }
