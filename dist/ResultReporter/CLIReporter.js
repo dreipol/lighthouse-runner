@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractResultReporter_1 = __importDefault(require("./AbstractResultReporter"));
 const chalk_1 = __importDefault(require("chalk"));
+const figures = require('figures');
 require('console.table');
 class CLIReporter extends AbstractResultReporter_1.default {
     constructor() {
@@ -24,7 +25,7 @@ class CLIReporter extends AbstractResultReporter_1.default {
             const categories = results.reportCategories;
             const { budget } = this.config;
             this.logger.debug(`Report: ${url}`);
-            yield this.printResults(categories, budget);
+            yield this.printResults(url, categories, budget);
         });
     }
     checkBudget(caregory, budget) {
@@ -35,7 +36,7 @@ class CLIReporter extends AbstractResultReporter_1.default {
         }
         return score >= threshhold;
     }
-    printResults(categories, budget) {
+    printResults(url, categories, budget) {
         return __awaiter(this, void 0, void 0, function* () {
             let allBudgetsReached = true;
             const results = [];
@@ -43,17 +44,25 @@ class CLIReporter extends AbstractResultReporter_1.default {
                 const category = categories[i];
                 category.score = Math.round(category.score);
                 const isReached = this.checkBudget(category, budget);
-                let budgetText = chalk_1.default.green(category.score.toString());
+                let budgetText = category.score.toString();
+                let status = figures.line;
+                if (isReached === true) {
+                    status = chalk_1.default.green(figures.tick);
+                    budgetText = chalk_1.default.green(category.score.toString());
+                }
                 if (isReached === false) {
                     budgetText = chalk_1.default.red(category.score.toString());
+                    status = chalk_1.default.red(figures.cross);
                     allBudgetsReached = false;
                 }
                 results.push({
                     Category: category.name,
+                    Status: status,
                     Score: budgetText,
                     Budget: budget[category.id] ? budget[category.id] : '',
                 });
             }
+            console.log(chalk_1.default.blue(url));
             console.table(results);
             if (allBudgetsReached) {
                 console.log(chalk_1.default.black.bgGreen('Congrats! Budged reached!'));

@@ -1,4 +1,4 @@
-import {LoggerInterface, DreihouseConfigInterface} from '@dreipol/lighthouse-config';
+import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 
 import NoopPrinter from './Logger/NoopLogger';
 import ReportRunner from './ReportRunner/ReportRunner';
@@ -20,7 +20,9 @@ export default class Dreihouse {
     protected reporters: ResultReporterInterface[];
     protected chromeStarter: ChromeStarter | null;
 
-    constructor(configFile: DreihouseConfigInterface | string | null, reporterNames: Array<string | ResultReporterInterface>, logger: LoggerInterface = new NoopPrinter()) {
+    constructor(configFile: DreihouseConfigInterface | string | null,
+                reporterNames: Array<string | ResultReporterInterface>,
+                logger: LoggerInterface = new NoopPrinter()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];

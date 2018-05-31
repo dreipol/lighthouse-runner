@@ -1,4 +1,4 @@
-import { LoggerInterface, DreihouseConfigInterface } from '@dreipol/lighthouse-config';
+import { DreihouseConfigInterface, LoggerInterface } from '@dreipol/lighthouse-config';
 import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 import ChromeStarter from './ChromeStarter/ChromeStarter';

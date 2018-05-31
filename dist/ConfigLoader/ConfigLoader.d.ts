@@ -1,4 +1,4 @@
-import { LoggerInterface, DreihouseConfigInterface } from '@dreipol/lighthouse-config';
+import { DreihouseConfigInterface, LoggerInterface } from '@dreipol/lighthouse-config';
 import Dreihouse from '../Dreihouse';
 export default class ConfigLoader {
     load(dreihouse: Dreihouse, configFile: DreihouseConfigInterface | string | null, logger?: LoggerInterface): DreihouseConfigInterface;

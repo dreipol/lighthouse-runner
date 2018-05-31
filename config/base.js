@@ -2,13 +2,19 @@ const {
     PSI,
     BrokenLink,
     Categories,
+    Meta,
 } = require('@dreipol/lighthouse-audits');
 
-function extendConfig (config) {
+function extendConfig(config) {
 
     // configure path to be reported
     config.paths = [
-        '/',
+        './',
+    ];
+
+    config.chromeFlags = [
+        '--window-size=1280,1024',
+        '--headless'
     ];
 
     // define a budget for the project
@@ -19,7 +25,7 @@ function extendConfig (config) {
         'best-practices': 90,
         dreipol: 90,
         seo: 90,
-        psi: 90
+        psi: 90,
     };
 
 
@@ -36,12 +42,15 @@ function extendConfig (config) {
         PSI.PSIJsResourcesAudit,
 
         BrokenLink.BrokenLinkAudit,
+
+        Meta.MetaAudit
     );
 
     // add custom data gatherer
     config.report.passes[0].gatherers.push(
         PSI.PSIGatherer,
         BrokenLink.BrokenLinkGatherer,
+        Meta.MetaGatherer
     );
 
 

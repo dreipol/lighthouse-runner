@@ -1,10 +1,12 @@
-import {ConfigValidator, LoggerInterface, DreihouseConfigInterface} from '@dreipol/lighthouse-config';
+import {ConfigValidator, DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 import {dirname, isAbsolute, resolve} from 'path';
 import Dreihouse from '../Dreihouse';
 import NoopLogger from '../Logger/NoopLogger';
 
 export default class ConfigLoader {
-    public load(dreihouse: Dreihouse, configFile: DreihouseConfigInterface | string | null, logger: LoggerInterface = new NoopLogger()): DreihouseConfigInterface {
+    public load(dreihouse: Dreihouse,
+                configFile: DreihouseConfigInterface | string | null,
+                logger: LoggerInterface = new NoopLogger()): DreihouseConfigInterface {
         if (configFile === null) {
             logger.debug('Use internal config');
             configFile = resolve(__dirname, '../../config/base.js');
