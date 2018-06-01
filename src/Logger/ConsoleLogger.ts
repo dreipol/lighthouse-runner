@@ -2,9 +2,9 @@ import {error as flError, info} from 'fancy-log';
 import chalk from 'chalk';
 import {LoggerInterface} from '@dreipol/lighthouse-config';
 
-const ERROR_LEVEL = 0;
-const INFO_LEVEL = 1;
-const DEBUG_LEVEL = 2;
+const ERROR_LEVEL = 1;
+const INFO_LEVEL = 2;
+const DEBUG_LEVEL = 3;
 
 export default class ConsoleLogger implements LoggerInterface {
     protected level: number;

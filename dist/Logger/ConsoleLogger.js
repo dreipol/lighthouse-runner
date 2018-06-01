@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fancy_log_1 = require("fancy-log");
 const chalk_1 = __importDefault(require("chalk"));
-const ERROR_LEVEL = 0;
-const INFO_LEVEL = 1;
-const DEBUG_LEVEL = 2;
+const ERROR_LEVEL = 1;
+const INFO_LEVEL = 2;
+const DEBUG_LEVEL = 3;
 class ConsoleLogger {
     constructor(level = 1) {
         this.level = level;
