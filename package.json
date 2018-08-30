@@ -1,6 +1,6 @@
 {
   "name": "@dreipol/lighthouse-runner",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "Command Line Runner for lighthouse with integrated budget checks for CI and quality control",
   "main": "./dist/Dreihouse.js",
   "scripts": {
