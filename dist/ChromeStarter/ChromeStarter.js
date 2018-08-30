@@ -49,15 +49,22 @@ class ChromeStarter {
                 timeout: 1000 * 60,
             });
             this.logger.debug(`Wait for networkidle0 complete`);
+            yield this.closePage();
+        });
+    }
+    closePage() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.page) {
+                yield this.page.close();
+                this.page = null;
+                this.logger.debug(`Page closed`);
+            }
         });
     }
     disconnect() {
         return __awaiter(this, void 0, void 0, function* () {
             this.logger.debug(`Closing session`);
-            if (this.page) {
-                yield this.page.close();
-                this.logger.debug(`Page closed`);
-            }
+            yield this.closePage();
             if (this.browser) {
                 yield this.browser.close();
                 this.logger.debug(`Browser closed`);

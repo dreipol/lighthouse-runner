@@ -10,6 +10,6 @@ export default class ReportRunner {
     protected reporters: ResultReporterInterface[];
     constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: LighthouseOptions, reporters: ResultReporterInterface[]);
     createReports(rootUrl: string, paths: string[], allResults?: LighthouseReportResult[]): Promise<LighthouseReportResult[]>;
-    private runReporters(site, results);
-    private runReport(rootUrl, path);
+    private runReporters;
+    private runReport;
 }

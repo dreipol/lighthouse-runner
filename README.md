@@ -18,6 +18,14 @@ After installing the module you have the command `dreihouse` available in your C
 To setup some initial configuration you run the `setup` command(See below).
 If you want the full advantage of `dreihouse` you could set it up for your CI.
 
+## Local Usage
+If you want to use this runner locally to test your config or something different, you need to install the `@dreipol/lighthouse-audits` and `@dreipol/lighthouse-config` dependencies 
+
+    npm i @dreipol/lighthouse-config @dreipol/lighthouse-audits --no-save
+
+These dependencies are required for your config, but don't are required to be in your `package.json` file, since they are only used 
+in your CI
+
 ## Config
 The configuration is stored in an external module.
 Check out [@dreipol/lighthouse-config](https://www.npmjs.com/package/@dreipol/lighthouse-config)

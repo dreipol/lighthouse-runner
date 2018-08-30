@@ -9,6 +9,7 @@ export default class ChromeStarter {
     protected logger: LoggerInterface;
     constructor(headless: boolean | undefined, port: number, logger?: LoggerInterface);
     setup(url: string, chromeFlags: string[]): Promise<void>;
+    closePage(): Promise<void>;
     disconnect(): Promise<void>;
     runPreAuditScripts(setupScripts: PreAuditScriptInterface[]): Promise<void>;
     protected startChrome(chromeFlags: string[]): Promise<LaunchedChrome>;

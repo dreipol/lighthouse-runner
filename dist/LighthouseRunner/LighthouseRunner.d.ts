@@ -5,5 +5,5 @@ export default class LighthouseRunner {
     private logger;
     constructor(logger: LoggerInterface);
     runReport(targetUrl: string, urlPath: string, opts: LighthouseOptions, config: DreihouseConfigInterface, port: number): Promise<LighthouseReportResult>;
-    private launchChromeAndRunLighthouse(url, opts, config, port);
+    private launchChromeAndRunLighthouse;
 }

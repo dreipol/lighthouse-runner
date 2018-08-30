@@ -74,14 +74,12 @@ export default class Dreihouse {
             throw new Error('No chrome starter defined');
         }
 
-        this.logger.debug(`Starting chrome`);
-
         await this.chromeStarter.setup(url, this.config.chromeFlags);
 
         if (this.config.preAuditScripts) {
             await this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
         }
-        this.logger.debug(`Starting chrome completed`);
+        await this.chromeStarter.closePage();
     }
 
     public async stopChrome() {

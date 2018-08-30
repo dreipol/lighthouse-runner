@@ -39,20 +39,29 @@ export default class ChromeStarter {
 
         this.logger.debug(`Navigate to ${url}`);
         this.logger.debug(`Wait for networkidle0`);
+
         await this.page.goto(url, {
             waitUntil: 'networkidle0',
             timeout: 1000 * 60,
         });
+
         this.logger.debug(`Wait for networkidle0 complete`);
+
+        await this.closePage();
+    }
+
+    public async closePage(): Promise<void> {
+        if (this.page) {
+            await this.page.close();
+            this.page = null;
+            this.logger.debug(`Page closed`);
+        }
     }
 
     public async disconnect(): Promise<void> {
         this.logger.debug(`Closing session`);
 
-        if (this.page) {
-            await this.page.close();
-            this.logger.debug(`Page closed`);
-        }
+        await this.closePage();
 
         if (this.browser) {
             await this.browser.close();
