@@ -49,7 +49,6 @@ class ChromeStarter {
                 timeout: 1000 * 60,
             });
             this.logger.debug(`Wait for networkidle0 complete`);
-            yield this.closePage();
         });
     }
     closePage() {

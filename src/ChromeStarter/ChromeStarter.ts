@@ -46,8 +46,6 @@ export default class ChromeStarter {
         });
 
         this.logger.debug(`Wait for networkidle0 complete`);
-
-        await this.closePage();
     }
 
     public async closePage(): Promise<void> {
