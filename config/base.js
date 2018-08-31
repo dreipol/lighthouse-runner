@@ -54,6 +54,7 @@ function extendConfig(config) {
     );
 
 
+
     config.report.categories.psi = Categories.PSI;
     config.report.categories.dreipol = Categories.Dreipol;
 

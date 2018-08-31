@@ -34,6 +34,10 @@ describe('Dreihouse', () => {
             new Dreihouse(CONFIG_FILENAME, [], new NoopLogger());
         });
 
+        it('load base config', async () => {
+            new Dreihouse('./config/base.js', [], new NoopLogger());
+        });
+
         it('load default config', async () => {
             new Dreihouse(null, [], new NoopLogger());
         });

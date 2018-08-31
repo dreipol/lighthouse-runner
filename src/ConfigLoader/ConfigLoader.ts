@@ -7,6 +7,7 @@ export default class ConfigLoader {
     public load(dreihouse: Dreihouse,
                 configFile: DreihouseConfigInterface | string | null,
                 logger: LoggerInterface = new NoopLogger()): DreihouseConfigInterface {
+
         if (configFile === null) {
             logger.debug('Use internal config');
             configFile = resolve(__dirname, '../../config/base.js');

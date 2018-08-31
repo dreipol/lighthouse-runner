@@ -1,27 +1,27 @@
 import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 
 import NoopPrinter from './Logger/NoopLogger';
-import ReportRunner from './ReportRunner/ReportRunner';
+import ReportRunner from './Report/ReportRunner';
 import LighthouseOptions from './Interfaces/LighthouseOptions';
-import ResultReporterInterface from './ResultReporter/ResultReporterInterface';
+import ReporterInterface from './Report/ReporterInterface';
 import LighthouseReportResult from './Interfaces/LighthouseReportResult';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
 import ConfigLoader from './ConfigLoader/ConfigLoader';
-import ResultReporterLoader from './ResultReporter/ResultReporterLoader';
+import ReporterLoader from './Report/ReporterLoader';
 
 const {version} = require('../package.json');
 
 export default class Dreihouse {
     protected configFolder: string;
     protected reportFolder: string;
-    protected reporterNames: Array<string | ResultReporterInterface>;
+    protected reporterNames: Array<string | ReporterInterface>;
     protected config: DreihouseConfigInterface | null;
     protected logger: LoggerInterface;
-    protected reporters: ResultReporterInterface[];
+    protected reporters: ReporterInterface[];
     protected chromeStarter: ChromeStarter | null;
 
     constructor(configFile: DreihouseConfigInterface | string | null,
-                reporterNames: Array<string | ResultReporterInterface>,
+                reporterNames: Array<string | ReporterInterface>,
                 logger: LoggerInterface = new NoopPrinter()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
@@ -36,7 +36,7 @@ export default class Dreihouse {
         this.config = configLoader.load(this, configFile);
         this.reportFolder = this.config.folder;
 
-        this.reporters = ResultReporterLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
+        this.reporters = ReporterLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.setChromeStarter(new ChromeStarter(true, 9222, this.logger));
     }
 
