@@ -55,7 +55,7 @@ class ReportRunner {
             const site = url_1.resolve(rootUrl, path);
             const runner = new LighthouseRunner_1.default(this.logger);
             this.logger.info(`Create report for ${path}`);
-            const results = yield runner.runReport(rootUrl, path, this.opts, this.config, this.port);
+            const results = yield runner.createAudit(rootUrl, path, this.opts, this.config, this.port);
             this.logger.debug(`Report for ${path} completed`);
             yield this.runReporters(site, results);
             return results;

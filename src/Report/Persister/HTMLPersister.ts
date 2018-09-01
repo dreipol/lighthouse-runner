@@ -1,8 +1,8 @@
 import {existsSync} from 'fs';
-import LighthouseReportResult from '../../Interfaces/LighthouseReportResult';
 import AbstractReporter from '../AbstractReporter';
 import createFolder from '../../utils/createFolder';
 import writeFile from '../../utils/writeFile';
+import IReportResult from "../../Interfaces/IReportResult";
 
 const ReportGenerator = require('lighthouse/lighthouse-core/report/report-generator');
 
@@ -23,10 +23,9 @@ export default class HTMLPersister extends AbstractReporter {
         return Promise.resolve();
     }
 
-    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
+    public async handle(url: string, results: IReportResult): Promise<void> {
         if (this.reportFolder) {
-            const generator = new ReportGenerator();
-            const html = generator.generateReportHtml(results);
+            const html = ReportGenerator.generateReportHtml(results.lhr);
             const filename = writeFile(url, this.reportFolder, html, 'html', this.config.tag);
             this.logger.debug(`HTML report created ${filename}`);
         }

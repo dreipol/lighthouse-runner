@@ -1,11 +1,7 @@
-import LighthouseReportResult from '../../Interfaces/LighthouseReportResult';
 import AbstractReporter from '../AbstractReporter';
-import ReportCategory from '../../Interfaces/ReportCategory';
-import ReportResult from '../../Interfaces/ReportResult';
-import { Budget } from '@dreipol/lighthouse-config';
+import IReportResult from "../../Interfaces/IReportResult";
 export default class DashboardJsonResultReporter extends AbstractReporter {
     key: string;
-    handle(url: string, results: LighthouseReportResult): Promise<void>;
+    handle(url: string, results: IReportResult): Promise<void>;
     setup(): Promise<void>;
-    protected generateReportJson(url: string, categories: ReportCategory[], budget: Budget, tag: string): ReportResult;
 }

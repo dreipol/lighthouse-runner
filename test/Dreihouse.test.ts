@@ -86,16 +86,15 @@ describe('Dreihouse', () => {
                 throw new Error('No result');
             }
 
-            const reportCategories = result.reportCategories;
+            const reportCategories = result.categoryGroups;
             expect(reportCategories).to.have.lengthOf(5);
 
             const category = reportCategories.shift();
 
-            expect(category).to.have.property('name');
-            expect(category).to.have.property('description');
-            expect(category).to.have.property('audits');
-            expect(category).to.have.property('id');
             expect(category).to.have.property('score');
+            expect(category).to.have.property('id');
+            expect(category).to.have.property('title');
+            expect(category).to.have.property('auditRefs');
         });
 
         it('fail on missing config file', async () => {

@@ -1,22 +1,19 @@
 import {existsSync} from 'fs';
-
-import LighthouseReportResult from '../../Interfaces/LighthouseReportResult';
 import AbstractReporter from '../AbstractReporter';
-import ReportCategory from '../../Interfaces/ReportCategory';
-import ReportResult from '../../Interfaces/ReportResult';
-import writeFile from '../../utils/writeFile';
 import createFolder from '../../utils/createFolder';
-import {Budget} from '@dreipol/lighthouse-config';
+import IReportResult from "../../Interfaces/IReportResult";
 
 export default class DashboardJsonResultReporter extends AbstractReporter {
     public key = 'DashboardJsonResultReporter';
 
-    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
+    public async handle(url: string, results: IReportResult): Promise<void> {
 
         if (this.reportFolder) {
+            /*
             const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
             const filename = writeFile(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
             this.logger.debug(`Json Dashboard created ${filename}`);
+            */
         }
         return;
     }
@@ -35,10 +32,11 @@ export default class DashboardJsonResultReporter extends AbstractReporter {
         return;
     }
 
-    protected generateReportJson(url: string, categories: ReportCategory[], budget: Budget, tag: string): ReportResult {
+    /*
+    protected generateReportJson(url: string, categories: IReportCategory[], budget: Budget, tag: string): IJSONReportResult {
         const cleanCategories = categories.map((item) => {
             item = {...item};
-            delete item.audits;
+            //delete item.audits;
             return item;
         });
 
@@ -50,4 +48,5 @@ export default class DashboardJsonResultReporter extends AbstractReporter {
             key: `${tag}:${url}`,
         };
     }
+    */
 }

@@ -5,28 +5,23 @@
 Dreihouse is a tool to run automated lighthouse audits for a webproject. Dreihouse has the advantage
 to be more configurable than lighthouse.
 
+
+# Use Cases
+There are several usecases for an automated audit tool like this. You can implement it into your CI so 
+you'll never deploy a page with bad performances again. Or if you wan't to see if a site enhances over time.
+You can also implement it in a gulp command.
+
+
 # Install
 
     npm i @dreipol/lighthouse-runner
 
-## Requirements
-You need `@dreipol/lighthouse-config` and `@dreipol/lighthouse-audits` installed locally in the project.
+# Requirements
+- `@dreipol/lighthouse-config` Holds some default configuration. Of course you don't have to install this and you can write your
+own config file instead of extending this one.
+- `@dreipol/lighthouse-audits` Some additional audits that we developed and found useful
 
-
-# Setup
-After installing the module you have the command `dreihouse` available in your CLI.
-To setup some initial configuration you run the `setup` command(See below).
-If you want the full advantage of `dreihouse` you could set it up for your CI.
-
-## Local Usage
-If you want to use this runner locally to test your config or something different, you need to install the `@dreipol/lighthouse-audits` and `@dreipol/lighthouse-config` dependencies 
-
-    npm i @dreipol/lighthouse-config @dreipol/lighthouse-audits --no-save
-
-These dependencies are required for your config, but don't are required to be in your `package.json` file, since they are only used 
-in your CI
-
-## Config
+# Config
 The configuration is stored in an external module.
 Check out [@dreipol/lighthouse-config](https://www.npmjs.com/package/@dreipol/lighthouse-config)
 
@@ -38,11 +33,10 @@ If you look into those files, you'll see that the `mobile` version extends the `
 The only modifications are that the viewport is resized and throttling is enabled on mobile devices.
 
 The `desktop` config extend from the basic configuration that comes with the
-[`@dreipol/lighthouse-config`](https://www.npmjs.com/package/@dreipol/lighthouse-config) module. Checkout the 
-[basic dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/base/desktop.js)
+[`@dreipol/lighthouse-config`](https://www.npmjs.com/package/@dreipol/lighthouse-config) module. Checkout the [basic 
+dektop config](https://github.com/dreipol/lighthouse-config/blob/master/config/base/desktop.js)
 
-# Usage
-## Programmatic use
+# Programmatic use
 In order to modify `dreihouse` to your needs, you can orchestrate `dreihouse` programmatically.
 
 In this example script we run the audit every 15s and use the `cli` to report the results but only start the chrome once
@@ -66,9 +60,7 @@ and reuse the connection.
     
     
     run();
-
-
     
-
-## Commands
-In order to use `dreihouse` with the CLI install [@dreipol/dreihouse-cli](https://www.npmjs.com/package/@dreipol/dreihouse-cli) 
+# Tools
+- [@dreipol/dreihouse-cli](https://www.npmjs.com/package/@dreipol/dreihouse-cli) helps you to run
+your audit from the CLI without the need of a project or config gile

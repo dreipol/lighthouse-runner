@@ -17,32 +17,6 @@ describe('Reporters', () => {
         return stop();
     });
 
-    it('without ', async () => {
-        const dreihouse = new Dreihouse(CONFIG_FILENAME, [], new NoopLogger());
-        const results = await dreihouse.execute(ROOT_URL, 9222);
-        if (!results) {
-            throw new Error('No results');
-        }
-
-        expect(results).to.have.lengthOf(1);
-        const result = results.shift();
-        expect(result).to.not.equal(null);
-        if (!result) {
-            throw new Error('No result');
-        }
-
-        const reportCategories = result.reportCategories;
-        expect(reportCategories).to.have.lengthOf(5);
-
-        const category = reportCategories.shift();
-
-        expect(category).to.have.property('name');
-        expect(category).to.have.property('description');
-        expect(category).to.have.property('audits');
-        expect(category).to.have.property('id');
-        expect(category).to.have.property('score');
-    });
-
     it('valid reporter object', async () => {
         const setup = sinon.spy();
         const handle = sinon.spy();

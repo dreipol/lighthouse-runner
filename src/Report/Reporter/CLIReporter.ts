@@ -1,8 +1,8 @@
-import LighthouseReportResult from '../../Interfaces/LighthouseReportResult';
 import AbstractReporter from '../AbstractReporter';
-import ReportCategory from '../../Interfaces/ReportCategory';
+import IReportCategory from '../../Interfaces/IReportCategory';
 import chalk from 'chalk';
 import {Budget} from '@dreipol/lighthouse-config';
+import IReportResult from "../../Interfaces/IReportResult";
 
 const figures = require('figures');
 
@@ -11,14 +11,15 @@ require('console.table');
 export default class CLIReporter extends AbstractReporter {
     public key = 'CLIReporter';
 
-    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
-        const categories = results.reportCategories;
+    public async handle(url: string, results: IReportResult): Promise<void> {
+        const categories = results.categoryGroups;
         const {budget} = this.config;
         this.logger.debug(`Report: ${url}`);
+
         await this.printResults(url, categories, budget);
     }
 
-    private checkBudget(caregory: ReportCategory, budget: Budget): boolean | null {
+    private checkBudget(caregory: IReportCategory, budget: Budget): boolean | null {
         const {id, score} = caregory;
         const threshhold = budget[id];
 
@@ -29,13 +30,13 @@ export default class CLIReporter extends AbstractReporter {
         return score >= threshhold;
     }
 
-    private async printResults(url: string, categories: ReportCategory[], budget: Budget): Promise<void> {
+    private async printResults(url: string, categories: IReportCategory[], budget: Budget): Promise<void> {
         let allBudgetsReached = true;
         const results = [];
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            category.score = Math.round(category.score);
+            category.score = Math.round(category.score * 100) / 100;
 
             const isReached = this.checkBudget(category, budget);
 
@@ -44,16 +45,16 @@ export default class CLIReporter extends AbstractReporter {
 
             if (isReached === true) {
                 status = chalk.green(figures.tick);
-                budgetText = chalk.green(category.score.toString());
+                budgetText = chalk.green(category.score + "");
             }
             if (isReached === false) {
-                budgetText = chalk.red(category.score.toString());
+                budgetText = chalk.red(category.score + "");
                 status = chalk.red(figures.cross);
                 allBudgetsReached = false;
             }
 
             results.push({
-                Category: category.name,
+                Category: category.title,
                 Status: status,
                 Score: budgetText,
                 Budget: budget[category.id] ? budget[category.id] : '',

@@ -1,15 +1,15 @@
-import LighthouseOptions from '../Interfaces/LighthouseOptions';
-import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
-import ReporterInterface from './ReporterInterface';
+import ILighthouseOptions from '../Interfaces/ILighthouseOptions';
+import IReporter from './IReporter';
 import { DreihouseConfigInterface, LoggerInterface } from '@dreipol/lighthouse-config';
+import IReportResult from "../Interfaces/IReportResult";
 export default class ReportRunner {
     protected config: DreihouseConfigInterface;
     protected port: number;
-    protected opts: LighthouseOptions;
+    protected opts: ILighthouseOptions;
     protected logger: LoggerInterface;
-    protected reporters: ReporterInterface[];
-    constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: LighthouseOptions, reporters: ReporterInterface[]);
-    createReports(rootUrl: string, paths: string[], allResults?: LighthouseReportResult[]): Promise<LighthouseReportResult[]>;
+    protected reporters: IReporter[];
+    constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: ILighthouseOptions, reporters: IReporter[]);
+    createReports(rootUrl: string, paths: string[], allResults?: IReportResult[]): Promise<IReportResult[]>;
     private runReporters;
     private runReport;
 }

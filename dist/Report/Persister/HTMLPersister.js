@@ -36,8 +36,7 @@ class HTMLPersister extends AbstractReporter_1.default {
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.reportFolder) {
-                const generator = new ReportGenerator();
-                const html = generator.generateReportHtml(results);
+                const html = ReportGenerator.generateReportHtml(results.lhr);
                 const filename = writeFile_1.default(url, this.reportFolder, html, 'html', this.config.tag);
                 this.logger.debug(`HTML report created ${filename}`);
             }

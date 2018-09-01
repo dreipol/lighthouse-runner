@@ -7,6 +7,9 @@ import NoopLogger from '../Logger/NoopLogger';
 const request = require('request');
 const util = require('util');
 
+/**
+ * Starts a chrome instance, makes the first page load and runs pre launching scripts
+ */
 export default class ChromeStarter {
     protected port: number;
     protected chrome: LaunchedChrome | null;
@@ -23,7 +26,7 @@ export default class ChromeStarter {
         this.page = null;
     }
 
-    public async setup(url: string, chromeFlags: string[]): Promise<void> {
+    public async setup(url: string | null, chromeFlags: string[]): Promise<void> {
         this.logger.debug('Start chrome');
         this.chrome = await this.startChrome(chromeFlags);
         this.logger.debug('Chrome started');
@@ -37,15 +40,19 @@ export default class ChromeStarter {
 
         this.page = await this.browser.newPage();
 
-        this.logger.debug(`Navigate to ${url}`);
-        this.logger.debug(`Wait for networkidle0`);
+        if (url) {
+            this.logger.debug(`Navigate to ${url}`);
+            this.logger.debug(`Wait for networkidle0`);
 
-        await this.page.goto(url, {
-            waitUntil: 'networkidle0',
-            timeout: 1000 * 60,
-        });
+            await this.page.goto(url, {
+                waitUntil: 'networkidle0',
+                timeout: 1000 * 60,
+            });
 
-        this.logger.debug(`Wait for networkidle0 complete`);
+            this.logger.debug(`Wait for networkidle0 complete`);
+        } else {
+            this.logger.debug(`Skip initial page visit`);
+        }
     }
 
     public async closePage(): Promise<void> {
@@ -78,6 +85,7 @@ export default class ChromeStarter {
         }
 
         this.logger.debug(`Execute ${setupScripts.length} setup script/s`);
+
         for (let i = 0; i < setupScripts.length; i++) {
             if (!setupScripts[i].execute) {
                 throw new Error('Script does not implement the PreAuditScript interface');
@@ -85,6 +93,7 @@ export default class ChromeStarter {
             // @ts-ignore
             await setupScripts[i].execute(this.logger, this.page);
         }
+
         this.logger.debug(`Setup scripts complete`);
     }
 

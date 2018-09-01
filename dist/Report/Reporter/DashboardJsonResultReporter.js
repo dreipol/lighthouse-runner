@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const AbstractReporter_1 = __importDefault(require("../AbstractReporter"));
-const writeFile_1 = __importDefault(require("../../utils/writeFile"));
 const createFolder_1 = __importDefault(require("../../utils/createFolder"));
 class DashboardJsonResultReporter extends AbstractReporter_1.default {
     constructor() {
@@ -23,9 +22,6 @@ class DashboardJsonResultReporter extends AbstractReporter_1.default {
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.reportFolder) {
-                const json = this.generateReportJson(url, results.reportCategories.slice(0), this.config.budget, this.config.tag);
-                const filename = writeFile_1.default(url, this.reportFolder, JSON.stringify(json), 'json', this.config.tag, 'dashboard');
-                this.logger.debug(`Json Dashboard created ${filename}`);
             }
             return;
         });
@@ -41,20 +37,6 @@ class DashboardJsonResultReporter extends AbstractReporter_1.default {
             }
             return;
         });
-    }
-    generateReportJson(url, categories, budget, tag) {
-        const cleanCategories = categories.map((item) => {
-            item = Object.assign({}, item);
-            delete item.audits;
-            return item;
-        });
-        return {
-            categories: cleanCategories,
-            budget,
-            url,
-            tag,
-            key: `${tag}:${url}`,
-        };
     }
 }
 exports.default = DashboardJsonResultReporter;

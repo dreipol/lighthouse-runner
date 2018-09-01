@@ -3,15 +3,18 @@ import {dirname, isAbsolute, resolve} from 'path';
 import Dreihouse from '../Dreihouse';
 import NoopLogger from '../Logger/NoopLogger';
 
+/**
+ * Handles the loading of the configuration
+ */
 export default class ConfigLoader {
-    public load(dreihouse: Dreihouse,
+    static load(dreihouse: Dreihouse,
                 configFile: DreihouseConfigInterface | string | null,
                 logger: LoggerInterface = new NoopLogger()): DreihouseConfigInterface {
 
         if (configFile === null) {
             logger.debug('Use internal config');
             configFile = resolve(__dirname, '../../config/base.js');
-            return this.loadConfig(require(configFile), process.cwd());
+            return ConfigLoader.loadConfig(require(configFile), process.cwd());
         }
 
         if (configFile && typeof configFile === 'string' && !isAbsolute(configFile)) {
@@ -21,18 +24,18 @@ export default class ConfigLoader {
 
         if (configFile && typeof configFile === 'string') {
             logger.debug('Load config from file');
-            return this.loadConfig(require(configFile), dirname(configFile));
+            return ConfigLoader.loadConfig(require(configFile), dirname(configFile));
         }
 
         if (typeof configFile === 'object') {
             logger.debug('Load config from object');
-            return this.loadConfig(configFile, process.cwd());
+            return ConfigLoader.loadConfig(configFile, process.cwd());
         }
 
         throw new Error('Could not load config accordingly');
     }
 
-    protected loadConfig(config: DreihouseConfigInterface, resolveFolder: string): DreihouseConfigInterface {
+    static loadConfig(config: DreihouseConfigInterface, resolveFolder: string): DreihouseConfigInterface {
         config = ConfigValidator.validate(config);
         config.folder = resolve(resolveFolder, config.folder);
         return config;

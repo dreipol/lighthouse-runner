@@ -7,17 +7,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const url_1 = require("url");
+const RunnerResultTransformer_1 = __importDefault(require("../Transformer/RunnerResultTransformer"));
 const lighthouse = require('lighthouse');
 class LighthouseRunner {
     constructor(logger) {
         this.logger = logger;
     }
-    runReport(targetUrl, urlPath, opts, config, port) {
+    createAudit(targetUrl, urlPath, opts, config, port) {
         return __awaiter(this, void 0, void 0, function* () {
             const url = url_1.resolve(targetUrl, urlPath);
-            return yield this.launchChromeAndRunLighthouse(url, opts, config, port);
+            const auditResult = yield this.launchChromeAndRunLighthouse(url, opts, config, port);
+            return RunnerResultTransformer_1.default.transform(auditResult);
         });
     }
     launchChromeAndRunLighthouse(url, opts, config, port) {
@@ -29,7 +34,28 @@ class LighthouseRunner {
                 }
                 opts.disableStorageReset = true;
                 this.logger.debug('Start lighthouse audit');
-                results = yield lighthouse(url, opts);
+                results = yield lighthouse(url, opts, {
+                    extends: 'lighthouse:default',
+                    settings: {},
+                    passes: [
+                        {
+                            passName: 'extraPass',
+                            gatherers: [
+                                'js-usage',
+                            ],
+                        },
+                    ],
+                    audits: [
+                        'byte-efficiency/unused-javascript',
+                    ],
+                    categories: {
+                        'performance': {
+                            auditRefs: [
+                                { id: 'unused-javascript', weight: 0, group: 'load-opportunities' },
+                            ],
+                        },
+                    },
+                });
                 this.logger.debug('Lighthouse audit complete');
             }
             catch (e) {

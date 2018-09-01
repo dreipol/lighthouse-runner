@@ -1,9 +1,8 @@
 import {existsSync} from 'fs';
-
-import LighthouseReportResult from '../../Interfaces/LighthouseReportResult';
 import AbstractReporter from '../AbstractReporter';
 import writeFile from '../../utils/writeFile';
 import createFolder from '../../utils/createFolder';
+import IReportResult from "../../Interfaces/IReportResult";
 
 export default class JsonResultReporter extends AbstractReporter {
     public key = 'JsonResultReporter';
@@ -22,7 +21,7 @@ export default class JsonResultReporter extends AbstractReporter {
         return;
     }
 
-    public async handle(url: string, results: LighthouseReportResult): Promise<void> {
+    public async handle(url: string, results: IReportResult): Promise<void> {
         if (this.reportFolder) {
             const filename = writeFile(url, this.reportFolder, JSON.stringify(results), 'json', this.config.tag);
             this.logger.debug(`Json report created ${filename}`);

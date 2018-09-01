@@ -1,12 +1,12 @@
-import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
-import ReporterInterface from './ReporterInterface';
+import IReporter from './IReporter';
 import { DreihouseConfigInterface, LoggerInterface } from '@dreipol/lighthouse-config';
-export default abstract class AbstractReporter implements ReporterInterface {
+import IReportResult from "../Interfaces/IReportResult";
+export default abstract class AbstractReporter implements IReporter {
     key: string;
     protected config: DreihouseConfigInterface;
     protected reportFolder: string | null;
     protected logger: LoggerInterface;
     constructor(reportFolder: string | null, config: DreihouseConfigInterface, logger: LoggerInterface);
     setup(): Promise<void>;
-    abstract handle(url: string, results: LighthouseReportResult): Promise<void>;
+    abstract handle(url: string, results: IReportResult): Promise<void>;
 }

@@ -14,8 +14,10 @@ function extendConfig(config) {
 
     config.chromeFlags = [
         '--window-size=1280,1024',
-        '--headless'
+        '--headless',
     ];
+
+    //config.initialVisit = false;
 
     // define a budget for the project
     config.budget = {
@@ -52,7 +54,6 @@ function extendConfig(config) {
         BrokenLink.BrokenLinkGatherer,
         Meta.MetaGatherer
     );
-
 
 
     config.report.categories.psi = Categories.PSI;

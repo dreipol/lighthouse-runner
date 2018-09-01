@@ -26,8 +26,7 @@ class Dreihouse {
         this.chromeStarter = null;
         this.configFolder = process.cwd();
         this.logger.info(`Dreihouse v${version}`);
-        const configLoader = new ConfigLoader_1.default();
-        this.config = configLoader.load(this, configFile);
+        this.config = ConfigLoader_1.default.load(this, configFile);
         this.reportFolder = this.config.folder;
         this.reporters = ReporterLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.setChromeStarter(new ChromeStarter_1.default(true, 9222, this.logger));
@@ -63,7 +62,7 @@ class Dreihouse {
             if (!this.chromeStarter) {
                 throw new Error('No chrome starter defined');
             }
-            yield this.chromeStarter.setup(url, this.config.chromeFlags);
+            yield this.chromeStarter.setup(null, this.config.chromeFlags);
             if (this.config.preAuditScripts) {
                 yield this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
             }
@@ -72,11 +71,10 @@ class Dreihouse {
     }
     stopChrome() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.chromeStarter) {
-                throw new Error('Chrome not started');
+            if (this.chromeStarter) {
+                this.logger.debug(`Stopping chrome`);
+                yield this.chromeStarter.disconnect();
             }
-            this.logger.debug(`Stopping chrome`);
-            yield this.chromeStarter.disconnect();
         });
     }
     audit(url, port = 9222) {

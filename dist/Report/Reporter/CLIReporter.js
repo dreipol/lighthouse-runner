@@ -22,7 +22,7 @@ class CLIReporter extends AbstractReporter_1.default {
     }
     handle(url, results) {
         return __awaiter(this, void 0, void 0, function* () {
-            const categories = results.reportCategories;
+            const categories = results.categoryGroups;
             const { budget } = this.config;
             this.logger.debug(`Report: ${url}`);
             yield this.printResults(url, categories, budget);
@@ -42,21 +42,21 @@ class CLIReporter extends AbstractReporter_1.default {
             const results = [];
             for (let i = 0; i < categories.length; i++) {
                 const category = categories[i];
-                category.score = Math.round(category.score);
+                category.score = Math.round(category.score * 100) / 100;
                 const isReached = this.checkBudget(category, budget);
                 let budgetText = category.score.toString();
                 let status = figures.line;
                 if (isReached === true) {
                     status = chalk_1.default.green(figures.tick);
-                    budgetText = chalk_1.default.green(category.score.toString());
+                    budgetText = chalk_1.default.green(category.score + "");
                 }
                 if (isReached === false) {
-                    budgetText = chalk_1.default.red(category.score.toString());
+                    budgetText = chalk_1.default.red(category.score + "");
                     status = chalk_1.default.red(figures.cross);
                     allBudgetsReached = false;
                 }
                 results.push({
-                    Category: category.name,
+                    Category: category.title,
                     Status: status,
                     Score: budgetText,
                     Budget: budget[category.id] ? budget[category.id] : '',

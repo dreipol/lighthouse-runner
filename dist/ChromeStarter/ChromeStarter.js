@@ -42,13 +42,18 @@ class ChromeStarter {
             this.browser = yield puppeteer_1.connect({ browserWSEndpoint: webSocketDebuggerUrl });
             this.logger.debug(`Connected to chrome instance`);
             this.page = yield this.browser.newPage();
-            this.logger.debug(`Navigate to ${url}`);
-            this.logger.debug(`Wait for networkidle0`);
-            yield this.page.goto(url, {
-                waitUntil: 'networkidle0',
-                timeout: 1000 * 60,
-            });
-            this.logger.debug(`Wait for networkidle0 complete`);
+            if (url) {
+                this.logger.debug(`Navigate to ${url}`);
+                this.logger.debug(`Wait for networkidle0`);
+                yield this.page.goto(url, {
+                    waitUntil: 'networkidle0',
+                    timeout: 1000 * 60,
+                });
+                this.logger.debug(`Wait for networkidle0 complete`);
+            }
+            else {
+                this.logger.debug(`Skip initial page visit`);
+            }
         });
     }
     closePage() {

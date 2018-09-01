@@ -2,7 +2,7 @@ import AbstractReporter from './AbstractReporter';
 import JsonResultReporter from './Reporter/JsonResultReporter';
 import DashboardJsonResultReporter from './Reporter/DashboardJsonResultReporter';
 import HTMLPersister from './Persister/HTMLPersister';
-import ReporterInterface from './ReporterInterface';
+import IReporter from './IReporter';
 import CLIReporter from './Reporter/CLIReporter';
 import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 import ConsoleLogger from '../Logger/ConsoleLogger';
@@ -16,12 +16,15 @@ const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractReporter> } = {
     'cli': CLIReporter,
 };
 
+/**
+ * Auto load reporter by their keyed name
+ */
 export default class ReporterLoader {
 
-    public static load(reportFolder: string | null, config: DreihouseConfigInterface, logger: LoggerInterface, loaders: Array<string | ReporterInterface>): ReporterInterface[] {
-        const handlers: ReporterInterface[] = [];
+    public static load(reportFolder: string | null, config: DreihouseConfigInterface, logger: LoggerInterface, loaders: Array<string | IReporter>): IReporter[] {
+        const handlers: IReporter[] = [];
 
-        loaders.forEach((module: string | ReporterInterface) => {
+        loaders.forEach((module: string | IReporter) => {
             if (typeof module === 'string') {
                 const Reporter = ReporterLoader.getMappedReporter(module);
                 if (Reporter) {
@@ -30,7 +33,7 @@ export default class ReporterLoader {
             }
 
             if (typeof module === 'object') {
-                if (!(<ReporterInterface> module).setup || !(<ReporterInterface> module).handle) {
+                if (!(<IReporter> module).setup || !(<IReporter> module).handle) {
                     throw new Error('Object does not implement the ResultReporterInterface');
                 }
                 handlers.push(module);

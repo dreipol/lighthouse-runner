@@ -1,19 +1,19 @@
 import {resolve as resolveUrl} from 'url';
 
-import LighthouseOptions from '../Interfaces/LighthouseOptions';
-import LighthouseReportResult from '../Interfaces/LighthouseReportResult';
+import ILighthouseOptions from '../Interfaces/ILighthouseOptions';
 import LighthouseRunner from '../Lighthouse/LighthouseRunner';
-import ReporterInterface from './ReporterInterface';
+import IReporter from './IReporter';
 import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
+import IReportResult from "../Interfaces/IReportResult";
 
 export default class ReportRunner {
     protected config: DreihouseConfigInterface;
     protected port: number;
-    protected opts: LighthouseOptions;
+    protected opts: ILighthouseOptions;
     protected logger: LoggerInterface;
-    protected reporters: ReporterInterface[];
+    protected reporters: IReporter[];
 
-    constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: LighthouseOptions, reporters: ReporterInterface[]) {
+    constructor(logger: LoggerInterface, config: DreihouseConfigInterface, port: number, opts: ILighthouseOptions, reporters: IReporter[]) {
         this.config = config;
         this.port = port;
         this.opts = opts;
@@ -21,7 +21,7 @@ export default class ReportRunner {
         this.reporters = reporters;
     }
 
-    public async createReports(rootUrl: string, paths: string[], allResults: LighthouseReportResult[] = []): Promise<LighthouseReportResult[]> {
+    public async createReports(rootUrl: string, paths: string[], allResults: IReportResult[] = []): Promise<IReportResult[]> {
         const urlPath = paths.shift();
 
         if (!urlPath) {
@@ -38,7 +38,7 @@ export default class ReportRunner {
         return allResults;
     }
 
-    private async runReporters(site: string, results: LighthouseReportResult): Promise<void> {
+    private async runReporters(site: string, results: IReportResult): Promise<void> {
         this.logger.info(`Run ${this.reporters.length} reporters`);
 
         for (let i = 0; i < this.reporters.length; i++) {
@@ -54,12 +54,12 @@ export default class ReportRunner {
         this.logger.debug(`Running reporters complete`);
     }
 
-    private async runReport(rootUrl: string, path: string): Promise<LighthouseReportResult> {
+    private async runReport(rootUrl: string, path: string): Promise<IReportResult> {
         const site = resolveUrl(rootUrl, path);
 
         const runner = new LighthouseRunner(this.logger);
         this.logger.info(`Create report for ${path}`);
-        const results = await runner.runReport(rootUrl, path, this.opts, this.config, this.port);
+        const results = await runner.createAudit(rootUrl, path, this.opts, this.config, this.port);
         this.logger.debug(`Report for ${path} completed`);
         await this.runReporters(site, results);
         return results;

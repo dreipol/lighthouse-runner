@@ -7,11 +7,11 @@ const lighthouse_config_1 = require("@dreipol/lighthouse-config");
 const path_1 = require("path");
 const NoopLogger_1 = __importDefault(require("../Logger/NoopLogger"));
 class ConfigLoader {
-    load(dreihouse, configFile, logger = new NoopLogger_1.default()) {
+    static load(dreihouse, configFile, logger = new NoopLogger_1.default()) {
         if (configFile === null) {
             logger.debug('Use internal config');
             configFile = path_1.resolve(__dirname, '../../config/base.js');
-            return this.loadConfig(require(configFile), process.cwd());
+            return ConfigLoader.loadConfig(require(configFile), process.cwd());
         }
         if (configFile && typeof configFile === 'string' && !path_1.isAbsolute(configFile)) {
             logger.debug('Resolve relative config file to process path');
@@ -19,15 +19,15 @@ class ConfigLoader {
         }
         if (configFile && typeof configFile === 'string') {
             logger.debug('Load config from file');
-            return this.loadConfig(require(configFile), path_1.dirname(configFile));
+            return ConfigLoader.loadConfig(require(configFile), path_1.dirname(configFile));
         }
         if (typeof configFile === 'object') {
             logger.debug('Load config from object');
-            return this.loadConfig(configFile, process.cwd());
+            return ConfigLoader.loadConfig(configFile, process.cwd());
         }
         throw new Error('Could not load config accordingly');
     }
-    loadConfig(config, resolveFolder) {
+    static loadConfig(config, resolveFolder) {
         config = lighthouse_config_1.ConfigValidator.validate(config);
         config.folder = path_1.resolve(resolveFolder, config.folder);
         return config;
