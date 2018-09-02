@@ -4,8 +4,9 @@ import DashboardJsonResultReporter from './Reporter/DashboardJsonResultReporter'
 import HTMLPersister from './Persister/HTMLPersister';
 import IReporter from './IReporter';
 import CLIReporter from './Reporter/CLIReporter';
-import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
 import ConsoleLogger from '../Logger/ConsoleLogger';
+import {IDreihouseConfig} from "../Interfaces/IDreihouseConfig";
+import {ILogger} from "../Logger/ILogger";
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -21,7 +22,7 @@ const MAPPED_REPORTERS: { [index: string]: Constructor<AbstractReporter> } = {
  */
 export default class ReporterLoader {
 
-    public static load(reportFolder: string | null, config: DreihouseConfigInterface, logger: LoggerInterface, loaders: Array<string | IReporter>): IReporter[] {
+    public static load(reportFolder: string | null, config: IDreihouseConfig, logger: ILogger, loaders: Array<string | IReporter>): IReporter[] {
         const handlers: IReporter[] = [];
 
         loaders.forEach((module: string | IReporter) => {

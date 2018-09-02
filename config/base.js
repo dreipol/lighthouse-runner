@@ -5,62 +5,34 @@ const {
     Meta,
 } = require('@dreipol/lighthouse-audits');
 
-function extendConfig(config) {
+const config = require('./desktop');
 
-    // configure path to be reported
-    config.paths = [
-        './',
-    ];
+config.audits = [
+    PSI.PSISpeedScoreAudit,
+    PSI.PSIUsabilityScoreAudit,
 
-    config.chromeFlags = [
-        '--window-size=1280,1024',
-        '--headless',
-    ];
+    PSI.PSIHTMLSizeAudit,
+    PSI.PSIImgSizeAudit,
+    PSI.PSICssSizeAudit,
+    PSI.PSICssResourcesAudit,
+    PSI.PSIJsSizeAudit,
+    PSI.PSIJsResourcesAudit,
 
-    //config.initialVisit = false;
+    BrokenLink.BrokenLinkAudit,
 
-    // define a budget for the project
-    config.budget = {
-        performance: 90,
-        pwa: 90,
-        accessibility: 90,
-        'best-practices': 90,
-        dreipol: 90,
-        seo: 90,
-        psi: 90,
-    };
+    Meta.MetaAudit,
+];
 
+config.gatherers = [
+    PSI.PSIGatherer,
+    BrokenLink.BrokenLinkGatherer,
+    Meta.MetaGatherer,
+];
+/*
+categories: {
+    psi: Categories.PSI,
+    dreipol: Categories.Dreipol,
+},
+*/
 
-    // add custom audits
-    config.report.audits.push(
-        PSI.PSISpeedScoreAudit,
-        PSI.PSIUsabilityScoreAudit,
-
-        PSI.PSIHTMLSizeAudit,
-        PSI.PSIImgSizeAudit,
-        PSI.PSICssSizeAudit,
-        PSI.PSICssResourcesAudit,
-        PSI.PSIJsSizeAudit,
-        PSI.PSIJsResourcesAudit,
-
-        BrokenLink.BrokenLinkAudit,
-
-        Meta.MetaAudit
-    );
-
-    // add custom data gatherer
-    config.report.passes[0].gatherers.push(
-        PSI.PSIGatherer,
-        BrokenLink.BrokenLinkGatherer,
-        Meta.MetaGatherer
-    );
-
-
-    config.report.categories.psi = Categories.PSI;
-    config.report.categories.dreipol = Categories.Dreipol;
-
-
-    return config;
-};
-
-module.exports = extendConfig(require('@dreipol/lighthouse-config/config/base/desktop'));
+module.exports = config;

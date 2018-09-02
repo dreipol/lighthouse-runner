@@ -1,9 +1,10 @@
 import ILighthouseOptions from '../Interfaces/ILighthouseOptions';
-import { DreihouseConfigInterface, LoggerInterface } from '@dreipol/lighthouse-config';
 import IReportResult from "../Interfaces/IReportResult";
+import { IDreihouseConfig } from "../Interfaces/IDreihouseConfig";
+import { ILogger } from "../Logger/ILogger";
 export default class LighthouseRunner {
     private logger;
-    constructor(logger: LoggerInterface);
-    createAudit(targetUrl: string, urlPath: string, opts: ILighthouseOptions, config: DreihouseConfigInterface, port: number): Promise<IReportResult>;
+    constructor(logger: ILogger);
+    createAudit(targetUrl: string, urlPath: string, opts: ILighthouseOptions, config: IDreihouseConfig, port: number): Promise<IReportResult>;
     private launchChromeAndRunLighthouse;
 }

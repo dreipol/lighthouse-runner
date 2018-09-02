@@ -1,9 +1,10 @@
 import IReportCategory from './IReportCategory';
-import { Budget } from '@dreipol/lighthouse-config';
+import { IBudget } from "./BudgetInterface";
 export default interface IJSONReportResult {
     categories: IReportCategory[];
-    budget: Budget;
+    budget: IBudget;
     url: string;
     tag: string;
     key: string;
+    version: string;
 }

@@ -7,6 +7,7 @@ export default class RunnerResultTransformer {
         const transformedResult: IReportResult = {
             categoryGroups: values(result.lhr.categories),
             lhr: result.lhr,
+            reporters: []
         };
         
         

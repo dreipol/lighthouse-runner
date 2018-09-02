@@ -1,12 +1,12 @@
 import {error as flError, info} from 'fancy-log';
 import chalk from 'chalk';
-import {LoggerInterface} from '@dreipol/lighthouse-config';
+import {ILogger} from "./ILogger";
 
 const ERROR_LEVEL = 1;
 const INFO_LEVEL = 2;
 const DEBUG_LEVEL = 3;
 
-export default class ConsoleLogger implements LoggerInterface {
+export default class ConsoleLogger implements ILogger {
     protected level: number;
 
     constructor(level: number = 1) {

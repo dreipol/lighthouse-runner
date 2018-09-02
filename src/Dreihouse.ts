@@ -1,13 +1,13 @@
-import {DreihouseConfigInterface, LoggerInterface} from '@dreipol/lighthouse-config';
-
 import NoopPrinter from './Logger/NoopLogger';
 import ReportRunner from './Report/ReportRunner';
 import ILighthouseOptions from './Interfaces/ILighthouseOptions';
 import IReporter from './Report/IReporter';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
-import ConfigLoader from './ConfigLoader/ConfigLoader';
+import ConfigLoader from './Config/ConfigLoader';
 import ReporterLoader from './Report/ReporterLoader';
 import IReportResult from "./Interfaces/IReportResult";
+import {IDreihouseConfig} from "./Interfaces/IDreihouseConfig";
+import {ILogger} from "./Logger/ILogger";
 
 const {version} = require('../package.json');
 
@@ -18,14 +18,14 @@ export default class Dreihouse {
     protected configFolder: string;
     protected reportFolder: string;
     protected reporterNames: Array<string | IReporter>;
-    protected config: DreihouseConfigInterface | null;
-    protected logger: LoggerInterface;
+    protected config: IDreihouseConfig | null;
+    protected logger: ILogger;
     protected reporters: IReporter[];
     protected chromeStarter: ChromeStarter | null;
     
-    constructor(configFile: DreihouseConfigInterface | string | null,
+    constructor(configFile: IDreihouseConfig | string | null,
                 reporterNames: Array<string | IReporter>,
-                logger: LoggerInterface = new NoopPrinter()) {
+                logger: ILogger = new NoopPrinter()) {
         this.logger = logger;
         this.reporterNames = reporterNames;
         this.reporters = [];
@@ -35,7 +35,7 @@ export default class Dreihouse {
         
         this.logger.info(`Dreihouse v${version}`);
         
-        this.config = ConfigLoader.load(this, configFile);
+        this.config = ConfigLoader.load(configFile);
         this.reportFolder = this.config.folder;
         
         this.reporters = ReporterLoader.load(this.reportFolder, this.config, this.logger, this.reporterNames);
@@ -118,7 +118,7 @@ export default class Dreihouse {
         return await runner.createReports(url, reportPaths);
     }
     
-    public getConfig(): DreihouseConfigInterface | null {
+    public getConfig(): IDreihouseConfig | null {
         return this.config;
     }
 }

@@ -1,7 +1,7 @@
 import {existsSync} from 'fs';
 import AbstractReporter from '../AbstractReporter';
-import createFolder from '../../utils/createFolder';
-import writeFile from '../../utils/writeFile';
+import createFolder from '../../Utils/createFolder';
+import writeFile from '../../Utils/writeFile';
 import IReportResult from "../../Interfaces/IReportResult";
 
 const ReportGenerator = require('lighthouse/lighthouse-core/report/report-generator');

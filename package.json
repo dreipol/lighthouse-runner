@@ -32,7 +32,6 @@
     "homepage": "https://github.com/dreipol/lighthouse-runner#readme",
     "dependencies": {
         "@dreipol/lighthouse-audits": "^1.1.0",
-        "@dreipol/lighthouse-config": "^3.1.0",
         "chalk": "^2.4.1",
         "chrome-launcher": "^0.10.2",
         "console.table": "^0.10.0",
