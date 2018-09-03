@@ -89,12 +89,11 @@ describe('Reporters', () => {
             assert.fail(null, null, e);
         }
     }));
-    it('json content', () => __awaiter(this, void 0, void 0, function* () {
+    it.skip('json content', () => __awaiter(this, void 0, void 0, function* () {
         try {
             const dreihouse = new Dreihouse_1.default(CONFIG_FILENAME, ['json-dashboard'], new NoopLogger_1.default());
             const res = yield dreihouse.execute(ROOT_URL);
             if (res) {
-                console.log(res[0].reporters);
                 const filename = lodash_1.get(res[0], 'reporters[0].value');
                 console.log(filename);
             }

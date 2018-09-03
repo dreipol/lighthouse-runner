@@ -6,4 +6,5 @@ export default interface IJSONReportResult {
     url: string;
     tag: string;
     key: string;
+    version: string;
 }

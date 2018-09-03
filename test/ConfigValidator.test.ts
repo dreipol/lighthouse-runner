@@ -1,17 +1,17 @@
 import 'mocha';
-import {ConfigValidator} from '../src';
+import ConfigValidator from '../src/Validator/ConfigValidator';
 import {expect} from 'chai';
 
 const DEFAULT_CONFIG = require('./data/config.js');
 
-describe('Validate Config', () => {
+describe('ConfigValidator', () => {
     it('Normalize config', () => {
         const config = {...DEFAULT_CONFIG, ...{disableEmulation: 'true'}};
         // @ts-ignore
         const results = ConfigValidator.validate(config);
         expect(results.disableEmulation).to.equal(true);
     });
-
+    
     it('Fail on incomplete config', (done) => {
         const config = {...DEFAULT_CONFIG};
         delete config.paths;
@@ -22,14 +22,14 @@ describe('Validate Config', () => {
             done();
         }
     });
-
+    
     it('`folder` can be null', (done) => {
         const config = {
             ...DEFAULT_CONFIG, ...{
                 folder: null,
             },
         };
-
+        
         try {
             // @ts-ignore
             ConfigValidator.validate(config);
@@ -38,14 +38,14 @@ describe('Validate Config', () => {
             done(e);
         }
     });
-
+    
     it('`folder` can be null', (done) => {
         const config = {
             ...DEFAULT_CONFIG,
         };
-
+        
         delete config.folder;
-
+        
         try {
             // @ts-ignore
             ConfigValidator.validate(config);
@@ -54,7 +54,7 @@ describe('Validate Config', () => {
             done();
         }
     });
-
+    
     it('Use objects directly in config for reporters', (done) => {
         const config = {
             ...DEFAULT_CONFIG, ...{
@@ -72,9 +72,9 @@ describe('Validate Config', () => {
                 },
             },
         };
-
+        
         delete config.folder;
-
+        
         try {
             ConfigValidator.validate(config);
             done(new Error('Invalid config should fail'));
