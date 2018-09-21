@@ -4,14 +4,10 @@ import {ILighthouseResult} from "../Interfaces/ILighthouseResult";
 
 export default class RunnerResultTransformer {
     static transform(result: ILighthouseResult): IReportResult {
-        const transformedResult: IReportResult = {
+        return {
             categoryGroups: values(result.lhr.categories),
             lhr: result.lhr,
             reporters: []
         };
-        
-        
-        return transformedResult;
-        
     }
 }

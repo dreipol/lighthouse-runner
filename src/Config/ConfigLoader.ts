@@ -15,7 +15,7 @@ export default class ConfigLoader {
         
         if (configFile === null) {
             logger.debug('Use internal config');
-            configFile = resolve(__dirname, '../../config/base.js');
+            configFile = resolve(__dirname, '../../config/desktop.js');
             return ConfigLoader.loadConfig(require(configFile), process.cwd());
         }
         

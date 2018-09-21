@@ -42,11 +42,20 @@ export default class Dreihouse {
         this.setChromeStarter(new ChromeStarter(true, 9222, this.logger));
     }
     
+    /**
+     * Set custom chromestarter
+     * @param value
+     */
     public setChromeStarter(value: ChromeStarter): void {
         this.chromeStarter = value;
         this.logger.debug('Set chromestarter');
     }
     
+    /**
+     * Run report
+     * @param url
+     * @param port
+     */
     public async execute(url: string, port: number = 9222): Promise<IReportResult[] | null> {
         if (!this.config) {
             throw new Error('No config loaded');
@@ -67,6 +76,10 @@ export default class Dreihouse {
         return auditResults;
     }
     
+    /**
+     * Start chrome
+     * @param url
+     */
     public async startChrome(url: string) {
         if (!this.config) {
             throw new Error('No config available');
@@ -76,7 +89,7 @@ export default class Dreihouse {
             throw new Error('No chrome starter defined');
         }
         
-        await this.chromeStarter.setup(null, this.config.chromeFlags);
+        await this.chromeStarter.setup(url, this.config.chromeFlags);
         
         if (this.config.preAuditScripts) {
             await this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
@@ -84,6 +97,9 @@ export default class Dreihouse {
         await this.chromeStarter.closePage();
     }
     
+    /**
+     * Stop chrome
+     */
     public async stopChrome() {
         if (this.chromeStarter) {
             this.logger.debug(`Stopping chrome`);
@@ -92,6 +108,11 @@ export default class Dreihouse {
         }
     }
     
+    /**
+     * Crate audit
+     * @param url
+     * @param port
+     */
     public async audit(url: string, port: number = 9222): Promise<IReportResult[] | null> {
         
         if (!this.config) {
@@ -118,6 +139,9 @@ export default class Dreihouse {
         return await runner.createReports(url, reportPaths);
     }
     
+    /**
+     * Get the current config
+     */
     public getConfig(): IDreihouseConfig | null {
         return this.config;
     }

@@ -1,5 +1,5 @@
 import { IPreAuditScript } from "./IPreAuditScript";
-import { IBudget } from "./BudgetInterface";
+import { IBudget } from "./IBudget";
 export interface IInitialConfig {
     paths: string[];
     folder: string;

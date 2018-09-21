@@ -1,6 +1,6 @@
 import {ILighthouseConfig} from './ILighthouseConfig';
 import {IPreAuditScript} from "./IPreAuditScript";
-import {IBudget} from "./BudgetInterface";
+import {IBudget} from "./IBudget";
 
 export interface IDreihouseConfig {
     paths: string[];

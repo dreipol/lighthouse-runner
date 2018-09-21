@@ -35,17 +35,5 @@ describe('ConfigLoader', () => {
             chai_1.expect(config).not.to.be.null;
         }));
     });
-    describe('extending default config', () => {
-        it('add custom audits', () => __awaiter(this, void 0, void 0, function* () {
-            const config = ConfigLoader_1.default.load(require('./data/config-custom-audits.js'));
-            chai_1.expect(config.lighthouse).not.to.be.null;
-            chai_1.expect(config.lighthouse).to.have.property('settings');
-            chai_1.expect(config.lighthouse).to.have.property('audits');
-            chai_1.expect(config.lighthouse.audits).to.have.lengthOf(116);
-            if (config.lighthouse) {
-                console.log(config.lighthouse.audits.length);
-            }
-        }));
-    });
 });
 //# sourceMappingURL=ConfigLoader.test.js.map

@@ -2,7 +2,7 @@ import AbstractReporter from '../AbstractReporter';
 import IReportCategory from '../../Interfaces/IReportCategory';
 import chalk from 'chalk';
 import IReportResult from "../../Interfaces/IReportResult";
-import {IBudget} from "../../Interfaces/BudgetInterface";
+import {IBudget} from "../../Interfaces/IBudget";
 
 const figures = require('figures');
 

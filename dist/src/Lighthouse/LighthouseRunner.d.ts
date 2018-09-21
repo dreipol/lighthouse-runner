@@ -6,5 +6,5 @@ export default class LighthouseRunner {
     private logger;
     constructor(logger: ILogger);
     createAudit(targetUrl: string, urlPath: string, opts: ILighthouseOptions, config: IDreihouseConfig, port: number): Promise<IReportResult>;
-    private launchChromeAndRunLighthouse(url, opts, config, port);
+    private launchChromeAndRunLighthouse;
 }

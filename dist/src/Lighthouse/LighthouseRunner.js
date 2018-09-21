@@ -34,28 +34,7 @@ class LighthouseRunner {
                 }
                 opts.disableStorageReset = true;
                 this.logger.debug('Start lighthouse audit');
-                results = yield lighthouse(url, opts, {
-                    extends: 'lighthouse:default',
-                    settings: {},
-                    passes: [
-                        {
-                            passName: 'extraPass',
-                            gatherers: [
-                                'js-usage',
-                            ],
-                        },
-                    ],
-                    audits: [
-                        'byte-efficiency/unused-javascript',
-                    ],
-                    categories: {
-                        'performance': {
-                            auditRefs: [
-                                { id: 'unused-javascript', weight: 0, group: 'load-opportunities' },
-                            ],
-                        },
-                    },
-                });
+                results = yield lighthouse(url, opts, config.lighthouse);
                 this.logger.debug('Lighthouse audit complete');
             }
             catch (e) {

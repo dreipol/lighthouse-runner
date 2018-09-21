@@ -11,6 +11,6 @@ export default class ReportRunner {
     protected reporters: IReporter[];
     constructor(logger: ILogger, config: IDreihouseConfig, port: number, opts: ILighthouseOptions, reporters: IReporter[]);
     createReports(rootUrl: string, paths: string[], allResults?: IReportResult[]): Promise<IReportResult[]>;
-    private runReporters(site, results);
-    private runReport(rootUrl, path);
+    private runReporters;
+    private runReport;
 }

@@ -62,7 +62,7 @@ class Dreihouse {
             if (!this.chromeStarter) {
                 throw new Error('No chrome starter defined');
             }
-            yield this.chromeStarter.setup(null, this.config.chromeFlags);
+            yield this.chromeStarter.setup(url, this.config.chromeFlags);
             if (this.config.preAuditScripts) {
                 yield this.chromeStarter.runPreAuditScripts(this.config.preAuditScripts);
             }

@@ -27,19 +27,4 @@ describe('ConfigLoader', () => {
             expect(config).not.to.be.null;
         });
     });
-    
-    describe('extending default config', () => {
-        it('add custom audits', async () => {
-            const config = ConfigLoader.load(require('./data/config-custom-audits.js'));
-            
-            expect(config.lighthouse).not.to.be.null;
-            expect(config.lighthouse).to.have.property('settings');
-            expect(config.lighthouse).to.have.property('audits');
-            expect(config.lighthouse.audits).to.have.lengthOf(116);
-            
-            if (config.lighthouse) {
-                console.log(config.lighthouse.audits.length);
-            }
-        });
-    })
 });

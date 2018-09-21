@@ -5,6 +5,8 @@ class DashboardResultTransformer {
     static transform(url, categories, budget, tag) {
         const cleanCategories = categories.map((item) => {
             item = Object.assign({}, item);
+            item.name = item.title;
+            delete item.title;
             delete item.auditRefs;
             return item;
         });

@@ -8,7 +8,7 @@ export default Joi.object().keys({
     disableEmulation: Joi.boolean().required(),
     disableThrottling: Joi.boolean().required(),
     budget: Joi.object().required(),
-    initialPageload: Joi.boolean().required(),
+    initialPageload: Joi.boolean(),
     audits: Joi.array(),
     gatherers: Joi.array(),
     preAuditScripts: Joi.array(),

@@ -11,7 +11,7 @@ class ConfigLoader {
     static load(configFile, logger = new NoopLogger_1.default()) {
         if (configFile === null) {
             logger.debug('Use internal config');
-            configFile = path_1.resolve(__dirname, '../../config/base.js');
+            configFile = path_1.resolve(__dirname, '../../config/desktop.js');
             return ConfigLoader.loadConfig(require(configFile), process.cwd());
         }
         if (configFile && typeof configFile === 'string' && !path_1.isAbsolute(configFile)) {
