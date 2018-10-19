@@ -1,6 +1,6 @@
-import {parse} from 'url';
-import {writeFileSync} from 'fs';
-import {join} from 'path';
+import { parse } from 'url';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 import formatDate from './formatDate';
 import urlToPath from './urlToPath';
 

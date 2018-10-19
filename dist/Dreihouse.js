@@ -40,9 +40,9 @@ class Dreihouse {
             if (!this.config) {
                 throw new Error('No config loaded');
             }
-            yield this.startChrome(url);
             let auditResults = null;
             try {
+                yield this.startChrome(url);
                 auditResults = yield this.audit(url, port);
             }
             catch (e) {
