@@ -48,10 +48,10 @@ class CLIReporter extends AbstractReporter_1.default {
                 let status = figures.line;
                 if (isReached === true) {
                     status = chalk_1.default.green(figures.tick);
-                    budgetText = chalk_1.default.green(category.score + "");
+                    budgetText = chalk_1.default.green(category.score + '');
                 }
                 if (isReached === false) {
-                    budgetText = chalk_1.default.red(category.score + "");
+                    budgetText = chalk_1.default.red(category.score + '');
                     status = chalk_1.default.red(figures.cross);
                     allBudgetsReached = false;
                 }

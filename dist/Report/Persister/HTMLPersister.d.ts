@@ -1,5 +1,5 @@
 import AbstractReporter from '../AbstractReporter';
-import IReportResult from "../../Interfaces/IReportResult";
+import IReportResult from '../../Interfaces/IReportResult';
 export default class HTMLPersister extends AbstractReporter {
     key: string;
     setup(): Promise<void>;

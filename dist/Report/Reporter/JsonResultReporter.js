@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const AbstractReporter_1 = __importDefault(require("../AbstractReporter"));
-const writeFile_1 = __importDefault(require("../../Utils/writeFile"));
-const createFolder_1 = __importDefault(require("../../Utils/createFolder"));
+const writeFile_1 = __importDefault(require("../../utils/writeFile"));
+const createFolder_1 = __importDefault(require("../../utils/createFolder"));
 class JsonResultReporter extends AbstractReporter_1.default {
     constructor() {
         super(...arguments);

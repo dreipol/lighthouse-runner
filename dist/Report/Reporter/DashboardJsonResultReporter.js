@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const AbstractReporter_1 = __importDefault(require("../AbstractReporter"));
-const createFolder_1 = __importDefault(require("../../Utils/createFolder"));
-const writeFile_1 = __importDefault(require("../../Utils/writeFile"));
+const createFolder_1 = __importDefault(require("../../utils/createFolder"));
+const writeFile_1 = __importDefault(require("../../utils/writeFile"));
 const DashboardResultValidator_1 = __importDefault(require("../../Validator/DashboardResultValidator"));
 const DashboardResultTransformer_1 = __importDefault(require("../../Transformer/DashboardResultTransformer"));
 class DashboardJsonResultReporter extends AbstractReporter_1.default {
@@ -32,7 +32,7 @@ class DashboardJsonResultReporter extends AbstractReporter_1.default {
                     this.logger.debug(`Json Dashboard created ${filename}`);
                     return {
                         key: this.key,
-                        value: filename
+                        value: filename,
                     };
                 }
                 catch (e) {
