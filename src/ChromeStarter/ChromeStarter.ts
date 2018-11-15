@@ -43,14 +43,14 @@ export default class ChromeStarter {
 
         if (url) {
             this.logger.debug(`Navigate to ${url}`);
-            this.logger.debug(`Wait for networkidle0`);
+            this.logger.debug(`Wait for domcontentloaded`);
 
             await this.page.goto(url, {
-                waitUntil: 'networkidle0',
+                waitUntil: 'domcontentloaded',
                 timeout: 1000 * 60,
             });
 
-            this.logger.debug(`Wait for networkidle0 complete`);
+            this.logger.debug(`Wait for domcontentloaded complete`);
         } else {
             this.logger.debug(`Skip initial page visit`);
         }
