@@ -1,8 +1,8 @@
 import IReporter from './Report/IReporter';
 import ChromeStarter from './ChromeStarter/ChromeStarter';
-import IReportResult from "./Interfaces/IReportResult";
-import { IDreihouseConfig } from "./Interfaces/IDreihouseConfig";
-import { ILogger } from "./Logger/ILogger";
+import IReportResult from './Interfaces/IReportResult';
+import { IDreihouseConfig } from './Interfaces/IDreihouseConfig';
+import { ILogger } from './Logger/ILogger';
 export default class Dreihouse {
     protected configFolder: string;
     protected reportFolder: string;

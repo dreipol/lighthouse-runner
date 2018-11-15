@@ -26,14 +26,21 @@ class Dreihouse {
         this.chromeStarter = null;
         this.configFolder = process.cwd();
         this.logger.info(`Dreihouse v${version}`);
-        this.config = ConfigLoader_1.default.load(configFile);
-        this.reportFolder = this.config.folder;
+        try {
+            this.config = ConfigLoader_1.default.load(configFile);
+            this.reportFolder = this.config.folder;
+            this.logger.info(`Config successfully loaded`);
+        }
+        catch (e) {
+            this.logger.error(`Failed loading configuration`);
+            throw e;
+        }
         this.reporters = ReporterLoader_1.default.load(this.reportFolder, this.config, this.logger, this.reporterNames);
         this.setChromeStarter(new ChromeStarter_1.default(true, 9222, this.logger));
     }
     setChromeStarter(value) {
-        this.chromeStarter = value;
         this.logger.debug('Set chromestarter');
+        this.chromeStarter = value;
     }
     execute(url, port = 9222) {
         return __awaiter(this, void 0, void 0, function* () {

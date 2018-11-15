@@ -1,7 +1,7 @@
-import { ILogger } from "../Logger/ILogger";
-import { IDreihouseConfig } from "../Interfaces/IDreihouseConfig";
-import { IInitialConfig } from "../Interfaces/IInitialConfig";
+import { ILogger } from '../Logger/ILogger';
+import { IDreihouseConfig } from '../Interfaces/IDreihouseConfig';
 export default class ConfigLoader {
     static load(configFile: IDreihouseConfig | string | null, logger?: ILogger): IDreihouseConfig;
-    static loadConfig(config: IInitialConfig, resolveFolder: string): IDreihouseConfig;
+    private static loadConfig;
+    private static loadConfigFile;
 }
