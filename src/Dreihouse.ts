@@ -65,10 +65,10 @@ export default class Dreihouse {
             throw new Error('No config loaded');
         }
 
-        await this.startChrome(url);
         let auditResults = null;
 
         try {
+            await this.startChrome(url);
             auditResults = await this.audit(url, port);
         } catch (e) {
             this.logger.error(e.message);
