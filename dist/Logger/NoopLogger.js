@@ -9,6 +9,9 @@ class NoopLogger {
     }
     setLevel(level) {
     }
+    getLevel() {
+        return 0;
+    }
 }
 exports.default = NoopLogger;
 //# sourceMappingURL=NoopLogger.js.map

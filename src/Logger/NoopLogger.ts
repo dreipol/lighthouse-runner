@@ -16,4 +16,8 @@ export default class NoopLogger implements ILogger {
     public setLevel(level: number): void {
         //
     }
+    
+    public getLevel(){
+        return 0;
+    }
 }

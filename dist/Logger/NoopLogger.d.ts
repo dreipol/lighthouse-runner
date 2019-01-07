@@ -4,4 +4,5 @@ export default class NoopLogger implements ILogger {
     error(...args: string[]): void;
     info(...args: string[]): void;
     setLevel(level: number): void;
+    getLevel(): number;
 }

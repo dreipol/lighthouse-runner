@@ -2,9 +2,9 @@ import {error as flError, info} from 'fancy-log';
 import chalk from 'chalk';
 import {ILogger} from "./ILogger";
 
-const ERROR_LEVEL = 1;
-const INFO_LEVEL = 2;
-const DEBUG_LEVEL = 3;
+export const ERROR_LEVEL = 1;
+export const INFO_LEVEL = 2;
+export const DEBUG_LEVEL = 3;
 
 export default class ConsoleLogger implements ILogger {
     protected level: number;
@@ -35,5 +35,9 @@ export default class ConsoleLogger implements ILogger {
     public setLevel(level: number): void {
         this.level = level;
         this.debug(`Verbosity: ${level}`);
+    }
+    
+    public getLevel(){
+        return this.level;
     }
 }

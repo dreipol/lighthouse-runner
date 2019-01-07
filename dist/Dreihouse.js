@@ -53,7 +53,8 @@ class Dreihouse {
                 auditResults = yield this.audit(url, port);
             }
             catch (e) {
-                this.logger.error(e.message);
+                this.logger.error(e.name, e.message);
+                console.error(e);
                 yield this.stopChrome();
                 throw e;
             }
