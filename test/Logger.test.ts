@@ -21,11 +21,14 @@ describe('Logger', () => {
         const info = sinon.spy();
         const error = sinon.spy();
         const setLevel = sinon.spy();
+        const getLevel = sinon.spy();
+        
         const Logger = {
             info,
             debug,
             error,
             setLevel,
+            getLevel,
         };
 
         const dreihouse = new Dreihouse(CONFIG_FILENAME, [], Logger);
